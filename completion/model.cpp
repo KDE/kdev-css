@@ -20,7 +20,7 @@
 
 namespace Css {
 
-extern int debugArea();
+// extern int debugArea();
 
 CodeCompletionModel::CodeCompletionModel(QObject *parent)
     : CodeCompletionModel2(parent)
@@ -29,7 +29,7 @@ CodeCompletionModel::CodeCompletionModel(QObject *parent)
 
 void CodeCompletionModel::completionInvoked(KTextEditor::View* view, const KTextEditor::Range& range, InvocationType invocationType)
 {
-    kDebug(debugArea()) << range;
+    kDebug(/*debugArea()*/) << range;
     Q_UNUSED(view);
     Q_UNUSED(range);
     Q_UNUSED(invocationType);
