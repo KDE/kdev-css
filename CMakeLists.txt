@@ -1,5 +1,7 @@
 PROJECT(css)
 
+set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${css_SOURCE_DIR}/cmake)
+
 enable_testing()
 
 find_package(KDE4 REQUIRED)
