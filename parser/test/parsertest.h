@@ -1,5 +1,6 @@
 /*
-   Copyright (C) 2009 Niko Sams <niko.sams@gmail.com>
+   This file is part of KDevelop
+   Copyright 2009 Niko Sams <niko.sams@gmail.com>
 
    This library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Library General Public
@@ -16,34 +17,27 @@
    Boston, MA 02110-1301, USA.
 */
 
-#include "model.h"
+#ifndef CSS_PARSERTEST_H
+#define CSS_PARSERTEST_H
 
-namespace Css {
+#include <QObject>
 
-extern int debugArea();
-
-CodeCompletionModel::CodeCompletionModel(QObject *parent)
-    : CodeCompletionModel2(parent)
+namespace Css
 {
-}
 
-void CodeCompletionModel::completionInvoked(KTextEditor::View* view, const KTextEditor::Range& range, InvocationType invocationType)
+class TestParser : public QObject
 {
-    kDebug(debugArea()) << range;
-    Q_UNUSED(view);
-    Q_UNUSED(range);
-    Q_UNUSED(invocationType);
-    setRowCount(5);
-    reset();
-}
+    Q_OBJECT
 
-QVariant CodeCompletionModel::data(const QModelIndex & index, int role) const
-{
-    if (role == Qt::DisplayRole && index.column() == CodeCompletionModel::Name) {
-        return QString::number(index.row());
-    }
-    return QVariant();
-}
+public:
+    TestParser();
 
+private Q_SLOTS:
+    void parser_data();
+    void parser();
+
+};
 
 }
+
+#endif

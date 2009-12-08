@@ -5,14 +5,32 @@ set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${css_SOURCE_DIR}/cmake)
 enable_testing()
 
 find_package(KDE4 REQUIRED)
-
 find_package(KDevPlatform REQUIRED)
+
 include_directories(
     ${KDEVPLATFORM_INCLUDE_DIR}
     ${KDE4_INCLUDES}
+    ${QT4_INCLUDES}
     ${CMAKE_CURRENT_BINARY_DIR}
     ${CMAKE_CURRENT_SOURCE_DIR}
 )
+
+#Don't error out if the FindXXX are missing for these two
+find_package(KDevelop-PG-Qt QUIET)
+
+if(KDEVPGQT_FOUND)
+    include_directories(
+        ${CMAKE_BINARY_DIR}/parser
+        ${KDEVPGQT_INCLUDE_DIR}
+    )
+else(KDEVPGQT_FOUND)
+    include_directories(
+        ${CMAKE_CURRENT_SOURCE_DIR}/parser/generated
+        ${CMAKE_CURRENT_SOURCE_DIR}/parser/generated/kdevelop-pg-qt
+    )
+endif(KDEVPGQT_FOUND)
+
+add_subdirectory(parser)
 
 set(kdevcsslanguagesupport_PART_SRCS
     csslanguagesupport.cpp
@@ -26,6 +44,7 @@ target_link_libraries(kdevcsslanguagesupport
     ${KDEVPLATFORM_INTERFACES_LIBRARIES}
     ${KDEVPLATFORM_LANGUAGE_LIBRARIES}
     ${KDE4_KTEXTEDITOR_LIBS}
+    kdev4cssparser
 )
 
 install(TARGETS kdevcsslanguagesupport DESTINATION ${PLUGIN_INSTALL_DIR})

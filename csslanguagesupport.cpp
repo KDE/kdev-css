@@ -32,7 +32,7 @@ K_EXPORT_PLUGIN(KDevCssSupportFactory("kdevcsssupport"))
 namespace Css
 {
 
-// int debugArea() { static int s_area = KDebug::registerArea("kdevcsssupport"); return s_area; }
+int debugArea() { static int s_area = KDebug::registerArea("kdevcsssupport"); return s_area; }
 
 LanguageSupport::LanguageSupport(QObject* parent, const QVariantList& /*args*/)
     : KDevelop::IPlugin(KDevCssSupportFactory::componentData(), parent),
