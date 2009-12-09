@@ -22,9 +22,9 @@
 #include <QtCore/QXmlStreamReader>
 #include <QFile>
 
-using namespace Css;
+namespace Css {
 
-Css::ContentAssistData::ContentAssistData()
+ContentAssistData::ContentAssistData()
 {
     QString fileName = KStandardDirs::locate("data", "kdevcsssupport/completion/CSS.xml");
     QFile f(fileName);
@@ -89,4 +89,16 @@ Css::ContentAssistData::ContentAssistData()
             }
         }
     }
+}
+
+
+ContentAssistData::Element ContentAssistData::element(const QString& name)
+{
+    if (!m_elements.contains(name)) {
+        return Element();
+    }
+    return m_elements[name];
+}
+
+
 }

@@ -35,6 +35,7 @@ add_subdirectory(parser)
 set(kdevcsslanguagesupport_PART_SRCS
     csslanguagesupport.cpp
     completion/model.cpp
+    completion/contentassistdata.cpp
 )
 
 kde4_add_plugin(kdevcsslanguagesupport ${kdevcsslanguagesupport_PART_SRCS})

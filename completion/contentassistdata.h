@@ -44,6 +44,8 @@ public:
     };
 
     ContentAssistData();
+
+    Element element(const QString &name);
 private:
     QHash<QString, Element> m_elements;
 };

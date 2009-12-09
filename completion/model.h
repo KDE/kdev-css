@@ -23,12 +23,18 @@
 
 namespace Css {
 
+class ContentAssistData;
+
 class CodeCompletionModel : public KTextEditor::CodeCompletionModel2
 {
 public:
     CodeCompletionModel(QObject *parent);
     virtual void completionInvoked(KTextEditor::View* view, const KTextEditor::Range& range, InvocationType invocationType);
     virtual QVariant data(const QModelIndex & index, int role) const;
+
+private:
+    QList< QString > m_currentFields;
+    ContentAssistData *m_assistData;
 };
 
 }

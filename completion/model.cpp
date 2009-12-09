@@ -18,29 +18,93 @@
 
 #include "model.h"
 
+#include <KTextEditor/View>
+#include <KTextEditor/Document>
+
+#include <cssdefaultvisitor.h>
+#include "../parser/parsesession.h"
+#include "../parser/editorintegrator.h"
+#include "contentassistdata.h"
+
 namespace Css {
 
 extern int debugArea();
 
 CodeCompletionModel::CodeCompletionModel(QObject *parent)
-    : CodeCompletionModel2(parent)
+    : CodeCompletionModel2(parent), m_assistData(new ContentAssistData)
 {
 }
 
+class FindCurrentNodeVisitor : public DefaultVisitor
+{
+public:
+    FindCurrentNodeVisitor(EditorIntegrator* editor, const KTextEditor::Range& range)
+        : m_node(0), m_editor(editor), m_range(range), m_lastSelectorElement(-1)
+    {}
+    virtual void visitNode(AstNode* node)
+    {
+        if (!node) return;
+        KDevelop::SimpleCursor pos = m_editor->findPosition(node->startToken, EditorIntegrator::FrontEdge);
+        if (m_range.contains(pos.textCursor())) {
+            m_node = node;
+            //don't continue visiting
+        } else {
+            DefaultVisitor::visitNode(node);
+        }
+    }
+
+    virtual void visitSimpleSelector(SimpleSelectorAst* node)
+    {
+        m_lastSelectorElement = node->element->ident;
+        DefaultVisitor::visitSimpleSelector(node);
+    }
+
+    AstNode *currentNode() { return m_node; }
+    QString lastSelectorElement() {
+        if (m_lastSelectorElement == -1) return QString();
+        return m_editor->tokenToString(m_lastSelectorElement);
+    }
+private:
+    AstNode *m_node;
+    EditorIntegrator *m_editor;
+    KTextEditor::Range m_range;
+    qint64 m_lastSelectorElement;
+};
+
 void CodeCompletionModel::completionInvoked(KTextEditor::View* view, const KTextEditor::Range& range, InvocationType invocationType)
 {
-    kDebug(debugArea()) << range;
-    Q_UNUSED(view);
-    Q_UNUSED(range);
     Q_UNUSED(invocationType);
-    setRowCount(5);
-    reset();
+
+    kDebug(debugArea()) << range;
+    ParseSession session;
+    session.setContents(view->document()->text());
+    Css::StartAst* ast = 0;
+    session.parse(&ast);
+    if (ast) {
+        EditorIntegrator editor(&session);
+
+        FindCurrentNodeVisitor visitor(&editor, range);
+        visitor.visitNode(ast);
+        AstNode* currentNode = visitor.currentNode();
+        if (currentNode) {
+            kDebug(debugArea()) << "currentNode kind" << currentNode->kind;
+            if (currentNode->kind == AstNode::DeclarationListKind) {
+                kDebug(debugArea()) << "lastSelectorElement" << visitor.lastSelectorElement();
+                ContentAssistData::Element element = m_assistData->element(visitor.lastSelectorElement());
+                m_currentFields = element.fields;
+                kDebug(debugArea()) << m_currentFields;
+                setRowCount(m_currentFields.count());
+                reset();
+            }
+        }
+    }
 }
 
 QVariant CodeCompletionModel::data(const QModelIndex & index, int role) const
 {
     if (role == Qt::DisplayRole && index.column() == CodeCompletionModel::Name) {
-        return QString::number(index.row());
+        if (m_currentFields.count() < index.row()) return QVariant();
+        return m_currentFields.at(index.row());
     }
     return QVariant();
 }

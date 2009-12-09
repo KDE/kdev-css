@@ -2,6 +2,7 @@
 set(parser_STAT_SRCS
     tokenizer.cpp
     parsesession.cpp
+    editorintegrator.cpp
     )
 
 if(KDEVPGQT_FOUND)
