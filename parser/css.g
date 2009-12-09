@@ -30,11 +30,6 @@
 #include <language/interfaces/iproblem.h>
 #include "parser/tokenizer.h"
 
-namespace KDevelop
-{
-    class DUContext;
-}
-
 :]
 
 
@@ -52,14 +47,6 @@ namespace KDevelop
 %namespace
 [:
     class Tokenizer;
-:]
-
-------------------------------------------------------------
--- Ast Node class members
-------------------------------------------------------------
-%ast_extra_members
-[:
-  KDevelop::DUContext* ducontext;
 :]
 
 ------------------------------------------------------------

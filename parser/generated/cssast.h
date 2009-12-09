@@ -15,11 +15,6 @@
 #include <language/interfaces/iproblem.h>
 #include "parser/tokenizer.h"
 
-namespace KDevelop
-{
-class DUContext;
-}
-
 
 namespace Css
 {
@@ -98,8 +93,6 @@ struct KDEVCSSPARSER_EXPORT AstNode
     int kind;
     qint64 startToken;
     qint64 endToken;
-
-    KDevelop::DUContext* ducontext;
 
 };
 
