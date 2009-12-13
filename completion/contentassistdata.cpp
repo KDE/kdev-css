@@ -18,9 +18,11 @@
 
 #include "contentassistdata.h"
 
-#include <KDE/KStandardDirs>
 #include <QtCore/QXmlStreamReader>
 #include <QFile>
+
+#include <KDE/KStandardDirs>
+#include <KDebug>
 
 namespace Css {
 
@@ -49,24 +51,7 @@ ContentAssistData::ContentAssistData()
                             el.description = xml.readElementText();
                         }
                         if (xml.isStartElement() && xml.name() == "browsers") {
-                            while (!xml.atEnd()) {
-                                xml.readNext();
-                                if (xml.isEndElement() && xml.name() == "browsers") break;
-                                if (xml.isStartElement() && xml.name() == "browser") {
-                                    Browser br;
-                                    br.platform = xml.attributes().value("platform").toString();
-                                    br.version = xml.attributes().value("version").toString();
-                                    br.os = xml.attributes().value("os").toString();
-                                    while (!xml.atEnd()) {
-                                        xml.readNext();
-                                        if (xml.isEndElement() && xml.name() == "browser") break;
-                                        if (xml.isStartElement() && xml.name() == "description") {
-                                            br.description = xml.readElementText();
-                                        }
-                                    }
-                                    el.browsers << br;
-                                }
-                            }
+                            el.browsers = readBrowsers(xml);
                         }
                         if (xml.isStartElement() && xml.name() == "example") {
                             el.example = xml.readElementText();
@@ -88,9 +73,70 @@ ContentAssistData::ContentAssistData()
                 }
             }
         }
+
+        if (xml.isStartElement() && xml.name() == "fields") {
+            while (!xml.atEnd()) {
+                xml.readNext();
+                if (xml.isEndElement() && xml.name() == "fields") break;
+                if (xml.isStartElement() && xml.name() == "field") {
+                    Field field;
+                    field.name = xml.attributes().value("name").toString();
+                    while (!xml.atEnd()) {
+                        xml.readNext();
+                        if (xml.isEndElement() && xml.name() == "field") break;
+                        if (xml.isStartElement() && xml.name() == "description") {
+                            field.description = xml.readElementText();
+                        }
+                        if (xml.isStartElement() && xml.name() == "hint") {
+                            field.hint = xml.readElementText();
+                        }
+                        if (xml.isStartElement() && xml.name() == "browsers") {
+                            field.browsers = readBrowsers(xml);
+                        }
+                        if (xml.isStartElement() && xml.name() == "example") {
+                            field.example = xml.readElementText();
+                        }
+                        if (xml.isStartElement() && xml.name() == "values") {
+                            while (!xml.atEnd()) {
+                                xml.readNext();
+                                if (xml.isEndElement() && xml.name() == "values") break;
+                                if (xml.isStartElement() && xml.name() == "value") {
+                                    field.values[xml.attributes().value("name").toString()] = xml.attributes().value("description").toString();
+                                }
+                            }
+                        }
+                        m_fields[field.name] = field;
+                    }
+                }
+            }
+        }
     }
 }
 
+QList<ContentAssistData::Browser> ContentAssistData::readBrowsers(QXmlStreamReader& xml)
+{
+    QList<Browser> ret;
+    Q_ASSERT(xml.isStartElement() && xml.name() == "browsers");
+    while (!xml.atEnd()) {
+        xml.readNext();
+        if (xml.isEndElement() && xml.name() == "browsers") break;
+        if (xml.isStartElement() && xml.name() == "browser") {
+            Browser br;
+            br.platform = xml.attributes().value("platform").toString();
+            br.version = xml.attributes().value("version").toString();
+            br.os = xml.attributes().value("os").toString();
+            while (!xml.atEnd()) {
+                xml.readNext();
+                if (xml.isEndElement() && xml.name() == "browser") break;
+                if (xml.isStartElement() && xml.name() == "description") {
+                    br.description = xml.readElementText();
+                }
+            }
+            ret << br;
+        }
+    }
+    return ret;
+}
 
 ContentAssistData::Element ContentAssistData::element(const QString& name)
 {
@@ -100,5 +146,12 @@ ContentAssistData::Element ContentAssistData::element(const QString& name)
     return m_elements[name];
 }
 
+ContentAssistData::Field ContentAssistData::field(const QString& name)
+{
+    if (!m_fields.contains(name)) {
+        return Field();
+    }
+    return m_fields[name];
+}
 
 }

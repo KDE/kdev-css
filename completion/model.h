@@ -20,20 +20,29 @@
 #define CSS_CODECOMPLETIONMODEL_H
 
 #include <KDE/KTextEditor/CodeCompletionModel>
+#include <KDE/KTextEditor/CodeCompletionModelControllerInterface>
 
 namespace Css {
 
 class ContentAssistData;
 
-class CodeCompletionModel : public KTextEditor::CodeCompletionModel2
+class CodeCompletionModel : public KTextEditor::CodeCompletionModel2, public KTextEditor::CodeCompletionModelControllerInterface
 {
+    Q_OBJECT
+    Q_INTERFACES(KTextEditor::CodeCompletionModelControllerInterface)
+
 public:
     CodeCompletionModel(QObject *parent);
     virtual void completionInvoked(KTextEditor::View* view, const KTextEditor::Range& range, InvocationType invocationType);
+
     virtual QVariant data(const QModelIndex & index, int role) const;
 
+    virtual KTextEditor::Range completionRange(KTextEditor::View* view, const KTextEditor::Cursor &position);
+    virtual bool shouldAbortCompletion(KTextEditor::View* view, const KTextEditor::SmartRange& range, const QString &currentCompletion);
+
+
 private:
-    QList< QString > m_currentFields;
+    QList<QString> m_items;
     ContentAssistData *m_assistData;
 };
 

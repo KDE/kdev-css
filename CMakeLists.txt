@@ -52,3 +52,19 @@ install(TARGETS kdevcsslanguagesupport DESTINATION ${PLUGIN_INSTALL_DIR})
 
 install(FILES kdevcsssupport.desktop DESTINATION ${SERVICES_INSTALL_DIR})
 install(FILES completion/CSS.xml DESTINATION ${DATA_INSTALL_DIR}/kdevcsssupport/completion)
+
+
+### next target
+set(completionmodeltest_SRCS
+    completion/test/modeltest.cpp
+    completion/model.cpp
+    completion/contentassistdata.cpp
+)
+kde4_add_unit_test(completionmodeltest ${completionmodeltest_SRCS})
+target_link_libraries(completionmodeltest
+    kdev4cssparser
+    ${KDE4_KDEUI_LIBS}
+    ${KDE4_KTEXTEDITOR_LIBS}
+    ${QT_QTGUI_LIBRARY}
+    ${QT_QTTEST_LIBRARY}
+)

@@ -21,7 +21,9 @@
 
 #include <QString>
 #include <QHash>
+#include <QMap>
 
+class QXmlStreamReader;
 namespace Css {
 
 class ContentAssistData
@@ -42,12 +44,24 @@ public:
         QString remarks;
         QList<QString> fields;
     };
+    struct Field {
+        QString name;
+        QString type;
+        QString hint;
+        QString description;
+        QMap<QString, QString> values;
+        QList<Browser> browsers;
+        QString example;
+    };
 
     ContentAssistData();
 
     Element element(const QString &name);
+    Field field(const QString &name);
 private:
+    QList<Browser> readBrowsers(QXmlStreamReader &xml);
     QHash<QString, Element> m_elements;
+    QHash<QString, Field> m_fields;
 };
 
 }

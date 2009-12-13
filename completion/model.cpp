@@ -59,27 +59,43 @@ public:
         DefaultVisitor::visitSimpleSelector(node);
     }
 
+    virtual void visitProperty(PropertyAst* node)
+    {
+        m_lastProperty = node->ident;
+        DefaultVisitor::visitProperty(node);
+    }
+
     AstNode *currentNode() { return m_node; }
     QString lastSelectorElement() {
         if (m_lastSelectorElement == -1) return QString();
         return m_editor->tokenToString(m_lastSelectorElement);
+    }
+    QString lastProperty() {
+        if (m_lastProperty == -1) return QString();
+        return m_editor->tokenToString(m_lastProperty);
     }
 private:
     AstNode *m_node;
     EditorIntegrator *m_editor;
     KTextEditor::Range m_range;
     qint64 m_lastSelectorElement;
+    qint64 m_lastProperty;
 };
 
 void CodeCompletionModel::completionInvoked(KTextEditor::View* view, const KTextEditor::Range& range, InvocationType invocationType)
 {
     Q_UNUSED(invocationType);
 
+    m_items.clear();
+    setRowCount(0);
+    reset();
+
     kDebug(debugArea()) << range;
     ParseSession session;
     session.setContents(view->document()->text());
     Css::StartAst* ast = 0;
     session.parse(&ast);
+
     if (ast) {
         EditorIntegrator editor(&session);
 
@@ -91,9 +107,14 @@ void CodeCompletionModel::completionInvoked(KTextEditor::View* view, const KText
             if (currentNode->kind == AstNode::DeclarationListKind) {
                 kDebug(debugArea()) << "lastSelectorElement" << visitor.lastSelectorElement();
                 ContentAssistData::Element element = m_assistData->element(visitor.lastSelectorElement());
-                m_currentFields = element.fields;
-                kDebug(debugArea()) << m_currentFields;
-                setRowCount(m_currentFields.count());
+                m_items = element.fields;
+                setRowCount(m_items.count());
+                reset();
+            } else if (currentNode->kind == AstNode::ExprKind) {
+                kDebug(debugArea()) << "lastProperty" << visitor.lastProperty();
+                ContentAssistData::Field field = m_assistData->field(visitor.lastProperty());
+                m_items = field.values.keys();
+                setRowCount(m_items.count());
                 reset();
             }
         }
@@ -102,12 +123,48 @@ void CodeCompletionModel::completionInvoked(KTextEditor::View* view, const KText
 
 QVariant CodeCompletionModel::data(const QModelIndex & index, int role) const
 {
+    if (index.parent().isValid()) return QVariant();
     if (role == Qt::DisplayRole && index.column() == CodeCompletionModel::Name) {
-        if (m_currentFields.count() < index.row()) return QVariant();
-        return m_currentFields.at(index.row());
+        if (m_items.count() < index.row()) return QVariant();
+        return m_items.at(index.row());
     }
     return QVariant();
 }
 
+//default implementation with '-' added to reg exps
+KTextEditor::Range CodeCompletionModel::completionRange(KTextEditor::View* view, const KTextEditor::Cursor &position)
+{
+    KTextEditor::Cursor end = position;
+
+    QString text = " "+view->document()->line(end.line())+" ";
+
+    static QRegExp findWordStart( "[^_\\w\\-]([_\\w\\-]+)$" );
+    static QRegExp findWordEnd( "^([_\\w\\-]*)[^_\\w\\-]" );
+
+    KTextEditor::Cursor start = end;
+
+    if (findWordStart.lastIndexIn(text.left(end.column())) >= 0)
+        start.setColumn(findWordStart.pos(1)-1);
+
+    if (findWordEnd.indexIn(text.mid(end.column())) >= 0)
+        end.setColumn(end.column() + findWordEnd.cap(1).length()-1);
+
+    KTextEditor::Range ret = KTextEditor::Range(start, end);
+
+    return ret;
+}
+
+//default implementation with '-' added to reg exp
+bool CodeCompletionModel::shouldAbortCompletion(KTextEditor::View* view, const KTextEditor::SmartRange& range, const QString& currentCompletion)
+{
+    Q_UNUSED(view);
+    Q_UNUSED(range);
+    static const QRegExp allowedText("^([\\w\\-]*)");
+    bool ret = !allowedText.exactMatch(currentCompletion);
+    kDebug(debugArea()) << currentCompletion << "shouldAbort:" << ret;
+    return ret;
+}
 
 }
+
+#include "model.moc"
