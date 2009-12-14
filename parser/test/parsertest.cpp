@@ -70,6 +70,8 @@ void TestParser::parser_data()
     QTest::newRow("charset") << "@charset \"utf-8\"; body{}";
     QTest::newRow("import url") << "@import url(\"foo.css\"); body{}";
     QTest::newRow("import string") << "@import \"foo.css\"; body{}";
+    QTest::newRow("two rules") << "h1{}h2{}";
+    QTest::newRow("two rules whitespace") << "h1{} h2{}";
 }
 
 void TestParser::parser()

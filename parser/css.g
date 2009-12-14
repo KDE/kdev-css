@@ -132,7 +132,7 @@
   WHITESPACE+ | 0
 -> maybeSpace ;;
 
-(SGML_CD maybeSpace)+ | 0
+maybeSpace (SGML_CD @ maybeSpace | 0)
 -> maybeSgml ;;
 
 
@@ -367,7 +367,6 @@
   | PLUS
 -> unaryOperator ;;
 
---  selectorList LBRACE maybeSpace declaration_list closing_brace
   selectors=selectorList LBRACE declarations=declarationList RBRACE
 -> ruleset ;;
 

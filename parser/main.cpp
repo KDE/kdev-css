@@ -171,7 +171,7 @@ int main(int argc, char* argv[])
     CssParser parser(debug, printTokens);
 
     if ( !code.isEmpty() ) {
-        parser.parseCode( code.join(" ") );
+        parser.parseCode( code.join(" ").replace("\\n", "\n") );
     } else if ( files.isEmpty() ) {
         files << "-";
     }
