@@ -47,6 +47,7 @@ public:
         KDevelop::SimpleCursor pos = m_editor->findPosition(node->startToken, EditorIntegrator::FrontEdge);
         if (m_range.contains(pos.textCursor())) {
             m_node = node;
+            kDebug() << "found range" << m_node << m_range << pos.textCursor();
             //don't continue visiting
         } else {
             DefaultVisitor::visitNode(node);
@@ -143,11 +144,14 @@ KTextEditor::Range CodeCompletionModel::completionRange(KTextEditor::View* view,
 
     KTextEditor::Cursor start = end;
 
-    if (findWordStart.lastIndexIn(text.left(end.column())) >= 0)
+    //kDebug() << end << text.left(end.column()+1);
+    if (findWordStart.lastIndexIn(text.left(end.column()+1)) >= 0)
         start.setColumn(findWordStart.pos(1)-1);
+    //kDebug() << findWordStart.cap(0);
 
-    if (findWordEnd.indexIn(text.mid(end.column())) >= 0)
-        end.setColumn(end.column() + findWordEnd.cap(1).length()-1);
+    if (findWordEnd.indexIn(text.mid(end.column()+1)) >= 0)
+        end.setColumn(end.column()+1 + findWordEnd.cap(1).length()-1);
+    //kDebug() << findWordEnd.cap(0);
 
     KTextEditor::Range ret = KTextEditor::Range(start, end);
 

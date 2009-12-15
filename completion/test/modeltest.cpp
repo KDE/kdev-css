@@ -67,6 +67,20 @@ void ModelTest::testCompletionRange()
     QCOMPARE(range, KTextEditor::Range(0, 0, 0, 5));
     QCOMPARE(doc->text(range), QString("font-"));
 
+    doc->setText("font-weight:normal");
+                //01234567890123456789
+
+    position = KTextEditor::Cursor(0, 12);
+    range = model->completionRange(view, position);
+    kDebug() << range << doc->text(range);
+    QCOMPARE(range, KTextEditor::Range(0, 12, 0, 18));
+    QCOMPARE(doc->text(range), QString("normal"));
+
+    position = KTextEditor::Cursor(0, 15);
+    range = model->completionRange(view, position);
+    kDebug() << range << doc->text(range);
+    QCOMPARE(range, KTextEditor::Range(0, 12, 0, 18));
+    QCOMPARE(doc->text(range), QString("normal"));
     delete doc;
 }
 
