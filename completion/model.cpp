@@ -43,11 +43,11 @@ public:
     {}
     virtual void visitNode(AstNode* node)
     {
-        if (!node) return;
+        if (!node || m_node) return;
         KDevelop::SimpleCursor pos = m_editor->findPosition(node->startToken, EditorIntegrator::FrontEdge);
-        if (m_range.contains(pos.textCursor())) {
+        if (m_range.start() <=  pos.textCursor()) {
             m_node = node;
-            kDebug() << "found range" << m_node << m_range << pos.textCursor();
+            kDebug(debugArea()) << "found range" << m_node << m_node->kind << m_range << pos.textCursor();
             //don't continue visiting
         } else {
             DefaultVisitor::visitNode(node);
@@ -103,6 +103,7 @@ void CodeCompletionModel::completionInvoked(KTextEditor::View* view, const KText
         FindCurrentNodeVisitor visitor(&editor, range);
         visitor.visitNode(ast);
         AstNode* currentNode = visitor.currentNode();
+        kDebug(debugArea()) << "currentNode" << currentNode;
         if (currentNode) {
             kDebug(debugArea()) << "currentNode kind" << currentNode->kind;
             if (currentNode->kind == AstNode::DeclarationListKind) {
