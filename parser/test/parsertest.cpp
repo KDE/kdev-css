@@ -23,6 +23,7 @@
 
 #include "../parsesession.h"
 #include "cssdebugvisitor.h"
+#include "../editorintegrator.h"
 
 QTEST_MAIN(Css::TestParser)
 
@@ -30,10 +31,6 @@ namespace Css
 {
 
 TestParser::TestParser()
-{
-}
-
-void parse(const QString &contents)
 {
 }
 
@@ -85,6 +82,26 @@ void TestParser::parser()
     DebugVisitor debugVisitor(session.tokenStream(), session.contents());
     debugVisitor.visitStart(ast);
 }
+
+void TestParser::multiline()
+{
+    ParseSession session;
+    session.setContents("body{color:red}\nbody{color:blue}");
+    //                   012345678901234  01234567890123456
+    //                   0         1      0         1
+    StartAst* ast = 0;
+    QVERIFY(session.parse(&ast));
+    DebugVisitor debugVisitor(session.tokenStream(), session.contents());
+    RuleAst* el = ast->rules->rulesSequence->at(1)->element;
+    debugVisitor.visitNode(el);
+
+    EditorIntegrator editor(&session);
+    kDebug() << editor.findPosition(el->startToken, KDevelop::EditorIntegrator::FrontEdge).textCursor();
+    kDebug() << editor.findPosition(el->endToken, KDevelop::EditorIntegrator::BackEdge).textCursor();
+    QCOMPARE(editor.findPosition(el->endToken, KDevelop::EditorIntegrator::BackEdge),
+                KDevelop::SimpleCursor(1, 16));
+}
+
 
 }
 

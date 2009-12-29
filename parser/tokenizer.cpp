@@ -112,9 +112,9 @@ int Tokenizer::tokenEnd() const
 int Tokenizer::lex()
 {
     int token = _lex();
-    for (unsigned short *d = data; d < data + yyleng; ++d) {
+    for (unsigned short *d = yytext; d < yytext + yyleng; ++d) {
         if (*d == '\n') {
-            m_tokenStream->locationTable()->newline(yytext - d);
+            m_tokenStream->locationTable()->newline(d - data);
         }
     }
     return token;

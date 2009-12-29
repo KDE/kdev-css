@@ -45,8 +45,10 @@ public:
     {
         if (!node || m_node) return;
         KDevelop::SimpleCursor pos = m_editor->findPosition(node->startToken, EditorIntegrator::FrontEdge);
+        //kDebug() << m_editor->tokenToString(node->startToken) << m_range.start() << pos.textCursor();
         if (m_range.start() <=  pos.textCursor()) {
             m_node = node;
+            //kDebug(debugArea()) << m_editor->tokenToString(node->startToken);
             kDebug(debugArea()) << "found range" << m_node << m_node->kind << m_range << pos.textCursor();
             //don't continue visiting
         } else {
@@ -103,7 +105,7 @@ void CodeCompletionModel::completionInvoked(KTextEditor::View* view, const KText
         FindCurrentNodeVisitor visitor(&editor, range);
         visitor.visitNode(ast);
         AstNode* currentNode = visitor.currentNode();
-        kDebug(debugArea()) << "currentNode" << currentNode;
+        kDebug(debugArea()) << "currentNode" << currentNode << editor.tokenToString(currentNode->startToken) << editor.tokenToString(currentNode->endToken);
         if (currentNode) {
             kDebug(debugArea()) << "currentNode kind" << currentNode->kind;
             if (currentNode->kind == AstNode::DeclarationListKind) {

@@ -36,6 +36,8 @@ private Q_SLOTS:
     void parser_data();
     void parser();
 
+    void multiline();
+
 };
 
 }
