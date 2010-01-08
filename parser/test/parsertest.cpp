@@ -70,6 +70,7 @@ void TestParser::parser_data()
     QTest::newRow("two rules") << "h1{}h2{}";
     QTest::newRow("two rules whitespace") << "h1{} h2{}";
     QTest::newRow("missing value") << "body{width:;}"; //todo check for reported error
+    QTest::newRow("missing value brace") << "body{width:1px;"; //todo check for reported error
 }
 
 void TestParser::parser()

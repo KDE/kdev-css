@@ -341,8 +341,15 @@ bool Parser::parseDeclarationList(DeclarationListAst **yynode)
 
     (*yynode)->startToken = tokenStream->index() - 1;
 
-    if (yytoken == Token_IDENT || yytoken == Token_EOF
-        || yytoken == Token_RBRACE)
+    if (yytoken == Token_IDENT || yytoken == Token_COLON
+        || yytoken == Token_DOT
+        || yytoken == Token_EOF
+        || yytoken == Token_IDENT
+        || yytoken == Token_LBRACKET
+        || yytoken == Token_RBRACE
+        || yytoken == Token_SGML_CD
+        || yytoken == Token_STAR
+        || yytoken == Token_WHITESPACE)
     {
         if (yytoken == Token_IDENT)
         {
@@ -480,11 +487,17 @@ bool Parser::parseExpr(ExprAst **yynode)
         || yytoken == Token_SECS
         || yytoken == Token_STRING
         || yytoken == Token_UNICODERANGE
-        || yytoken == Token_URI || yytoken == Token_EOF
+        || yytoken == Token_URI || yytoken == Token_COLON
+        || yytoken == Token_DOT
+        || yytoken == Token_EOF
         || yytoken == Token_IDENT
         || yytoken == Token_IMPORTANT_SYM
+        || yytoken == Token_LBRACKET
         || yytoken == Token_RBRACE
-        || yytoken == Token_SEMICOLON)
+        || yytoken == Token_SEMICOLON
+        || yytoken == Token_SGML_CD
+        || yytoken == Token_STAR
+        || yytoken == Token_WHITESPACE)
     {
         if (yytoken == Token_CMS
             || yytoken == Token_DEGS
@@ -1101,10 +1114,16 @@ bool Parser::parsePrio(PrioAst **yynode)
 
     (*yynode)->startToken = tokenStream->index() - 1;
 
-    if (yytoken == Token_IMPORTANT_SYM || yytoken == Token_EOF
+    if (yytoken == Token_IMPORTANT_SYM || yytoken == Token_COLON
+        || yytoken == Token_DOT
+        || yytoken == Token_EOF
         || yytoken == Token_IDENT
+        || yytoken == Token_LBRACKET
         || yytoken == Token_RBRACE
-        || yytoken == Token_SEMICOLON)
+        || yytoken == Token_SEMICOLON
+        || yytoken == Token_SGML_CD
+        || yytoken == Token_STAR
+        || yytoken == Token_WHITESPACE)
     {
         if (yytoken == Token_IMPORTANT_SYM)
         {
@@ -1431,13 +1450,24 @@ bool Parser::parseRuleset(RulesetAst **yynode)
         }
         (*yynode)->declarations = __node_38;
 
-        if (yytoken != Token_RBRACE)
+        if (yytoken == Token_RBRACE)
         {
-            expectedToken(yytoken, Token_RBRACE, "}");
+            if (yytoken != Token_RBRACE)
+            {
+                expectedToken(yytoken, Token_RBRACE, "}");
+                return false;
+            }
+            yylex();
+
+        }
+        else if (true /*epsilon*/)
+        {
+            reportProblem( Error, "Expected '}'" );
+        }
+        else
+        {
             return false;
         }
-        yylex();
-
     }
     else
     {

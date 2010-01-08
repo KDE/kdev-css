@@ -367,7 +367,9 @@ maybeSpace (SGML_CD @ maybeSpace | 0)
   | PLUS
 -> unaryOperator ;;
 
-  selectors=selectorList LBRACE declarations=declarationList RBRACE
+  selectors=selectorList LBRACE declarations=declarationList
+  (  RBRACE
+   | 0 [: reportProblem( Error, "Expected '}'" ); :])
 -> ruleset ;;
 
 --selector %prec UNIMPORTANT_TOK
