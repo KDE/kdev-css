@@ -104,7 +104,7 @@ bool containsCompletion(CodeCompletionModel* model, QString text)
     QStringList completions;
     for (int i=0; i < model->rowCount(); ++i) {
         completions << model->data(model->index(i, CodeCompletionModel::Name), Qt::DisplayRole).toString();
-        kDebug() << model->data(model->index(i, CodeCompletionModel::Name), Qt::DisplayRole).toString();
+        //kDebug() << model->data(model->index(i, CodeCompletionModel::Name), Qt::DisplayRole).toString();
     }
     return completions.contains(text);
 }
@@ -113,6 +113,7 @@ void ModelTest::testCompletionElement()
 {
     KTextEditor::Document* doc = KTextEditor::EditorChooser::editor()->createDocument(0);
     doc->setText("body{font-w:normal;}");
+    //                       ^
                 //01234567890123456789
     KTextEditor::View* view = doc->createView(0);
     CodeCompletionModel* model = new CodeCompletionModel(doc);
@@ -152,6 +153,52 @@ void ModelTest::testCompletionElementSecondLine()
     QVERIFY(containsCompletion(model, "font-weight"));
 }
 
+void ModelTest::testCompletionSelectorAtStart()
+{
+    KTextEditor::Document* doc = KTextEditor::EditorChooser::editor()->createDocument(0);
+    doc->setText("body{}");
+                //012345
+    KTextEditor::View* view = doc->createView(0);
+    CodeCompletionModel* model = new CodeCompletionModel(doc);
+
+    KTextEditor::Cursor position(0, 0);
+    QCOMPARE(model->rowCount(), 0);
+    model->completionInvoked(view, model->completionRange(view, position), KTextEditor::CodeCompletionModel::ManualInvocation);
+    QVERIFY(containsCompletion(model, "body"));
+    QVERIFY(containsCompletion(model, "a"));
+}
+
+void ModelTest::testCompletionSelector()
+{
+    KTextEditor::Document* doc = KTextEditor::EditorChooser::editor()->createDocument(0);
+    doc->setText("body{}");
+                //0123456
+    KTextEditor::View* view = doc->createView(0);
+    CodeCompletionModel* model = new CodeCompletionModel(doc);
+
+               //Think of cursors as having their position at the start of a character, not in the middle of one.
+    KTextEditor::Cursor position(0, 6);
+    QCOMPARE(model->rowCount(), 0);
+    model->completionInvoked(view, model->completionRange(view, position), KTextEditor::CodeCompletionModel::ManualInvocation);
+    QVERIFY(containsCompletion(model, "body"));
+    QVERIFY(containsCompletion(model, "a"));
+}
+
+void ModelTest::testCompletionSelectorWithSpaces()
+{
+    KTextEditor::Document* doc = KTextEditor::EditorChooser::editor()->createDocument(0);
+    doc->setText("body{} ");
+                //01234567
+    KTextEditor::View* view = doc->createView(0);
+    CodeCompletionModel* model = new CodeCompletionModel(doc);
+
+               //Think of cursors as having their position at the start of a character, not in the middle of one.
+    KTextEditor::Cursor position(0, 7);
+    QCOMPARE(model->rowCount(), 0);
+    model->completionInvoked(view, model->completionRange(view, position), KTextEditor::CodeCompletionModel::ManualInvocation);
+    QVERIFY(containsCompletion(model, "body"));
+    QVERIFY(containsCompletion(model, "a"));
+}
 
 }
 

@@ -154,4 +154,10 @@ ContentAssistData::Field ContentAssistData::field(const QString& name)
     return m_fields[name];
 }
 
+QStringList ContentAssistData::elements()
+{
+    return m_elements.keys();
+}
+
+
 }

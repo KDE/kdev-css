@@ -22,6 +22,7 @@
 #include <KTextEditor/Document>
 
 #include <cssdefaultvisitor.h>
+#include <cssdebugvisitor.h>
 #include "../parser/parsesession.h"
 #include "../parser/editorintegrator.h"
 #include "contentassistdata.h"
@@ -29,30 +30,65 @@
 namespace Css {
 
 extern int debugArea();
+#define debug() kDebug(debugArea())
 
 CodeCompletionModel::CodeCompletionModel(QObject *parent)
     : CodeCompletionModel2(parent), m_assistData(new ContentAssistData)
 {
 }
 
+enum CompletionContext {
+    NoContext,
+    SelectorContext,
+    PropertyContext,
+    ValueContext
+};
+
 class FindCurrentNodeVisitor : public DefaultVisitor
 {
 public:
     FindCurrentNodeVisitor(EditorIntegrator* editor, const KTextEditor::Range& range)
-        : m_node(0), m_editor(editor), m_range(range), m_lastSelectorElement(-1)
+        : m_editor(editor), m_range(range), m_lastSelectorElement(-1), m_context(SelectorContext)
     {}
     virtual void visitNode(AstNode* node)
     {
-        if (!node || m_node) return;
+        if (!node) return;
+        if (m_context != NoContext) {
+            debug() << "context already set" << m_context;
+            DefaultVisitor::visitNode(node);
+            return;
+        }
         KDevelop::SimpleCursor pos = m_editor->findPosition(node->startToken, EditorIntegrator::FrontEdge);
-        //kDebug() << m_editor->tokenToString(node->startToken) << m_range.start() << pos.textCursor();
+        debug() << m_editor->tokenToString(node->startToken) << m_range.start() << pos.textCursor();
         if (m_range.start() <=  pos.textCursor()) {
-            m_node = node;
             //kDebug(debugArea()) << m_editor->tokenToString(node->startToken);
-            kDebug(debugArea()) << "found range" << m_node << m_node->kind << m_range << pos.textCursor();
+            debug() << "found range" << node << node->kind << m_range << pos.textCursor();
+            debug() << "currentNode" << node << m_editor->tokenToString(node->startToken) << m_editor->tokenToString(node->endToken);
+            debug() << "currentNode kind" << node->kind;
+            if (node->kind == AstNode::DeclarationListKind || node->kind == AstNode::DeclarationKind) {
+                debug() << "using PropertyContext";
+                m_context = PropertyContext;
+            } else if (node->kind == AstNode::ExprKind) {
+                debug() << "using ValueContext";
+                m_context = ValueContext;
+            } else if (node->kind == AstNode::StartKind) {
+                debug() << "using SelectorContext";
+                m_context = SelectorContext;
+            }
             //don't continue visiting
         } else {
             DefaultVisitor::visitNode(node);
+        }
+    }
+
+    virtual void visitDeclarationList(DeclarationListAst* node)
+    {
+        if (m_context == SelectorContext) {
+            m_context = NoContext;
+        }
+        DefaultVisitor::visitDeclarationList(node);
+        if (m_context == NoContext) {
+            m_context = SelectorContext;
         }
     }
 
@@ -68,7 +104,7 @@ public:
         DefaultVisitor::visitProperty(node);
     }
 
-    AstNode *currentNode() { return m_node; }
+    CompletionContext currentContext() { return m_context; }
     QString lastSelectorElement() {
         if (m_lastSelectorElement == -1) return QString();
         return m_editor->tokenToString(m_lastSelectorElement);
@@ -78,49 +114,59 @@ public:
         return m_editor->tokenToString(m_lastProperty);
     }
 private:
-    AstNode *m_node;
     EditorIntegrator *m_editor;
     KTextEditor::Range m_range;
     qint64 m_lastSelectorElement;
     qint64 m_lastProperty;
+    CompletionContext m_context;
 };
 
 void CodeCompletionModel::completionInvoked(KTextEditor::View* view, const KTextEditor::Range& range, InvocationType invocationType)
 {
     Q_UNUSED(invocationType);
 
-    m_items.clear();
-    setRowCount(0);
-    reset();
-
-    kDebug(debugArea()) << range;
+    debug() << range;
     ParseSession session;
     session.setContents(view->document()->text());
     Css::StartAst* ast = 0;
     session.parse(&ast);
+    DebugVisitor vis(session.tokenStream(), session.contents());
+    vis.visitNode(ast);
 
     if (ast) {
         EditorIntegrator editor(&session);
 
         FindCurrentNodeVisitor visitor(&editor, range);
         visitor.visitNode(ast);
-        AstNode* currentNode = visitor.currentNode();
-        kDebug(debugArea()) << "currentNode" << currentNode << editor.tokenToString(currentNode->startToken) << editor.tokenToString(currentNode->endToken);
-        if (currentNode) {
-            kDebug(debugArea()) << "currentNode kind" << currentNode->kind;
-            if (currentNode->kind == AstNode::DeclarationListKind) {
-                kDebug(debugArea()) << "lastSelectorElement" << visitor.lastSelectorElement();
+        switch (visitor.currentContext()) {
+            case PropertyContext:
+            {
+                debug() << "lastSelectorElement" << visitor.lastSelectorElement();
                 ContentAssistData::Element element = m_assistData->element(visitor.lastSelectorElement());
                 m_items = element.fields;
                 setRowCount(m_items.count());
                 reset();
-            } else if (currentNode->kind == AstNode::ExprKind) {
-                kDebug(debugArea()) << "lastProperty" << visitor.lastProperty();
+                break;
+            }
+            case ValueContext:
+            {
+                debug() << "lastProperty" << visitor.lastProperty();
                 ContentAssistData::Field field = m_assistData->field(visitor.lastProperty());
                 m_items = field.values.keys();
                 setRowCount(m_items.count());
                 reset();
+                break;
             }
+            case SelectorContext:
+                m_items = m_assistData->elements();
+                setRowCount(m_items.count());
+                reset();
+                break;
+            default:
+                m_items.clear();
+                setRowCount(0);
+                reset();
+                break;
         }
     }
 }
@@ -147,14 +193,14 @@ KTextEditor::Range CodeCompletionModel::completionRange(KTextEditor::View* view,
 
     KTextEditor::Cursor start = end;
 
-    //kDebug() << end << text.left(end.column()+1);
+    //debug() << end << text.left(end.column()+1);
     if (findWordStart.lastIndexIn(text.left(end.column()+1)) >= 0)
         start.setColumn(findWordStart.pos(1)-1);
-    //kDebug() << findWordStart.cap(0);
+    //debug() << findWordStart.cap(0);
 
     if (findWordEnd.indexIn(text.mid(end.column()+1)) >= 0)
         end.setColumn(end.column()+1 + findWordEnd.cap(1).length()-1);
-    //kDebug() << findWordEnd.cap(0);
+    //debug() << findWordEnd.cap(0);
 
     KTextEditor::Range ret = KTextEditor::Range(start, end);
 
@@ -168,7 +214,7 @@ bool CodeCompletionModel::shouldAbortCompletion(KTextEditor::View* view, const K
     Q_UNUSED(range);
     static const QRegExp allowedText("^([\\w\\-]*)");
     bool ret = !allowedText.exactMatch(currentCompletion);
-    kDebug(debugArea()) << currentCompletion << "shouldAbort:" << ret;
+    debug() << currentCompletion << "shouldAbort:" << ret;
     return ret;
 }
 

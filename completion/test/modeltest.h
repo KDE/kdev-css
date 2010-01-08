@@ -18,6 +18,9 @@ private slots:
     void testCompletionElement();
     void testCompletionField();
     void testCompletionElementSecondLine();
+    void testCompletionSelectorAtStart();
+    void testCompletionSelector();
+    void testCompletionSelectorWithSpaces();
 };
 
 }

@@ -58,6 +58,7 @@ public:
 
     Element element(const QString &name);
     Field field(const QString &name);
+    QStringList elements();
 private:
     QList<Browser> readBrowsers(QXmlStreamReader &xml);
     QHash<QString, Element> m_elements;
