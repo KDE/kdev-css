@@ -15,13 +15,9 @@ public:
 private slots:
     void testCompletionRange();
     void testCompletionRangeSecondLine();
-    void testCompletionElement();
-    void testCompletionField();
-    void testCompletionElementSecondLine();
-    void testCompletionSelectorAtStart();
-    void testCompletionSelector();
-    void testCompletionSelectorSecondLine();
-    void testCompletionSelectorWithSpace();
+
+    void completionItems_data();
+    void completionItems();
 };
 
 }

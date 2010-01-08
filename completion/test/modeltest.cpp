@@ -109,108 +109,81 @@ bool containsCompletion(CodeCompletionModel* model, QString text)
     return completions.contains(text);
 }
 
-void ModelTest::testCompletionElement()
+void ModelTest::completionItems_data()
 {
-    KTextEditor::Document* doc = KTextEditor::EditorChooser::editor()->createDocument(0);
-    doc->setText("body{font-w:normal;}");
-    //                       ^
-                //01234567890123456789
-    KTextEditor::View* view = doc->createView(0);
-    CodeCompletionModel* model = new CodeCompletionModel(doc);
+    QTest::addColumn<QString>("text");
+    QTest::addColumn<int>("positionRow");
+    QTest::addColumn<int>("positionLine");
+    QTest::addColumn<QStringList>("result");
 
-    KTextEditor::Cursor position(0, 10);
-    QCOMPARE(model->rowCount(), 0);
-    model->completionInvoked(view, model->completionRange(view, position), KTextEditor::CodeCompletionModel::ManualInvocation);
-    QVERIFY(containsCompletion(model, "font-weight"));
+    QTest::newRow("completion element")
+          //012345678901234567890123
+        << "body{font-w:normal;}"
+        << 0 << 10
+        << (QStringList() << "font-weight");
+
+    QTest::newRow("field")
+          //012345678901234567890123
+        << "body{font-weight:normal;}"
+        << 0 << 17
+        << (QStringList() << "normal" << "bold");
+
+    QTest::newRow("element second line")
+          //01234567890123456 012345678901234567890
+        << "body{color:red;}\nbody{font-w:normal;}"
+        << 1 << 9
+        << (QStringList() << "font-weight");
+
+    QTest::newRow("selector at start")
+          //0123456
+        << "body{}"
+        << 0 << 0
+        << (QStringList() << "body" << "a");
+
+    QTest::newRow("selector")
+          //0123456
+        << "body{}"
+        << 0 << 6
+        << (QStringList() << "body" << "a");
+
+    QTest::newRow("selector second line")
+          //012345678901234567890123456 0123456789012345678901234
+        << "body{font-weight: bolder;}\nbody{font-weight: asdf;}"
+        << 0 << 26
+        << (QStringList() << "body" << "a");
+
+    QTest::newRow("selector with space")
+          //0123456
+        << "body{} "
+        << 0 << 7
+        << (QStringList() << "body" << "a");
 }
 
-void ModelTest::testCompletionField()
+void ModelTest::completionItems()
 {
     KTextEditor::Document* doc = KTextEditor::EditorChooser::editor()->createDocument(0);
-    doc->setText("body{font-weight:normal;}");
-                //01234567890123456789
+
+    QFETCH(QString, text);
+    doc->setText(text);
+
     KTextEditor::View* view = doc->createView(0);
     CodeCompletionModel* model = new CodeCompletionModel(doc);
 
-    KTextEditor::Cursor position(0, 17);
+    QFETCH(int, positionRow);
+    QFETCH(int, positionLine);
+    KTextEditor::Cursor position(positionRow, positionLine);
     QCOMPARE(model->rowCount(), 0);
     model->completionInvoked(view, model->completionRange(view, position), KTextEditor::CodeCompletionModel::ManualInvocation);
-    QVERIFY(containsCompletion(model, "normal"));
-    QVERIFY(containsCompletion(model, "bold"));
-}
+    QStringList completions;
+    for (int i=0; i < model->rowCount(); ++i) {
+        completions << model->data(model->index(i, CodeCompletionModel::Name), Qt::DisplayRole).toString();
+    }
+    QFETCH(QStringList, result);
+    foreach (const QString &i, result) {
+        QVERIFY(completions.contains(i));
+    }
 
-void ModelTest::testCompletionElementSecondLine()
-{
-    KTextEditor::Document* doc = KTextEditor::EditorChooser::editor()->createDocument(0);
-    doc->setText("body{color:red;}\nbody{font-w:normal;}");
-                //01234567890       01234567890123456789
-    KTextEditor::View* view = doc->createView(0);
-    CodeCompletionModel* model = new CodeCompletionModel(doc);
-
-    KTextEditor::Cursor position(1, 9);
-    QCOMPARE(model->rowCount(), 0);
-    model->completionInvoked(view, model->completionRange(view, position), KTextEditor::CodeCompletionModel::ManualInvocation);
-    QVERIFY(containsCompletion(model, "font-weight"));
-}
-
-void ModelTest::testCompletionSelectorAtStart()
-{
-    KTextEditor::Document* doc = KTextEditor::EditorChooser::editor()->createDocument(0);
-    doc->setText("body{}");
-                //012345
-    KTextEditor::View* view = doc->createView(0);
-    CodeCompletionModel* model = new CodeCompletionModel(doc);
-
-    KTextEditor::Cursor position(0, 0);
-    QCOMPARE(model->rowCount(), 0);
-    model->completionInvoked(view, model->completionRange(view, position), KTextEditor::CodeCompletionModel::ManualInvocation);
-    QVERIFY(containsCompletion(model, "body"));
-    QVERIFY(containsCompletion(model, "a"));
-}
-
-void ModelTest::testCompletionSelector()
-{
-    KTextEditor::Document* doc = KTextEditor::EditorChooser::editor()->createDocument(0);
-    doc->setText("body{}");
-                //0123456
-    KTextEditor::View* view = doc->createView(0);
-    CodeCompletionModel* model = new CodeCompletionModel(doc);
-
-    KTextEditor::Cursor position(0, 6);
-    QCOMPARE(model->rowCount(), 0);
-    model->completionInvoked(view, model->completionRange(view, position), KTextEditor::CodeCompletionModel::ManualInvocation);
-    QVERIFY(containsCompletion(model, "body"));
-    QVERIFY(containsCompletion(model, "a"));
-}
-
-void ModelTest::testCompletionSelectorSecondLine()
-{
-    KTextEditor::Document* doc = KTextEditor::EditorChooser::editor()->createDocument(0);
-    doc->setText("body{font-weight: bolder;}\nbody{font-weight: asdf;}");
-                //012345678901234567890123456 0123456
-    KTextEditor::View* view = doc->createView(0);
-    CodeCompletionModel* model = new CodeCompletionModel(doc);
-
-    KTextEditor::Cursor position(0, 26);
-    QCOMPARE(model->rowCount(), 0);
-    model->completionInvoked(view, model->completionRange(view, position), KTextEditor::CodeCompletionModel::ManualInvocation);
-    QVERIFY(containsCompletion(model, "body"));
-    QVERIFY(containsCompletion(model, "a"));
-}
-
-void ModelTest::testCompletionSelectorWithSpace()
-{
-    KTextEditor::Document* doc = KTextEditor::EditorChooser::editor()->createDocument(0);
-    doc->setText("body{} ");
-                //01234567
-    KTextEditor::View* view = doc->createView(0);
-    CodeCompletionModel* model = new CodeCompletionModel(doc);
-
-    KTextEditor::Cursor position(0, 7);
-    QCOMPARE(model->rowCount(), 0);
-    model->completionInvoked(view, model->completionRange(view, position), KTextEditor::CodeCompletionModel::ManualInvocation);
-    QVERIFY(containsCompletion(model, "body"));
-    QVERIFY(containsCompletion(model, "a"));
+    delete doc;
 }
 
 }
