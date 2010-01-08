@@ -112,50 +112,36 @@ bool containsCompletion(CodeCompletionModel* model, QString text)
 void ModelTest::completionItems_data()
 {
     QTest::addColumn<QString>("text");
-    QTest::addColumn<int>("positionRow");
-    QTest::addColumn<int>("positionLine");
     QTest::addColumn<QStringList>("result");
 
+    // | is the cursor
+
     QTest::newRow("completion element")
-          //012345678901234567890123
-        << "body{font-w:normal;}"
-        << 0 << 10
+        << "body{font-|w:normal;}"
         << (QStringList() << "font-weight");
 
     QTest::newRow("field")
-          //012345678901234567890123
-        << "body{font-weight:normal;}"
-        << 0 << 17
+        << "body{font-weight:|normal;}"
         << (QStringList() << "normal" << "bold");
 
     QTest::newRow("element second line")
-          //01234567890123456 012345678901234567890
-        << "body{color:red;}\nbody{font-w:normal;}"
-        << 1 << 9
+        << "body{color:red;}\nbody{font|-w:normal;}"
         << (QStringList() << "font-weight");
 
     QTest::newRow("selector at start")
-          //0123456
-        << "body{}"
-        << 0 << 0
+        << "|body{}"
         << (QStringList() << "body" << "a");
 
     QTest::newRow("selector")
-          //0123456
-        << "body{}"
-        << 0 << 6
+        << "body{}|"
         << (QStringList() << "body" << "a");
 
     QTest::newRow("selector second line")
-          //012345678901234567890123456 0123456789012345678901234
-        << "body{font-weight: bolder;}\nbody{font-weight: asdf;}"
-        << 0 << 26
+        << "body{font-weight: bolder;}|\nbody{font-weight: asdf;}"
         << (QStringList() << "body" << "a");
 
     QTest::newRow("selector with space")
-          //0123456
-        << "body{} "
-        << 0 << 7
+        << "body{} |"
         << (QStringList() << "body" << "a");
 }
 
@@ -164,14 +150,16 @@ void ModelTest::completionItems()
     KTextEditor::Document* doc = KTextEditor::EditorChooser::editor()->createDocument(0);
 
     QFETCH(QString, text);
+    KTextEditor::Cursor position;
+    QString textBeforeCursor = text.left(text.indexOf('|'));
+    position.setLine(textBeforeCursor.count('\n'));
+    position.setColumn(textBeforeCursor.mid(textBeforeCursor.lastIndexOf('\n')).length());
+    text.replace('|', "");
     doc->setText(text);
 
     KTextEditor::View* view = doc->createView(0);
     CodeCompletionModel* model = new CodeCompletionModel(doc);
 
-    QFETCH(int, positionRow);
-    QFETCH(int, positionLine);
-    KTextEditor::Cursor position(positionRow, positionLine);
     QCOMPARE(model->rowCount(), 0);
     model->completionInvoked(view, model->completionRange(view, position), KTextEditor::CodeCompletionModel::ManualInvocation);
     QStringList completions;
