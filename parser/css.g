@@ -494,6 +494,7 @@ IMPORTANT_SYM maybeSpace | 0
 
     -- term+ as adding |0 to operator gives a conflict
     #terms=term+ @ operator
+  | 0 [: reportProblem( Error, "Expected exprssion" ); :]
 -> expr ;;
 
     DIVIDE maybeSpace

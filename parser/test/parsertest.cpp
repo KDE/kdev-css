@@ -69,6 +69,7 @@ void TestParser::parser_data()
     QTest::newRow("import string") << "@import \"foo.css\"; body{}";
     QTest::newRow("two rules") << "h1{}h2{}";
     QTest::newRow("two rules whitespace") << "h1{} h2{}";
+    QTest::newRow("missing value") << "body{width:;}"; //todo check for reported error
 }
 
 void TestParser::parser()

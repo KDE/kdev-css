@@ -480,64 +480,49 @@ bool Parser::parseExpr(ExprAst **yynode)
         || yytoken == Token_SECS
         || yytoken == Token_STRING
         || yytoken == Token_UNICODERANGE
-        || yytoken == Token_URI)
+        || yytoken == Token_URI || yytoken == Token_EOF
+        || yytoken == Token_IDENT
+        || yytoken == Token_IMPORTANT_SYM
+        || yytoken == Token_RBRACE
+        || yytoken == Token_SEMICOLON)
     {
-        do
+        if (yytoken == Token_CMS
+            || yytoken == Token_DEGS
+            || yytoken == Token_DIMEN
+            || yytoken == Token_EMS
+            || yytoken == Token_EXS
+            || yytoken == Token_FLOAT
+            || yytoken == Token_GRADS
+            || yytoken == Token_HERZ
+            || yytoken == Token_HEXCOLOR
+            || yytoken == Token_IDENT
+            || yytoken == Token_INS
+            || yytoken == Token_INTEGER
+            || yytoken == Token_KHERZ
+            || yytoken == Token_MINUS
+            || yytoken == Token_MMS
+            || yytoken == Token_MSECS
+            || yytoken == Token_PCS
+            || yytoken == Token_PERCENTAGE
+            || yytoken == Token_PLUS
+            || yytoken == Token_PTS
+            || yytoken == Token_PXS
+            || yytoken == Token_QEMS
+            || yytoken == Token_RADS
+            || yytoken == Token_SECS
+            || yytoken == Token_STRING
+            || yytoken == Token_UNICODERANGE
+            || yytoken == Token_URI)
         {
-            TermAst *__node_15 = 0;
-            if (!parseTerm(&__node_15))
-            {
-                expectedSymbol(AstNode::TermKind, "term");
-                return false;
-            }
-            (*yynode)->termsSequence = snoc((*yynode)->termsSequence, __node_15, memoryPool);
-
-        }
-        while (yytoken == Token_CMS
-               || yytoken == Token_DEGS
-               || yytoken == Token_DIMEN
-               || yytoken == Token_EMS
-               || yytoken == Token_EXS
-               || yytoken == Token_FLOAT
-               || yytoken == Token_GRADS
-               || yytoken == Token_HERZ
-               || yytoken == Token_HEXCOLOR
-               || yytoken == Token_IDENT
-               || yytoken == Token_INS
-               || yytoken == Token_INTEGER
-               || yytoken == Token_KHERZ
-               || yytoken == Token_MINUS
-               || yytoken == Token_MMS
-               || yytoken == Token_MSECS
-               || yytoken == Token_PCS
-               || yytoken == Token_PERCENTAGE
-               || yytoken == Token_PLUS
-               || yytoken == Token_PTS
-               || yytoken == Token_PXS
-               || yytoken == Token_QEMS
-               || yytoken == Token_RADS
-               || yytoken == Token_SECS
-               || yytoken == Token_STRING
-               || yytoken == Token_UNICODERANGE
-               || yytoken == Token_URI);
-        while (yytoken == Token_COMMA
-               || yytoken == Token_DIVIDE)
-        {
-            OperatorAst *__node_16 = 0;
-            if (!parseOperator(&__node_16))
-            {
-                expectedSymbol(AstNode::OperatorKind, "operator");
-                return false;
-            }
             do
             {
-                TermAst *__node_17 = 0;
-                if (!parseTerm(&__node_17))
+                TermAst *__node_15 = 0;
+                if (!parseTerm(&__node_15))
                 {
                     expectedSymbol(AstNode::TermKind, "term");
                     return false;
                 }
-                (*yynode)->termsSequence = snoc((*yynode)->termsSequence, __node_17, memoryPool);
+                (*yynode)->termsSequence = snoc((*yynode)->termsSequence, __node_15, memoryPool);
 
             }
             while (yytoken == Token_CMS
@@ -567,6 +552,62 @@ bool Parser::parseExpr(ExprAst **yynode)
                    || yytoken == Token_STRING
                    || yytoken == Token_UNICODERANGE
                    || yytoken == Token_URI);
+            while (yytoken == Token_COMMA
+                   || yytoken == Token_DIVIDE)
+            {
+                OperatorAst *__node_16 = 0;
+                if (!parseOperator(&__node_16))
+                {
+                    expectedSymbol(AstNode::OperatorKind, "operator");
+                    return false;
+                }
+                do
+                {
+                    TermAst *__node_17 = 0;
+                    if (!parseTerm(&__node_17))
+                    {
+                        expectedSymbol(AstNode::TermKind, "term");
+                        return false;
+                    }
+                    (*yynode)->termsSequence = snoc((*yynode)->termsSequence, __node_17, memoryPool);
+
+                }
+                while (yytoken == Token_CMS
+                       || yytoken == Token_DEGS
+                       || yytoken == Token_DIMEN
+                       || yytoken == Token_EMS
+                       || yytoken == Token_EXS
+                       || yytoken == Token_FLOAT
+                       || yytoken == Token_GRADS
+                       || yytoken == Token_HERZ
+                       || yytoken == Token_HEXCOLOR
+                       || yytoken == Token_IDENT
+                       || yytoken == Token_INS
+                       || yytoken == Token_INTEGER
+                       || yytoken == Token_KHERZ
+                       || yytoken == Token_MINUS
+                       || yytoken == Token_MMS
+                       || yytoken == Token_MSECS
+                       || yytoken == Token_PCS
+                       || yytoken == Token_PERCENTAGE
+                       || yytoken == Token_PLUS
+                       || yytoken == Token_PTS
+                       || yytoken == Token_PXS
+                       || yytoken == Token_QEMS
+                       || yytoken == Token_RADS
+                       || yytoken == Token_SECS
+                       || yytoken == Token_STRING
+                       || yytoken == Token_UNICODERANGE
+                       || yytoken == Token_URI);
+            }
+        }
+        else if (true /*epsilon*/)
+        {
+            reportProblem( Error, "Expected exprssion" );
+        }
+        else
+        {
+            return false;
         }
     }
     else
