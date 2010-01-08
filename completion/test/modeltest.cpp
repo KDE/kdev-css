@@ -176,7 +176,6 @@ void ModelTest::testCompletionSelector()
     KTextEditor::View* view = doc->createView(0);
     CodeCompletionModel* model = new CodeCompletionModel(doc);
 
-               //Think of cursors as having their position at the start of a character, not in the middle of one.
     KTextEditor::Cursor position(0, 6);
     QCOMPARE(model->rowCount(), 0);
     model->completionInvoked(view, model->completionRange(view, position), KTextEditor::CodeCompletionModel::ManualInvocation);
@@ -184,7 +183,22 @@ void ModelTest::testCompletionSelector()
     QVERIFY(containsCompletion(model, "a"));
 }
 
-void ModelTest::testCompletionSelectorWithSpaces()
+void ModelTest::testCompletionSelectorSecondLine()
+{
+    KTextEditor::Document* doc = KTextEditor::EditorChooser::editor()->createDocument(0);
+    doc->setText("body{font-weight: bolder;}\nbody{font-weight: asdf;}");
+                //012345678901234567890123456 0123456
+    KTextEditor::View* view = doc->createView(0);
+    CodeCompletionModel* model = new CodeCompletionModel(doc);
+
+    KTextEditor::Cursor position(0, 26);
+    QCOMPARE(model->rowCount(), 0);
+    model->completionInvoked(view, model->completionRange(view, position), KTextEditor::CodeCompletionModel::ManualInvocation);
+    QVERIFY(containsCompletion(model, "body"));
+    QVERIFY(containsCompletion(model, "a"));
+}
+
+void ModelTest::testCompletionSelectorWithSpace()
 {
     KTextEditor::Document* doc = KTextEditor::EditorChooser::editor()->createDocument(0);
     doc->setText("body{} ");
@@ -192,7 +206,6 @@ void ModelTest::testCompletionSelectorWithSpaces()
     KTextEditor::View* view = doc->createView(0);
     CodeCompletionModel* model = new CodeCompletionModel(doc);
 
-               //Think of cursors as having their position at the start of a character, not in the middle of one.
     KTextEditor::Cursor position(0, 7);
     QCOMPARE(model->rowCount(), 0);
     model->completionInvoked(view, model->completionRange(view, position), KTextEditor::CodeCompletionModel::ManualInvocation);

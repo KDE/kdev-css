@@ -58,6 +58,7 @@ public:
             DefaultVisitor::visitNode(node);
             return;
         }
+        debug();
         KDevelop::SimpleCursor pos = m_editor->findPosition(node->startToken, EditorIntegrator::FrontEdge);
         debug() << m_editor->tokenToString(node->startToken) << m_range.start() << pos.textCursor();
         if (m_range.start() <=  pos.textCursor()) {
@@ -83,12 +84,20 @@ public:
 
     virtual void visitDeclarationList(DeclarationListAst* node)
     {
-        if (m_context == SelectorContext) {
-            m_context = NoContext;
-        }
-        DefaultVisitor::visitDeclarationList(node);
-        if (m_context == NoContext) {
-            m_context = SelectorContext;
+        KDevelop::SimpleCursor pos = m_editor->findPosition(node->startToken, EditorIntegrator::FrontEdge);
+        debug() << pos.textCursor() << m_range;
+        if (m_range.start() >= pos.textCursor()) {
+            if (m_context == SelectorContext) {
+                m_context = NoContext;
+                debug() << "using NoContext";
+            }
+            DefaultVisitor::visitDeclarationList(node);
+            if (m_context == NoContext) {
+                m_context = SelectorContext;
+                debug() << "using SelectorContext";
+            }
+        } else {
+            debug() << "!(range > pos)";
         }
     }
 
