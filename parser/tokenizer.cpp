@@ -47,8 +47,6 @@ extern int cssyydebug;
 Tokenizer::Tokenizer(KDevPG::TokenStream *tokenStream, const QString &string)
     : m_tokenStream(tokenStream)
 {
-    //TODO NIKO: do something with tokenStream, we need it for newlines
-
     yy_start = 1;
 
 #if YYDEBUG > 0
