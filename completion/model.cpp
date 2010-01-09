@@ -164,20 +164,20 @@ void CodeCompletionModel::completionInvoked(KTextEditor::View* view, const KText
                 m_items = field.values.keys();
                 setRowCount(m_items.count());
                 reset();
-                break;
+                return;
             }
             case SelectorContext:
                 m_items = m_assistData->elements();
                 setRowCount(m_items.count());
                 reset();
-                break;
+                return;
             default:
-                m_items.clear();
-                setRowCount(0);
-                reset();
                 break;
         }
     }
+    m_items.clear();
+    setRowCount(0);
+    reset();
 }
 
 QVariant CodeCompletionModel::data(const QModelIndex & index, int role) const
