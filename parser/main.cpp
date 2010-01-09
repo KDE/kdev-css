@@ -111,10 +111,6 @@ private:
         }
     }
 
-    /**
-     * print the token with the same text as css tokens - so they can be compared with
-     * the result of get_token_all (see test-tokenize.css)
-     **/
     void printToken(int token, const Tokenizer& lexer) const
     {
         int begin = lexer.tokenBegin();
