@@ -91,6 +91,7 @@ add_custom_target( copy-generated
     COMMAND ${CMAKE_COMMAND} -E copy_if_different "${css_BINARY_DIR}/parser/cssdefaultvisitor.h" "${css_SOURCE_DIR}/parser/generated/cssdefaultvisitor.h"
     COMMAND ${CMAKE_COMMAND} -E copy_if_different "${css_BINARY_DIR}/parser/cssdefaultvisitor.cpp" "${css_SOURCE_DIR}/parser/generated/cssdefaultvisitor.cpp"
     COMMAND ${CMAKE_COMMAND} -E copy_if_different "${css_BINARY_DIR}/parser/cssdebugvisitor.h" "${css_SOURCE_DIR}/parser/generated/cssdebugvisitor.h"
+    COMMAND ${CMAKE_COMMAND} -E copy_if_different "${css_BINARY_DIR}/parser/csstokentext.h" "${css_SOURCE_DIR}/parser/generated/csstokentext.h"
     COMMAND ${CMAKE_COMMAND} -E copy_if_different "${css_BINARY_DIR}/parser/tokenizer.cpp" "${css_SOURCE_DIR}/parser/generated/tokenizer.cpp"
     DEPENDS "${css_BINARY_DIR}/parser/cssparser.cpp"
     DEPENDS "${css_BINARY_DIR}/parser/cssparser.h"
@@ -100,5 +101,6 @@ add_custom_target( copy-generated
     DEPENDS "${css_BINARY_DIR}/parser/cssdefaultvisitor.h"
     DEPENDS "${css_BINARY_DIR}/parser/cssast.h"
     DEPENDS "${css_BINARY_DIR}/parser/cssdebugvisitor.h"
+    DEPENDS "${css_BINARY_DIR}/parser/csstokentext.h"
     DEPENDS "${css_BINARY_DIR}/parser/tokenizer.cpp"
     )
