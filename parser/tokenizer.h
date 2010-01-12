@@ -30,7 +30,7 @@
 
 // The YY_USER_ACTION macro is called whenever a token is found by Flex
 #define YY_USER_ACTION \
-m_tokenBegin = m_tokenEnd; \
+m_tokenBegin = m_tokenEnd + 1; \
 m_tokenEnd += yyleng;
 
 namespace KDevPG {

@@ -116,11 +116,25 @@ void ModelTest::completionItems_data()
 
     // | is the cursor
 
-    QTest::newRow("completion element")
+    QTest::newRow("element")
         << "body{font-|w:normal;}"
         << (QStringList() << "font-weight");
 
+    QTest::newRow("new element")
+        << "body{|}"
+        << (QStringList() << "font-weight");
+
+    QTest::newRow("new element without value")
+        << "body{font-w|}"
+        << (QStringList() << "font-weight");
+
+    QTest::newRow("new element without value and without brace")
+          //01234567890123456789
+        << "body{font-w|"
+        << (QStringList() << "font-weight");
+
     QTest::newRow("field")
+          //01234567890123456789
         << "body{font-weight:|normal;}"
         << (QStringList() << "normal" << "bold");
 
@@ -137,6 +151,13 @@ void ModelTest::completionItems_data()
           //0123456789012345678
         << "body{font-weight: |"
         << (QStringList() << "normal" << "bold");
+
+    /*
+    QTest::newRow("second field")
+          //01234567890123456789
+        << "body{font-weight:normal; |}"
+        << (QStringList() << "normal" << "bold");
+    */
 
     QTest::newRow("element second line")
         << "body{color:red;}\nbody{font|-w:normal;}"
@@ -157,6 +178,16 @@ void ModelTest::completionItems_data()
     QTest::newRow("selector with space")
         << "body{} |"
         << (QStringList() << "body" << "a");
+
+    /*
+    QTest::newRow("selector separated with space")
+        << "body |{}"
+        << (QStringList() << "body" << "a");
+
+    QTest::newRow("selector separated with colon")
+        << "body, |{}"
+        << (QStringList() << "body" << "a");
+    */
 }
 
 void ModelTest::completionItems()

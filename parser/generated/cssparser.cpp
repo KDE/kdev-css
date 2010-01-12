@@ -287,6 +287,7 @@ bool Parser::parseDeclaration(DeclarationAst **yynode)
     *yynode = create<DeclarationAst>();
 
     (*yynode)->startToken = tokenStream->index() - 1;
+    (*yynode)->colon = -1;
 
     if (yytoken == Token_IDENT)
     {
@@ -298,13 +299,25 @@ bool Parser::parseDeclaration(DeclarationAst **yynode)
         }
         (*yynode)->property = __node_9;
 
-        if (yytoken != Token_COLON)
+        if (yytoken == Token_COLON)
         {
-            expectedToken(yytoken, Token_COLON, ":");
+            if (yytoken != Token_COLON)
+            {
+                expectedToken(yytoken, Token_COLON, ":");
+                return false;
+            }
+            (*yynode)->colon = tokenStream->index() - 1;
+            yylex();
+
+        }
+        else if (true /*epsilon*/)
+        {
+            reportProblem( Error, "Expected Colon" );
+        }
+        else
+        {
             return false;
         }
-        yylex();
-
         MaybeSpaceAst *__node_10 = 0;
         if (!parseMaybeSpace(&__node_10))
         {

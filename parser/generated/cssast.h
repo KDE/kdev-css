@@ -115,6 +115,7 @@ struct KDEVCSSPARSER_EXPORT DeclarationAst: public AstNode
     enum { KIND = DeclarationKind };
 
     PropertyAst *property;
+    qint64 colon;
     ExprAst *expr;
 };
 

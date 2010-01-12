@@ -482,7 +482,9 @@ maybeSpace (SGML_CD @ maybeSpace | 0)
 --         /* if we come across: div { color{;color:maroon} }, ignore everything within curly brackets */
 --         $$ = false;
 --     }
-      property=property COLON maybeSpace expr=expr prio
+  property=property
+    (colon=COLON | 0 [: reportProblem( Error, "Expected Colon" ); :])
+    maybeSpace expr=expr prio
 -> declaration ;;
 
 

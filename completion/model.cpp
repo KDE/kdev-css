@@ -50,54 +50,43 @@ public:
     FindCurrentNodeVisitor(EditorIntegrator* editor, const KTextEditor::Range& range)
         : m_editor(editor), m_range(range), m_lastSelectorElement(-1), m_context(SelectorContext)
     {}
-    virtual void visitNode(AstNode* node)
+
+    virtual void visitDeclaration(DeclarationAst* node)
     {
-        if (!node) return;
-        if (m_context != NoContext) {
-            debug() << "context already set" << m_context;
-            DefaultVisitor::visitNode(node);
-            return;
-        }
-        debug();
-        KDevelop::SimpleCursor pos = m_editor->findPosition(node->startToken, EditorIntegrator::BackEdge);
-        debug() << m_editor->tokenToString(node->startToken) << m_range.start() << pos.textCursor();
-        if (m_range.start() <=  pos.textCursor()) {
-            //kDebug(debugArea()) << m_editor->tokenToString(node->startToken);
-            debug() << "found range" << node << node->kind << m_range << pos.textCursor();
-            debug() << "currentNode" << node << m_editor->tokenToString(node->startToken) << m_editor->tokenToString(node->endToken);
-            debug() << "currentNode kind" << node->kind;
-            if (node->kind == AstNode::DeclarationListKind || node->kind == AstNode::DeclarationKind) {
-                debug() << "using PropertyContext";
-                m_context = PropertyContext;
-            } else if (node->kind == AstNode::ExprKind) {
-                debug() << "using ValueContext";
-                m_context = ValueContext;
-            } else if (node->kind == AstNode::StartKind) {
-                debug() << "using SelectorContext";
-                m_context = SelectorContext;
+        {
+            KDevelop::SimpleCursor pos = m_editor->findPosition(node->startToken, EditorIntegrator::FrontEdge);
+            debug() << m_editor->tokenToString(node->startToken) << m_range.start() << pos.textCursor();
+            if (m_range.start() >= pos.textCursor()) {
+                if (node->colon != -1 && m_range.start() >= m_editor->findPosition(node->colon, EditorIntegrator::FrontEdge).textCursor()) {
+                    debug() << "using ValueContext";
+                    m_context = ValueContext;
+                } else {
+                    debug() << "using PropertyContext";
+                    m_context = PropertyContext;
+                }
             }
-            //don't continue visiting
-        } else {
-            DefaultVisitor::visitNode(node);
         }
+        DefaultVisitor::visitDeclaration(node);
     }
 
     virtual void visitDeclarationList(DeclarationListAst* node)
     {
-        KDevelop::SimpleCursor pos = m_editor->findPosition(node->startToken, EditorIntegrator::FrontEdge);
-        debug() << pos.textCursor() << m_range;
-        if (m_range.start() >= pos.textCursor()) {
-            if (m_context == SelectorContext) {
-                m_context = NoContext;
-                debug() << "using NoContext";
+        {
+            KDevelop::SimpleCursor pos = m_editor->findPosition(node->startToken, EditorIntegrator::FrontEdge);
+            debug() << m_editor->tokenToString(node->startToken) << m_range.start() << pos.textCursor();
+            if (m_range.start() >= pos.textCursor()) {
+                debug() << "using PropertyContext";
+                m_context = PropertyContext;
             }
-            DefaultVisitor::visitDeclarationList(node);
-            if (m_context == NoContext) {
-                m_context = SelectorContext;
+        }
+        DefaultVisitor::visitDeclarationList(node);
+        {
+            KDevelop::SimpleCursor pos = m_editor->findPosition(node->endToken, EditorIntegrator::BackEdge);
+            debug() << pos.textCursor() << m_range.start();
+            if (m_range.start() > pos.textCursor()) {
                 debug() << "using SelectorContext";
+                m_context = SelectorContext;
             }
-        } else {
-            debug() << "!(range > pos)";
         }
     }
 
