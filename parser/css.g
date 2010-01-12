@@ -377,11 +377,6 @@ maybeSpace (SGML_CD @ maybeSpace | 0)
 #selectors=selector @ (COMMA maybeSpace)
 -> selectorList ;;
 
---    selector WHITESPACE
--- -> selectorWithTrailingWhitespace ;;
-
---     | selectorWithTrailingWhitespace
---     | selectorWithTrailingWhitespace simpleSelector
 --     | selector combinator simpleSelector
 --     | selector error
    simpleSelector=simpleSelector maybeSpace
