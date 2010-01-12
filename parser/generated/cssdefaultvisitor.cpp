@@ -158,6 +158,11 @@ void DefaultVisitor::visitSimpleSelector(SimpleSelectorAst *node)
     visitNode(node->specifier);
 }
 
+void DefaultVisitor::visitSimpleSelectorWithWhitespace(SimpleSelectorWithWhitespaceAst *node)
+{
+    visitNode(node->simpleSelector);
+}
+
 void DefaultVisitor::visitSpecifier(SpecifierAst *node)
 {
     visitNode(node->attrib);

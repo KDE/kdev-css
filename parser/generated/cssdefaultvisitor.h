@@ -36,6 +36,7 @@ public:
     virtual void visitSelector(SelectorAst *node);
     virtual void visitSelectorList(SelectorListAst *node);
     virtual void visitSimpleSelector(SimpleSelectorAst *node);
+    virtual void visitSimpleSelectorWithWhitespace(SimpleSelectorWithWhitespaceAst *node);
     virtual void visitSpecifier(SpecifierAst *node);
     virtual void visitSpecifierList(SpecifierListAst *node);
     virtual void visitStart(StartAst *node);

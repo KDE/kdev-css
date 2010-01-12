@@ -41,6 +41,7 @@ struct RulesetAst;
 struct SelectorAst;
 struct SelectorListAst;
 struct SimpleSelectorAst;
+struct SimpleSelectorWithWhitespaceAst;
 struct SpecifierAst;
 struct SpecifierListAst;
 struct StartAst;
@@ -79,13 +80,14 @@ struct KDEVCSSPARSER_EXPORT AstNode
         SelectorKind = 1020,
         SelectorListKind = 1021,
         SimpleSelectorKind = 1022,
-        SpecifierKind = 1023,
-        SpecifierListKind = 1024,
-        StartKind = 1025,
-        StringOrUriKind = 1026,
-        TermKind = 1027,
-        UnaryOperatorKind = 1028,
-        UnaryTermKind = 1029,
+        SimpleSelectorWithWhitespaceKind = 1023,
+        SpecifierKind = 1024,
+        SpecifierListKind = 1025,
+        StartKind = 1026,
+        StringOrUriKind = 1027,
+        TermKind = 1028,
+        UnaryOperatorKind = 1029,
+        UnaryTermKind = 1030,
         AST_NODE_KIND_COUNT
     };
 
@@ -241,7 +243,7 @@ struct KDEVCSSPARSER_EXPORT SelectorAst: public AstNode
 {
     enum { KIND = SelectorKind };
 
-    SimpleSelectorAst *simpleSelector;
+    SimpleSelectorWithWhitespaceAst *simpleSelector;
 };
 
 struct KDEVCSSPARSER_EXPORT SelectorListAst: public AstNode
@@ -257,6 +259,13 @@ struct KDEVCSSPARSER_EXPORT SimpleSelectorAst: public AstNode
 
     ElementNameAst *element;
     SpecifierListAst *specifier;
+};
+
+struct KDEVCSSPARSER_EXPORT SimpleSelectorWithWhitespaceAst: public AstNode
+{
+    enum { KIND = SimpleSelectorWithWhitespaceKind };
+
+    SimpleSelectorAst *simpleSelector;
 };
 
 struct KDEVCSSPARSER_EXPORT SpecifierAst: public AstNode

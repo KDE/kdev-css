@@ -229,7 +229,7 @@ public:
     virtual void visitSelector(SelectorAst *node)
     {
         if (!m_indent) printToken(node, "selector");
-        if (node->simpleSelector) printToken(node->simpleSelector, "simpleSelector", "simpleSelector");
+        if (node->simpleSelector) printToken(node->simpleSelector, "simpleSelectorWithWhitespace", "simpleSelector");
         m_indent++;
         DefaultVisitor::visitSelector(node);
         m_indent--;
@@ -260,6 +260,15 @@ public:
         if (node->specifier) printToken(node->specifier, "specifierList", "specifier");
         m_indent++;
         DefaultVisitor::visitSimpleSelector(node);
+        m_indent--;
+    }
+
+    virtual void visitSimpleSelectorWithWhitespace(SimpleSelectorWithWhitespaceAst *node)
+    {
+        if (!m_indent) printToken(node, "simpleSelectorWithWhitespace");
+        if (node->simpleSelector) printToken(node->simpleSelector, "simpleSelector", "simpleSelector");
+        m_indent++;
+        DefaultVisitor::visitSimpleSelectorWithWhitespace(node);
         m_indent--;
     }
 

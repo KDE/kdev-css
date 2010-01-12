@@ -31,6 +31,7 @@ Visitor::ParserFuncType Visitor::sParserTable[] =
     reinterpret_cast<ParserFuncType>(&Visitor::visitSelector),
     reinterpret_cast<ParserFuncType>(&Visitor::visitSelectorList),
     reinterpret_cast<ParserFuncType>(&Visitor::visitSimpleSelector),
+    reinterpret_cast<ParserFuncType>(&Visitor::visitSimpleSelectorWithWhitespace),
     reinterpret_cast<ParserFuncType>(&Visitor::visitSpecifier),
     reinterpret_cast<ParserFuncType>(&Visitor::visitSpecifierList),
     reinterpret_cast<ParserFuncType>(&Visitor::visitStart),

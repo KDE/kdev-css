@@ -44,6 +44,7 @@ public:
     virtual void visitSelector(SelectorAst *) {}
     virtual void visitSelectorList(SelectorListAst *) {}
     virtual void visitSimpleSelector(SimpleSelectorAst *) {}
+    virtual void visitSimpleSelectorWithWhitespace(SimpleSelectorWithWhitespaceAst *) {}
     virtual void visitSpecifier(SpecifierAst *) {}
     virtual void visitSpecifierList(SpecifierListAst *) {}
     virtual void visitStart(StartAst *) {}

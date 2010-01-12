@@ -384,8 +384,11 @@ maybeSpace (SGML_CD @ maybeSpace | 0)
 
 --     | selector combinator simpleSelector
 --     | selector error
-   simpleSelector=simpleSelector maybeSpace
+   simpleSelector=simpleSelectorWithWhitespace+
 -> selector ;;
+
+    simpleSelector=simpleSelector maybeSpace
+-> simpleSelectorWithWhitespace ;;
 
 --     /* empty */ '|'
 --     | STAR '|'
@@ -402,7 +405,7 @@ maybeSpace (SGML_CD @ maybeSpace | 0)
   ident=IDENT | star=STAR
 -> elementName ;;
 
-    #specifiers=specifier+
+    (#specifiers=specifier)+
 -> specifierList ;;
 
     DOT className=IDENT

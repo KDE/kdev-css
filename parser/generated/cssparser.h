@@ -206,6 +206,7 @@ public:
     bool parseSelector(SelectorAst **yynode);
     bool parseSelectorList(SelectorListAst **yynode);
     bool parseSimpleSelector(SimpleSelectorAst **yynode);
+    bool parseSimpleSelectorWithWhitespace(SimpleSelectorWithWhitespaceAst **yynode);
     bool parseSpecifier(SpecifierAst **yynode);
     bool parseSpecifierList(SpecifierListAst **yynode);
     bool parseStart(StartAst **yynode);
