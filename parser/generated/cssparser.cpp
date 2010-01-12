@@ -797,7 +797,8 @@ bool Parser::parseImportList(ImportListAst **yynode)
         || yytoken == Token_EOF
         || yytoken == Token_IDENT
         || yytoken == Token_LBRACKET
-        || yytoken == Token_STAR)
+        || yytoken == Token_STAR
+        || yytoken == Token_WHITESPACE)
     {
         while (yytoken == Token_IMPORT_SYM)
         {
@@ -928,7 +929,8 @@ bool Parser::parseMaybeSgml(MaybeSgmlAst **yynode)
         || yytoken == Token_IDENT
         || yytoken == Token_IMPORT_SYM
         || yytoken == Token_LBRACKET
-        || yytoken == Token_STAR)
+        || yytoken == Token_STAR
+        || yytoken == Token_WHITESPACE)
     {
         MaybeSpaceAst *__node_25 = 0;
         if (!parseMaybeSpace(&__node_25))
@@ -1013,6 +1015,7 @@ bool Parser::parseMaybeSpace(MaybeSpaceAst **yynode)
         || yytoken == Token_INS
         || yytoken == Token_INTEGER
         || yytoken == Token_KHERZ
+        || yytoken == Token_LBRACE
         || yytoken == Token_LBRACKET
         || yytoken == Token_MINUS
         || yytoken == Token_MMS
@@ -1366,7 +1369,8 @@ bool Parser::parseRule(RuleAst **yynode)
         || yytoken == Token_DOT
         || yytoken == Token_IDENT
         || yytoken == Token_LBRACKET
-        || yytoken == Token_STAR)
+        || yytoken == Token_STAR
+        || yytoken == Token_WHITESPACE)
     {
         RulesetAst *__node_34 = 0;
         if (!parseRuleset(&__node_34))
@@ -1397,13 +1401,15 @@ bool Parser::parseRuleList(RuleListAst **yynode)
         || yytoken == Token_DOT
         || yytoken == Token_IDENT
         || yytoken == Token_LBRACKET
-        || yytoken == Token_STAR || yytoken == Token_EOF)
+        || yytoken == Token_STAR
+        || yytoken == Token_WHITESPACE || yytoken == Token_EOF)
     {
         while (yytoken == Token_COLON
                || yytoken == Token_DOT
                || yytoken == Token_IDENT
                || yytoken == Token_LBRACKET
-               || yytoken == Token_STAR)
+               || yytoken == Token_STAR
+               || yytoken == Token_WHITESPACE)
         {
             RuleAst *__node_35 = 0;
             if (!parseRule(&__node_35))
@@ -1441,7 +1447,8 @@ bool Parser::parseRuleset(RulesetAst **yynode)
         || yytoken == Token_DOT
         || yytoken == Token_IDENT
         || yytoken == Token_LBRACKET
-        || yytoken == Token_STAR)
+        || yytoken == Token_STAR
+        || yytoken == Token_WHITESPACE)
     {
         SelectorListAst *__node_37 = 0;
         if (!parseSelectorList(&__node_37))
@@ -1505,7 +1512,8 @@ bool Parser::parseSelector(SelectorAst **yynode)
         || yytoken == Token_DOT
         || yytoken == Token_IDENT
         || yytoken == Token_LBRACKET
-        || yytoken == Token_STAR)
+        || yytoken == Token_STAR
+        || yytoken == Token_WHITESPACE)
     {
         SimpleSelectorAst *__node_39 = 0;
         if (!parseSimpleSelector(&__node_39))
@@ -1536,7 +1544,8 @@ bool Parser::parseSelectorList(SelectorListAst **yynode)
         || yytoken == Token_DOT
         || yytoken == Token_IDENT
         || yytoken == Token_LBRACKET
-        || yytoken == Token_STAR)
+        || yytoken == Token_STAR
+        || yytoken == Token_WHITESPACE)
     {
         SelectorAst *__node_40 = 0;
         if (!parseSelector(&__node_40))
@@ -1585,30 +1594,37 @@ bool Parser::parseSimpleSelector(SimpleSelectorAst **yynode)
         || yytoken == Token_DOT
         || yytoken == Token_IDENT
         || yytoken == Token_LBRACKET
-        || yytoken == Token_STAR)
+        || yytoken == Token_STAR
+        || yytoken == Token_WHITESPACE)
     {
+        MaybeSpaceAst *__node_42 = 0;
+        if (!parseMaybeSpace(&__node_42))
+        {
+            expectedSymbol(AstNode::MaybeSpaceKind, "maybeSpace");
+            return false;
+        }
         if (yytoken == Token_IDENT
             || yytoken == Token_STAR)
         {
-            ElementNameAst *__node_42 = 0;
-            if (!parseElementName(&__node_42))
+            ElementNameAst *__node_43 = 0;
+            if (!parseElementName(&__node_43))
             {
                 expectedSymbol(AstNode::ElementNameKind, "elementName");
                 return false;
             }
-            (*yynode)->element = __node_42;
+            (*yynode)->element = __node_43;
 
             if (yytoken == Token_COLON
                 || yytoken == Token_DOT
                 || yytoken == Token_LBRACKET)
             {
-                SpecifierListAst *__node_43 = 0;
-                if (!parseSpecifierList(&__node_43))
+                SpecifierListAst *__node_44 = 0;
+                if (!parseSpecifierList(&__node_44))
                 {
                     expectedSymbol(AstNode::SpecifierListKind, "specifierList");
                     return false;
                 }
-                (*yynode)->specifier = __node_43;
+                (*yynode)->specifier = __node_44;
 
             }
             else if (true /*epsilon*/)
@@ -1623,17 +1639,23 @@ bool Parser::parseSimpleSelector(SimpleSelectorAst **yynode)
                  || yytoken == Token_DOT
                  || yytoken == Token_LBRACKET)
         {
-            SpecifierListAst *__node_44 = 0;
-            if (!parseSpecifierList(&__node_44))
+            SpecifierListAst *__node_45 = 0;
+            if (!parseSpecifierList(&__node_45))
             {
                 expectedSymbol(AstNode::SpecifierListKind, "specifierList");
                 return false;
             }
-            (*yynode)->specifier = __node_44;
+            (*yynode)->specifier = __node_45;
 
         }
         else
         {
+            return false;
+        }
+        MaybeSpaceAst *__node_46 = 0;
+        if (!parseMaybeSpace(&__node_46))
+        {
+            expectedSymbol(AstNode::MaybeSpaceKind, "maybeSpace");
             return false;
         }
     }
@@ -1678,24 +1700,24 @@ bool Parser::parseSpecifier(SpecifierAst **yynode)
         }
         else if (yytoken == Token_LBRACKET)
         {
-            AttribAst *__node_45 = 0;
-            if (!parseAttrib(&__node_45))
+            AttribAst *__node_47 = 0;
+            if (!parseAttrib(&__node_47))
             {
                 expectedSymbol(AstNode::AttribKind, "attrib");
                 return false;
             }
-            (*yynode)->attrib = __node_45;
+            (*yynode)->attrib = __node_47;
 
         }
         else if (yytoken == Token_COLON)
         {
-            PseudoAst *__node_46 = 0;
-            if (!parsePseudo(&__node_46))
+            PseudoAst *__node_48 = 0;
+            if (!parsePseudo(&__node_48))
             {
                 expectedSymbol(AstNode::PseudoKind, "pseudo");
                 return false;
             }
-            (*yynode)->pseudo = __node_46;
+            (*yynode)->pseudo = __node_48;
 
         }
         else
@@ -1725,13 +1747,13 @@ bool Parser::parseSpecifierList(SpecifierListAst **yynode)
     {
         do
         {
-            SpecifierAst *__node_47 = 0;
-            if (!parseSpecifier(&__node_47))
+            SpecifierAst *__node_49 = 0;
+            if (!parseSpecifier(&__node_49))
             {
                 expectedSymbol(AstNode::SpecifierKind, "specifier");
                 return false;
             }
-            (*yynode)->specifiersSequence = snoc((*yynode)->specifiersSequence, __node_47, memoryPool);
+            (*yynode)->specifiersSequence = snoc((*yynode)->specifiersSequence, __node_49, memoryPool);
 
         }
         while (yytoken == Token_COLON
@@ -1766,13 +1788,13 @@ bool Parser::parseStart(StartAst **yynode)
     {
         if (yytoken == Token_CHARSET_SYM)
         {
-            CharsetAst *__node_48 = 0;
-            if (!parseCharset(&__node_48))
+            CharsetAst *__node_50 = 0;
+            if (!parseCharset(&__node_50))
             {
                 expectedSymbol(AstNode::CharsetKind, "charset");
                 return false;
             }
-            (*yynode)->charset = __node_48;
+            (*yynode)->charset = __node_50;
 
         }
         else if (true /*epsilon*/)
@@ -1782,27 +1804,27 @@ bool Parser::parseStart(StartAst **yynode)
         {
             return false;
         }
-        MaybeSgmlAst *__node_49 = 0;
-        if (!parseMaybeSgml(&__node_49))
+        MaybeSgmlAst *__node_51 = 0;
+        if (!parseMaybeSgml(&__node_51))
         {
             expectedSymbol(AstNode::MaybeSgmlKind, "maybeSgml");
             return false;
         }
-        ImportListAst *__node_50 = 0;
-        if (!parseImportList(&__node_50))
+        ImportListAst *__node_52 = 0;
+        if (!parseImportList(&__node_52))
         {
             expectedSymbol(AstNode::ImportListKind, "importList");
             return false;
         }
-        (*yynode)->imports = __node_50;
+        (*yynode)->imports = __node_52;
 
-        RuleListAst *__node_51 = 0;
-        if (!parseRuleList(&__node_51))
+        RuleListAst *__node_53 = 0;
+        if (!parseRuleList(&__node_53))
         {
             expectedSymbol(AstNode::RuleListKind, "ruleList");
             return false;
         }
-        (*yynode)->rules = __node_51;
+        (*yynode)->rules = __node_53;
 
         if (Token_EOF != yytoken)
         {
@@ -1915,8 +1937,8 @@ bool Parser::parseTerm(TermAst **yynode)
             (*yynode)->string = tokenStream->index() - 1;
             yylex();
 
-            MaybeSpaceAst *__node_52 = 0;
-            if (!parseMaybeSpace(&__node_52))
+            MaybeSpaceAst *__node_54 = 0;
+            if (!parseMaybeSpace(&__node_54))
             {
                 expectedSymbol(AstNode::MaybeSpaceKind, "maybeSpace");
                 return false;
@@ -1932,8 +1954,8 @@ bool Parser::parseTerm(TermAst **yynode)
             (*yynode)->ident = tokenStream->index() - 1;
             yylex();
 
-            MaybeSpaceAst *__node_53 = 0;
-            if (!parseMaybeSpace(&__node_53))
+            MaybeSpaceAst *__node_55 = 0;
+            if (!parseMaybeSpace(&__node_55))
             {
                 expectedSymbol(AstNode::MaybeSpaceKind, "maybeSpace");
                 return false;
@@ -1965,13 +1987,13 @@ bool Parser::parseTerm(TermAst **yynode)
             if (yytoken == Token_MINUS
                 || yytoken == Token_PLUS)
             {
-                UnaryOperatorAst *__node_54 = 0;
-                if (!parseUnaryOperator(&__node_54))
+                UnaryOperatorAst *__node_56 = 0;
+                if (!parseUnaryOperator(&__node_56))
                 {
                     expectedSymbol(AstNode::UnaryOperatorKind, "unaryOperator");
                     return false;
                 }
-                (*yynode)->op = __node_54;
+                (*yynode)->op = __node_56;
 
             }
             else if (true /*epsilon*/)
@@ -2001,13 +2023,13 @@ bool Parser::parseTerm(TermAst **yynode)
                 || yytoken == Token_RADS
                 || yytoken == Token_SECS)
             {
-                UnaryTermAst *__node_55 = 0;
-                if (!parseUnaryTerm(&__node_55))
+                UnaryTermAst *__node_57 = 0;
+                if (!parseUnaryTerm(&__node_57))
                 {
                     expectedSymbol(AstNode::UnaryTermKind, "unaryTerm");
                     return false;
                 }
-                (*yynode)->term = __node_55;
+                (*yynode)->term = __node_57;
 
             }
             else if (yytoken == Token_DIMEN)
@@ -2035,8 +2057,8 @@ bool Parser::parseTerm(TermAst **yynode)
             (*yynode)->uri = tokenStream->index() - 1;
             yylex();
 
-            MaybeSpaceAst *__node_56 = 0;
-            if (!parseMaybeSpace(&__node_56))
+            MaybeSpaceAst *__node_58 = 0;
+            if (!parseMaybeSpace(&__node_58))
             {
                 expectedSymbol(AstNode::MaybeSpaceKind, "maybeSpace");
                 return false;
@@ -2052,8 +2074,8 @@ bool Parser::parseTerm(TermAst **yynode)
             (*yynode)->unicoderange = tokenStream->index() - 1;
             yylex();
 
-            MaybeSpaceAst *__node_57 = 0;
-            if (!parseMaybeSpace(&__node_57))
+            MaybeSpaceAst *__node_59 = 0;
+            if (!parseMaybeSpace(&__node_59))
             {
                 expectedSymbol(AstNode::MaybeSpaceKind, "maybeSpace");
                 return false;
@@ -2061,13 +2083,13 @@ bool Parser::parseTerm(TermAst **yynode)
         }
         else if (yytoken == Token_HEXCOLOR)
         {
-            HexcolorAst *__node_58 = 0;
-            if (!parseHexcolor(&__node_58))
+            HexcolorAst *__node_60 = 0;
+            if (!parseHexcolor(&__node_60))
             {
                 expectedSymbol(AstNode::HexcolorKind, "hexcolor");
                 return false;
             }
-            (*yynode)->hexcolor = __node_58;
+            (*yynode)->hexcolor = __node_60;
 
         }
         else
@@ -2184,8 +2206,8 @@ bool Parser::parseUnaryTerm(UnaryTermAst **yynode)
             (*yynode)->value = tokenStream->index() - 1;
             yylex();
 
-            MaybeSpaceAst *__node_59 = 0;
-            if (!parseMaybeSpace(&__node_59))
+            MaybeSpaceAst *__node_61 = 0;
+            if (!parseMaybeSpace(&__node_61))
             {
                 expectedSymbol(AstNode::MaybeSpaceKind, "maybeSpace");
                 return false;
@@ -2201,8 +2223,8 @@ bool Parser::parseUnaryTerm(UnaryTermAst **yynode)
             (*yynode)->value = tokenStream->index() - 1;
             yylex();
 
-            MaybeSpaceAst *__node_60 = 0;
-            if (!parseMaybeSpace(&__node_60))
+            MaybeSpaceAst *__node_62 = 0;
+            if (!parseMaybeSpace(&__node_62))
             {
                 expectedSymbol(AstNode::MaybeSpaceKind, "maybeSpace");
                 return false;
@@ -2218,8 +2240,8 @@ bool Parser::parseUnaryTerm(UnaryTermAst **yynode)
             (*yynode)->value = tokenStream->index() - 1;
             yylex();
 
-            MaybeSpaceAst *__node_61 = 0;
-            if (!parseMaybeSpace(&__node_61))
+            MaybeSpaceAst *__node_63 = 0;
+            if (!parseMaybeSpace(&__node_63))
             {
                 expectedSymbol(AstNode::MaybeSpaceKind, "maybeSpace");
                 return false;
@@ -2235,8 +2257,8 @@ bool Parser::parseUnaryTerm(UnaryTermAst **yynode)
             (*yynode)->value = tokenStream->index() - 1;
             yylex();
 
-            MaybeSpaceAst *__node_62 = 0;
-            if (!parseMaybeSpace(&__node_62))
+            MaybeSpaceAst *__node_64 = 0;
+            if (!parseMaybeSpace(&__node_64))
             {
                 expectedSymbol(AstNode::MaybeSpaceKind, "maybeSpace");
                 return false;
@@ -2252,8 +2274,8 @@ bool Parser::parseUnaryTerm(UnaryTermAst **yynode)
             (*yynode)->value = tokenStream->index() - 1;
             yylex();
 
-            MaybeSpaceAst *__node_63 = 0;
-            if (!parseMaybeSpace(&__node_63))
+            MaybeSpaceAst *__node_65 = 0;
+            if (!parseMaybeSpace(&__node_65))
             {
                 expectedSymbol(AstNode::MaybeSpaceKind, "maybeSpace");
                 return false;
@@ -2269,8 +2291,8 @@ bool Parser::parseUnaryTerm(UnaryTermAst **yynode)
             (*yynode)->value = tokenStream->index() - 1;
             yylex();
 
-            MaybeSpaceAst *__node_64 = 0;
-            if (!parseMaybeSpace(&__node_64))
+            MaybeSpaceAst *__node_66 = 0;
+            if (!parseMaybeSpace(&__node_66))
             {
                 expectedSymbol(AstNode::MaybeSpaceKind, "maybeSpace");
                 return false;
@@ -2286,8 +2308,8 @@ bool Parser::parseUnaryTerm(UnaryTermAst **yynode)
             (*yynode)->value = tokenStream->index() - 1;
             yylex();
 
-            MaybeSpaceAst *__node_65 = 0;
-            if (!parseMaybeSpace(&__node_65))
+            MaybeSpaceAst *__node_67 = 0;
+            if (!parseMaybeSpace(&__node_67))
             {
                 expectedSymbol(AstNode::MaybeSpaceKind, "maybeSpace");
                 return false;
@@ -2303,8 +2325,8 @@ bool Parser::parseUnaryTerm(UnaryTermAst **yynode)
             (*yynode)->value = tokenStream->index() - 1;
             yylex();
 
-            MaybeSpaceAst *__node_66 = 0;
-            if (!parseMaybeSpace(&__node_66))
+            MaybeSpaceAst *__node_68 = 0;
+            if (!parseMaybeSpace(&__node_68))
             {
                 expectedSymbol(AstNode::MaybeSpaceKind, "maybeSpace");
                 return false;
@@ -2320,8 +2342,8 @@ bool Parser::parseUnaryTerm(UnaryTermAst **yynode)
             (*yynode)->value = tokenStream->index() - 1;
             yylex();
 
-            MaybeSpaceAst *__node_67 = 0;
-            if (!parseMaybeSpace(&__node_67))
+            MaybeSpaceAst *__node_69 = 0;
+            if (!parseMaybeSpace(&__node_69))
             {
                 expectedSymbol(AstNode::MaybeSpaceKind, "maybeSpace");
                 return false;
@@ -2337,8 +2359,8 @@ bool Parser::parseUnaryTerm(UnaryTermAst **yynode)
             (*yynode)->value = tokenStream->index() - 1;
             yylex();
 
-            MaybeSpaceAst *__node_68 = 0;
-            if (!parseMaybeSpace(&__node_68))
+            MaybeSpaceAst *__node_70 = 0;
+            if (!parseMaybeSpace(&__node_70))
             {
                 expectedSymbol(AstNode::MaybeSpaceKind, "maybeSpace");
                 return false;
@@ -2354,8 +2376,8 @@ bool Parser::parseUnaryTerm(UnaryTermAst **yynode)
             (*yynode)->value = tokenStream->index() - 1;
             yylex();
 
-            MaybeSpaceAst *__node_69 = 0;
-            if (!parseMaybeSpace(&__node_69))
+            MaybeSpaceAst *__node_71 = 0;
+            if (!parseMaybeSpace(&__node_71))
             {
                 expectedSymbol(AstNode::MaybeSpaceKind, "maybeSpace");
                 return false;
@@ -2371,8 +2393,8 @@ bool Parser::parseUnaryTerm(UnaryTermAst **yynode)
             (*yynode)->value = tokenStream->index() - 1;
             yylex();
 
-            MaybeSpaceAst *__node_70 = 0;
-            if (!parseMaybeSpace(&__node_70))
+            MaybeSpaceAst *__node_72 = 0;
+            if (!parseMaybeSpace(&__node_72))
             {
                 expectedSymbol(AstNode::MaybeSpaceKind, "maybeSpace");
                 return false;
@@ -2388,8 +2410,8 @@ bool Parser::parseUnaryTerm(UnaryTermAst **yynode)
             (*yynode)->value = tokenStream->index() - 1;
             yylex();
 
-            MaybeSpaceAst *__node_71 = 0;
-            if (!parseMaybeSpace(&__node_71))
+            MaybeSpaceAst *__node_73 = 0;
+            if (!parseMaybeSpace(&__node_73))
             {
                 expectedSymbol(AstNode::MaybeSpaceKind, "maybeSpace");
                 return false;
@@ -2405,8 +2427,8 @@ bool Parser::parseUnaryTerm(UnaryTermAst **yynode)
             (*yynode)->value = tokenStream->index() - 1;
             yylex();
 
-            MaybeSpaceAst *__node_72 = 0;
-            if (!parseMaybeSpace(&__node_72))
+            MaybeSpaceAst *__node_74 = 0;
+            if (!parseMaybeSpace(&__node_74))
             {
                 expectedSymbol(AstNode::MaybeSpaceKind, "maybeSpace");
                 return false;
@@ -2422,8 +2444,8 @@ bool Parser::parseUnaryTerm(UnaryTermAst **yynode)
             (*yynode)->value = tokenStream->index() - 1;
             yylex();
 
-            MaybeSpaceAst *__node_73 = 0;
-            if (!parseMaybeSpace(&__node_73))
+            MaybeSpaceAst *__node_75 = 0;
+            if (!parseMaybeSpace(&__node_75))
             {
                 expectedSymbol(AstNode::MaybeSpaceKind, "maybeSpace");
                 return false;
@@ -2439,8 +2461,8 @@ bool Parser::parseUnaryTerm(UnaryTermAst **yynode)
             (*yynode)->value = tokenStream->index() - 1;
             yylex();
 
-            MaybeSpaceAst *__node_74 = 0;
-            if (!parseMaybeSpace(&__node_74))
+            MaybeSpaceAst *__node_76 = 0;
+            if (!parseMaybeSpace(&__node_76))
             {
                 expectedSymbol(AstNode::MaybeSpaceKind, "maybeSpace");
                 return false;
@@ -2456,8 +2478,8 @@ bool Parser::parseUnaryTerm(UnaryTermAst **yynode)
             (*yynode)->value = tokenStream->index() - 1;
             yylex();
 
-            MaybeSpaceAst *__node_75 = 0;
-            if (!parseMaybeSpace(&__node_75))
+            MaybeSpaceAst *__node_77 = 0;
+            if (!parseMaybeSpace(&__node_77))
             {
                 expectedSymbol(AstNode::MaybeSpaceKind, "maybeSpace");
                 return false;
@@ -2473,8 +2495,8 @@ bool Parser::parseUnaryTerm(UnaryTermAst **yynode)
             (*yynode)->value = tokenStream->index() - 1;
             yylex();
 
-            MaybeSpaceAst *__node_76 = 0;
-            if (!parseMaybeSpace(&__node_76))
+            MaybeSpaceAst *__node_78 = 0;
+            if (!parseMaybeSpace(&__node_78))
             {
                 expectedSymbol(AstNode::MaybeSpaceKind, "maybeSpace");
                 return false;
@@ -2490,8 +2512,8 @@ bool Parser::parseUnaryTerm(UnaryTermAst **yynode)
             (*yynode)->value = tokenStream->index() - 1;
             yylex();
 
-            MaybeSpaceAst *__node_77 = 0;
-            if (!parseMaybeSpace(&__node_77))
+            MaybeSpaceAst *__node_79 = 0;
+            if (!parseMaybeSpace(&__node_79))
             {
                 expectedSymbol(AstNode::MaybeSpaceKind, "maybeSpace");
                 return false;

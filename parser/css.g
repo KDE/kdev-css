@@ -392,8 +392,8 @@ maybeSpace (SGML_CD @ maybeSpace | 0)
 --     | IDENT '|'
 -- -> namespaceSelector ;;
 
-    element=elementName (specifier=specifierList | 0)
-  | specifier=specifierList
+    maybeSpace ( element=elementName (specifier=specifierList | 0)
+  | specifier=specifierList ) maybeSpace
 --     | namespace_selector elementName
 --     | namespace_selector elementName specifierList
 --     | namespace_selector specifierList
