@@ -115,7 +115,7 @@ private:
     {
         int begin = lexer.tokenBegin();
         int end = lexer.tokenEnd();
-        qout << m_session.contents().mid(begin, end - begin).replace('\n', "\\n")
+        qout << m_session.contents().mid(begin, end - begin + 1).replace('\n', "\\n")
         << " "+tokenText(token) << endl;
     }
 
