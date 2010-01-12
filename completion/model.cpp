@@ -75,24 +75,19 @@ public:
         DefaultVisitor::visitDeclaration(node);
     }
 
-    virtual void visitDeclarationList(DeclarationListAst* node)
+    virtual void visitRuleset(RulesetAst* node)
     {
-        {
-            KDevelop::SimpleCursor pos = m_editor->findPosition(node->startToken, EditorIntegrator::FrontEdge);
-            debug() << m_editor->tokenToString(node->startToken) << m_range.start() << pos.textCursor();
-            if (m_range.start() >= pos.textCursor()) {
-                debug() << "using PropertyContext";
-                m_context = PropertyContext;
-            }
+        if (node->lbrace != -1 && m_range.start() >= m_editor->findPosition(node->lbrace).textCursor()) {
+            debug() << "using PropertyContext";
+            m_context = PropertyContext;
+        } else if (m_range.start() >= m_editor->findPosition(node->startToken, EditorIntegrator::FrontEdge).textCursor()) {
+            debug() << "using SelectorContext 1";
+            m_context = SelectorContext;
         }
-        DefaultVisitor::visitDeclarationList(node);
-        {
-            KDevelop::SimpleCursor pos = m_editor->findPosition(node->endToken, EditorIntegrator::BackEdge);
-            debug() << pos.textCursor() << m_range.start();
-            if (m_range.start() > pos.textCursor()) {
-                debug() << "using SelectorContext";
-                m_context = SelectorContext;
-            }
+        DefaultVisitor::visitRuleset(node);
+        if (node->rbrace != -1 && m_range.start() >= m_editor->findPosition(node->rbrace).textCursor()) {
+            debug() << "using SelectorContext 2";
+            m_context = SelectorContext;
         }
     }
 

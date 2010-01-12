@@ -175,6 +175,17 @@ void ModelTest::completionItems_data()
         << "body, |{}"
         << (QStringList() << "body" << "a");
 
+    QTest::newRow("selector separated with space without braces")
+        << "body |"
+        << (QStringList() << "body" << "a");
+
+    QTest::newRow("selector separated with comma without braces")
+        << "body, |"
+        << (QStringList() << "body" << "a");
+
+    QTest::newRow("selector empty text")
+        << "|"
+        << (QStringList() << "body" << "a");
 }
 
 void ModelTest::completionItems()
