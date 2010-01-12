@@ -78,6 +78,8 @@ void TestParser::parser_data()
     QTest::newRow("selector without declarations3") << " a b "; //todo check for reported error
     QTest::newRow("space in declaration") << "body{ color:red;}";
     QTest::newRow("space in declaration") << "body{ color:red}";
+    QTest::newRow("id selector") << "#foo{}";
+    QTest::newRow("id element selector") << "body#foo{}";
 }
 
 void TestParser::parser()

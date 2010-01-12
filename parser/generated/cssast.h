@@ -266,6 +266,7 @@ struct KDEVCSSPARSER_EXPORT SpecifierAst: public AstNode
     qint64 className;
     AttribAst *attrib;
     PseudoAst *pseudo;
+    qint64 idSel;
 };
 
 struct KDEVCSSPARSER_EXPORT SpecifierListAst: public AstNode

@@ -386,6 +386,7 @@ bool Parser::parseDeclarationList(DeclarationListAst **yynode)
         || yytoken == Token_DOT
         || yytoken == Token_EOF
         || yytoken == Token_IDENT
+        || yytoken == Token_IDSEL
         || yytoken == Token_LBRACKET
         || yytoken == Token_RBRACE
         || yytoken == Token_SGML_CD
@@ -511,6 +512,7 @@ bool Parser::parseExpr(ExprAst **yynode)
         || yytoken == Token_DOT
         || yytoken == Token_EOF
         || yytoken == Token_IDENT
+        || yytoken == Token_IDSEL
         || yytoken == Token_IMPORTANT_SYM
         || yytoken == Token_LBRACKET
         || yytoken == Token_RBRACE
@@ -800,6 +802,7 @@ bool Parser::parseImportList(ImportListAst **yynode)
         || yytoken == Token_DOT
         || yytoken == Token_EOF
         || yytoken == Token_IDENT
+        || yytoken == Token_IDSEL
         || yytoken == Token_LBRACKET
         || yytoken == Token_STAR)
     {
@@ -930,6 +933,7 @@ bool Parser::parseMaybeSgml(MaybeSgmlAst **yynode)
         || yytoken == Token_DOT
         || yytoken == Token_EOF
         || yytoken == Token_IDENT
+        || yytoken == Token_IDSEL
         || yytoken == Token_IMPORT_SYM
         || yytoken == Token_LBRACKET
         || yytoken == Token_STAR)
@@ -1011,6 +1015,7 @@ bool Parser::parseMaybeSpace(MaybeSpaceAst **yynode)
         || yytoken == Token_HERZ
         || yytoken == Token_HEXCOLOR
         || yytoken == Token_IDENT
+        || yytoken == Token_IDSEL
         || yytoken == Token_IMPORTANT_SYM
         || yytoken == Token_IMPORT_SYM
         || yytoken == Token_INCLUDES
@@ -1139,6 +1144,7 @@ bool Parser::parsePrio(PrioAst **yynode)
         || yytoken == Token_DOT
         || yytoken == Token_EOF
         || yytoken == Token_IDENT
+        || yytoken == Token_IDSEL
         || yytoken == Token_LBRACKET
         || yytoken == Token_RBRACE
         || yytoken == Token_SEMICOLON
@@ -1377,6 +1383,7 @@ bool Parser::parseRule(RuleAst **yynode)
     if (yytoken == Token_COLON
         || yytoken == Token_DOT
         || yytoken == Token_IDENT
+        || yytoken == Token_IDSEL
         || yytoken == Token_LBRACKET
         || yytoken == Token_STAR)
     {
@@ -1408,12 +1415,14 @@ bool Parser::parseRuleList(RuleListAst **yynode)
     if (yytoken == Token_COLON
         || yytoken == Token_DOT
         || yytoken == Token_IDENT
+        || yytoken == Token_IDSEL
         || yytoken == Token_LBRACKET
         || yytoken == Token_STAR || yytoken == Token_EOF)
     {
         while (yytoken == Token_COLON
                || yytoken == Token_DOT
                || yytoken == Token_IDENT
+               || yytoken == Token_IDSEL
                || yytoken == Token_LBRACKET
                || yytoken == Token_STAR)
         {
@@ -1454,6 +1463,7 @@ bool Parser::parseRuleset(RulesetAst **yynode)
     if (yytoken == Token_COLON
         || yytoken == Token_DOT
         || yytoken == Token_IDENT
+        || yytoken == Token_IDSEL
         || yytoken == Token_LBRACKET
         || yytoken == Token_STAR)
     {
@@ -1531,6 +1541,7 @@ bool Parser::parseSelector(SelectorAst **yynode)
     if (yytoken == Token_COLON
         || yytoken == Token_DOT
         || yytoken == Token_IDENT
+        || yytoken == Token_IDSEL
         || yytoken == Token_LBRACKET
         || yytoken == Token_STAR)
     {
@@ -1568,6 +1579,7 @@ bool Parser::parseSelectorList(SelectorListAst **yynode)
     if (yytoken == Token_COLON
         || yytoken == Token_DOT
         || yytoken == Token_IDENT
+        || yytoken == Token_IDSEL
         || yytoken == Token_LBRACKET
         || yytoken == Token_STAR)
     {
@@ -1628,6 +1640,7 @@ bool Parser::parseSimpleSelector(SimpleSelectorAst **yynode)
     if (yytoken == Token_COLON
         || yytoken == Token_DOT
         || yytoken == Token_IDENT
+        || yytoken == Token_IDSEL
         || yytoken == Token_LBRACKET
         || yytoken == Token_STAR)
     {
@@ -1644,6 +1657,7 @@ bool Parser::parseSimpleSelector(SimpleSelectorAst **yynode)
 
             if (yytoken == Token_COLON
                 || yytoken == Token_DOT
+                || yytoken == Token_IDSEL
                 || yytoken == Token_LBRACKET)
             {
                 SpecifierListAst *__node_46 = 0;
@@ -1665,6 +1679,7 @@ bool Parser::parseSimpleSelector(SimpleSelectorAst **yynode)
         }
         else if (yytoken == Token_COLON
                  || yytoken == Token_DOT
+                 || yytoken == Token_IDSEL
                  || yytoken == Token_LBRACKET)
         {
             SpecifierListAst *__node_47 = 0;
@@ -1697,9 +1712,11 @@ bool Parser::parseSpecifier(SpecifierAst **yynode)
 
     (*yynode)->startToken = tokenStream->index() - 1;
     (*yynode)->className = -1;
+    (*yynode)->idSel = -1;
 
     if (yytoken == Token_COLON
         || yytoken == Token_DOT
+        || yytoken == Token_IDSEL
         || yytoken == Token_LBRACKET)
     {
         if (yytoken == Token_DOT)
@@ -1742,6 +1759,17 @@ bool Parser::parseSpecifier(SpecifierAst **yynode)
             (*yynode)->pseudo = __node_49;
 
         }
+        else if (yytoken == Token_IDSEL)
+        {
+            if (yytoken != Token_IDSEL)
+            {
+                expectedToken(yytoken, Token_IDSEL, "id selector");
+                return false;
+            }
+            (*yynode)->idSel = tokenStream->index() - 1;
+            yylex();
+
+        }
         else
         {
             return false;
@@ -1765,6 +1793,7 @@ bool Parser::parseSpecifierList(SpecifierListAst **yynode)
 
     if (yytoken == Token_COLON
         || yytoken == Token_DOT
+        || yytoken == Token_IDSEL
         || yytoken == Token_LBRACKET)
     {
         do
@@ -1780,6 +1809,7 @@ bool Parser::parseSpecifierList(SpecifierListAst **yynode)
         }
         while (yytoken == Token_COLON
                || yytoken == Token_DOT
+               || yytoken == Token_IDSEL
                || yytoken == Token_LBRACKET);
     }
     else
@@ -1802,6 +1832,7 @@ bool Parser::parseStart(StartAst **yynode)
         || yytoken == Token_COLON
         || yytoken == Token_DOT
         || yytoken == Token_IDENT
+        || yytoken == Token_IDSEL
         || yytoken == Token_IMPORT_SYM
         || yytoken == Token_LBRACKET
         || yytoken == Token_SGML_CD

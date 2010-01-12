@@ -1479,7 +1479,7 @@ case 17:
 /* rule 17 can match eol */
 YY_RULE_SETUP
 #line 83 "tokenizer.flex"
-{return Parser::Token_HASH;}
+{return Parser::Token_IDSEL;}
 	YY_BREAK
 /* @rule tokens surrounding css declaration blocks with { } braces must start a BEGIN(at_rule) context */
 case 18:

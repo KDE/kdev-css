@@ -90,14 +90,14 @@
 -- List of defined tokens
 -----------------------------------------------------------
 
--- keywords:
+-- keywords:<
 %token IMPORT_SYM ("@import"), PAGE_SYM ("@page"), MEDIA_SYM ("@media"),
     FONT_FACE_SYM ("@font-face"), CHARSET_SYM ("@charset"), NAMESPACE_SYM ("@namespace"),
     IMPORTANT_SYM ("!important") ;;
 
 %token WHITESPACE ("whitespace"), IDENT ("identifier"), STRING ("string"), SGML_CD ("<!--/-->"),
     NOTFUNCTION ("not function"), URI ("uri"), FUNCTION ("function"), UNICODERANGE ("unicoderange"),
-    HEXCOLOR ("hex color"), NTH ("nth"), HASH ("hash"),
+    HEXCOLOR ("hex color"), NTH ("nth"), IDSEL ("id selector"),
     MEDIA_NOT ("media not"), MEDIA_ONLY ("media only"), MEDIA_AND ("media and") ;;
 
 -- seperators:
@@ -408,7 +408,7 @@ maybeSpace (SGML_CD @ maybeSpace | 0)
     DOT className=IDENT
   | attrib=attrib
   | pseudo=pseudo
---   | IDSEL
+  | idSel=IDSEL
 --   | HEX
 -> specifier ;;
 

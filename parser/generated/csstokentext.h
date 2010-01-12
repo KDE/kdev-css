@@ -57,14 +57,14 @@ QString tokenText(int token)
         return "function";
     case Parser::Token_GRADS:
         return "grad";
-    case Parser::Token_HASH:
-        return "hash";
     case Parser::Token_HERZ:
         return "Hz";
     case Parser::Token_HEXCOLOR:
         return "hex color";
     case Parser::Token_IDENT:
         return "identifier";
+    case Parser::Token_IDSEL:
+        return "id selector";
     case Parser::Token_IMPORTANT_SYM:
         return "!important";
     case Parser::Token_IMPORT_SYM:

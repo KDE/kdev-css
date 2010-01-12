@@ -80,7 +80,7 @@ nth             (-?[0-9]*n[\+-][0-9]+)|(-?[0-9]*n)
 
 
 <block>"#"{hexcolor}           {return Parser::Token_HEXCOLOR;}
-"#"{ident}              {return Parser::Token_HASH;}
+"#"{ident}              {return Parser::Token_IDSEL;}
  /* @rule tokens surrounding css declaration blocks with { } braces must start a BEGIN(at_rule) context */
 "@import"               {BEGIN(mediaquery); return Parser::Token_IMPORT_SYM;}
 "@page"                 {BEGIN(at_rule); return Parser::Token_PAGE_SYM;}
