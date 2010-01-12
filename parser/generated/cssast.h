@@ -232,7 +232,9 @@ struct KDEVCSSPARSER_EXPORT RulesetAst: public AstNode
     enum { KIND = RulesetKind };
 
     SelectorListAst *selectors;
+    qint64 lbrace;
     DeclarationListAst *declarations;
+    qint64 rbrace;
 };
 
 struct KDEVCSSPARSER_EXPORT SelectorAst: public AstNode
