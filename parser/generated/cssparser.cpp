@@ -1568,6 +1568,11 @@ bool Parser::parseSelectorList(SelectorListAst **yynode)
                 expectedSymbol(AstNode::MaybeSpaceKind, "maybeSpace");
                 return false;
             }
+            if (LA(1).kind == Token_LBRACE)
+            {
+                reportProblem( Error, "Expected Selector" );
+                break;
+            }
             SelectorAst *__node_43 = 0;
             if (!parseSelector(&__node_43))
             {

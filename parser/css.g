@@ -374,7 +374,12 @@ maybeSpace (SGML_CD @ maybeSpace | 0)
 --selector %prec UNIMPORTANT_TOK
 --   | selectorList ',' maybeSpace selector %prec UNIMPORTANT_TOK
 --   | selectorList error
-#selectors=selector @ (COMMA maybeSpace)
+#selectors=selector
+    @ (COMMA maybeSpace
+        [: if(LA(1).kind == Token_LBRACE) {
+            reportProblem( Error, "Expected Selector" );
+            break;}
+        :])
 -> selectorList ;;
 
 --     | selector combinator simpleSelector

@@ -170,11 +170,11 @@ void ModelTest::completionItems_data()
     QTest::newRow("selector separated with space")
         << "body |{}"
         << (QStringList() << "body" << "a");
-    /*
-    QTest::newRow("selector separated with colon")
+    
+    QTest::newRow("selector separated with comma")
         << "body, |{}"
         << (QStringList() << "body" << "a");
-    */
+
 }
 
 void ModelTest::completionItems()
