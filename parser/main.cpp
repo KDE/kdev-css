@@ -78,9 +78,9 @@ private:
     {
         if (m_printTokens) {
             KDevPG::TokenStream tokenStream;
-            Tokenizer lexer(&tokenStream, m_session.contents());
+            Tokenizer lexer(&tokenStream, m_session.contents().toLatin1().data());
             int token;
-            while ((token = lexer.lex())) {
+            while ((token = lexer.yylex())) {
                 Parser::Token &t = tokenStream.next();
                 //t.begin = lexer.tokenBegin();
                 //t.end = lexer.tokenEnd();
@@ -115,7 +115,7 @@ private:
     {
         int begin = lexer.tokenBegin();
         int end = lexer.tokenEnd();
-        qout << m_session.contents().mid(begin, end - begin + 1).replace('\n', "\\n")
+        qout << m_session.contents().mid(begin, end - begin).replace('\n', "\\n")
         << " "+tokenText(token) << endl;
     }
 

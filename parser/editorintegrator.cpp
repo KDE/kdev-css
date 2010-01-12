@@ -45,9 +45,7 @@ KDevelop::SimpleCursor EditorIntegrator::findPosition(qint64 token, Edge edge) c
 KDevelop::SimpleCursor EditorIntegrator::findPosition(const KDevPG::TokenStream::Token & token, Edge edge) const
 {
     if (edge == BackEdge) {
-        // Apparently KTE expects a range to go until _after_ the last character that should be included
-        // however the parser calculates endCol as the index _before_ the last included character, so adjust here
-        return m_session->positionAt(token.end + 1);
+        return m_session->positionAt(token.end);
     } else {
         return m_session->positionAt(token.begin);
     }

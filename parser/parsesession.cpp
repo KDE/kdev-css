@@ -126,14 +126,14 @@ KDevelop::SimpleCursor ParseSession::positionAt(qint64 offset) const
 QString ParseSession::symbol(qint64 token) const
 {
     const KDevPG::TokenStream::Token& tok = m_tokenStream->token(token);
-    return m_contents.mid(tok.begin, tok.end - tok.begin + 1);
+    return m_contents.mid(tok.begin, tok.end - tok.begin);
 }
 
 QString ParseSession::symbol(AstNode* node) const
 {
     const KDevPG::TokenStream::Token& startTok = m_tokenStream->token(node->startToken);
     const KDevPG::TokenStream::Token& endTok = m_tokenStream->token(node->endToken);
-    return m_contents.mid(startTok.begin, endTok.end - startTok.begin + 1);
+    return m_contents.mid(startTok.begin, endTok.end - startTok.begin);
 }
 
 QList<KDevelop::ProblemPointer> ParseSession::problems()

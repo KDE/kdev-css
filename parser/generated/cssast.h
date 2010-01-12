@@ -13,7 +13,6 @@
 #include <QtCore/QString>
 #include <kdebug.h>
 #include <language/interfaces/iproblem.h>
-#include "parser/tokenizer.h"
 
 
 namespace Css

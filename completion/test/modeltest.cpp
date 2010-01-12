@@ -124,6 +124,20 @@ void ModelTest::completionItems_data()
         << "body{font-weight:|normal;}"
         << (QStringList() << "normal" << "bold");
 
+    QTest::newRow("field without expression")
+        << "body{font-weight:|}"
+        << (QStringList() << "normal" << "bold");
+
+    QTest::newRow("field without expression and without brace")
+          //012345678901234567
+        << "body{font-weight:|"
+        << (QStringList() << "normal" << "bold");
+
+    QTest::newRow("field without expression and without brace with space")
+          //0123456789012345678
+        << "body{font-weight: |"
+        << (QStringList() << "normal" << "bold");
+
     QTest::newRow("element second line")
         << "body{color:red;}\nbody{font|-w:normal;}"
         << (QStringList() << "font-weight");
@@ -166,6 +180,7 @@ void ModelTest::completionItems()
     for (int i=0; i < model->rowCount(); ++i) {
         completions << model->data(model->index(i, CodeCompletionModel::Name), Qt::DisplayRole).toString();
     }
+    kDebug() << "completions" << completions;
     QFETCH(QStringList, result);
     foreach (const QString &i, result) {
         QVERIFY(completions.contains(i));

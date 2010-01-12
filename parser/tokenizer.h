@@ -1,67 +1,73 @@
-/*
- * This file is part of the DOM implementation for KDE.
- *
- * Copyright 2003 Lars Knoll (knoll@kde.org)
- * Copyright (C) 2004, 2005, 2006 Apple Computer, Inc.
- *
- * This library is free software; you can redistribute it and/or
- * modify it under the terms of the GNU Library General Public
- * License as published by the Free Software Foundation; either
- * version 2 of the License, or (at your option) any later version.
- *
- * This library is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- * Library General Public License for more details.
- *
- * You should have received a copy of the GNU Library General Public License
- * along with this library; see the file COPYING.LIB.  If not, write to
- * the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
- * Boston, MA 02110-1301, USA.
- */
-#ifndef _CSS_cssparser_h_
-#define _CSS_cssparser_h_
+/*****************************************************************************
+ * Copyright 2005, 2006 Jakob Petsovits <jpetso@gmx.at>                      *
+ * Copyright 2010 Niko Sams <niko.sams@gmail.com>                            *
+ *                                                                           *
+ * This program is free software; you can redistribute it and/or             *
+ * modify it under the terms of the GNU Library General Public               *
+ * License as published by the Free Software Foundation; either              *
+ * version 2 of the License, or (at your option) any later version.          *
+ *                                                                           *
+ * This grammar is distributed in the hope that it will be useful,           *
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of            *
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU         *
+ * Lesser General Public License for more details.                           *
+ *                                                                           *
+ * You should have received a copy of the GNU Library General Public License *
+ * along with this library; see the file COPYING.LIB.  If not, write to      *
+ * the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,      *
+ * Boston, MA 02110-1301, USA.                                               *
+ *****************************************************************************/
+#ifndef CSS_TOKENIZER_H
+#define CSS_TOKENIZER_H
 
-#include <QtCore/QString>
-#include <QtGui/QColor>
-#include <QtCore/QVector>
 #include "parserexport.h"
 
+#include <QByteArray>
+
+#ifndef DONT_INCLUDE_FLEXLEXER
+#include "FlexLexer.h"
+#endif
+
+// The YY_USER_ACTION macro is called whenever a token is found by Flex
+#define YY_USER_ACTION \
+m_tokenBegin = m_tokenEnd; \
+m_tokenEnd += yyleng;
+
 namespace KDevPG {
+    class LocationTable;
     class TokenStream;
 }
+namespace Css
+{
 
-namespace Css {
+class KDEVCSSPARSER_EXPORT Tokenizer : public yyFlexLexer
+{
+public:
+    Tokenizer( KDevPG::TokenStream *tokenStream, const QByteArray &contents );
+    void restart( KDevPG::TokenStream *tokenStream, const QByteArray &contents );
 
-    class KDEVCSSPARSER_EXPORT Tokenizer
-    {
-    public:
-        Tokenizer(KDevPG::TokenStream *tokenStream, const QString &string);
-        ~Tokenizer();
+    int yylex();
+    std::size_t tokenBegin() const { return m_tokenBegin; }
+    std::size_t tokenEnd()   const { return m_tokenEnd;   }
 
-    // tokenizer methods and data
-    public:
-        int token() const;
-        int tokenBegin() const;
-        int tokenEnd() const;
+protected:
+    // custom input, replacing the Flex default input stdin
+    virtual int LexerInput( char *buf, int max_size );
 
-        int lex();
+    // dismisses any lexer output (which should not happen anyways)
+    virtual void LexerOutput( const char * /*buf*/, int /*max_size*/ ) { return; }
+    virtual void LexerError( const char */*msg*/ ) { return; }
 
-    private:
-        int _lex();
-        int yyparse();
+private:
+    QByteArray m_contents;
+    std::size_t m_tokenBegin, m_tokenEnd;
+    std::size_t m_currentOffset;
+    KDevPG::LocationTable *m_locationTable;
+};
 
-        KDevPG::TokenStream *m_tokenStream;
-        unsigned short *data;
-        unsigned short *yytext;
-        unsigned short *yy_c_buf_p;
-        unsigned short yy_hold_char;
-        int yy_last_accepting_state;
-        unsigned short *yy_last_accepting_cpos;
-        int yyleng;
-        int yyTok;
-        int yy_start;
-    };
+} // end of namespace Css
 
-} // namespace
 #endif
+
+// kate: space-indent on; indent-width 4; tab-width 4; replace-tabs on
+

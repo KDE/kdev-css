@@ -59,7 +59,7 @@ public:
             return;
         }
         debug();
-        KDevelop::SimpleCursor pos = m_editor->findPosition(node->startToken, EditorIntegrator::FrontEdge);
+        KDevelop::SimpleCursor pos = m_editor->findPosition(node->startToken, EditorIntegrator::BackEdge);
         debug() << m_editor->tokenToString(node->startToken) << m_range.start() << pos.textCursor();
         if (m_range.start() <=  pos.textCursor()) {
             //kDebug(debugArea()) << m_editor->tokenToString(node->startToken);
@@ -147,6 +147,7 @@ void CodeCompletionModel::completionInvoked(KTextEditor::View* view, const KText
 
         FindCurrentNodeVisitor visitor(&editor, range);
         visitor.visitNode(ast);
+        debug() << "context" << visitor.currentContext();
         switch (visitor.currentContext()) {
             case PropertyContext:
             {
@@ -155,7 +156,7 @@ void CodeCompletionModel::completionInvoked(KTextEditor::View* view, const KText
                 m_items = element.fields;
                 setRowCount(m_items.count());
                 reset();
-                break;
+                return;
             }
             case ValueContext:
             {

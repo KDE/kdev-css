@@ -7,6 +7,7 @@
 
 #include <QtCore/QDebug>
 #include <KTextEditor/Range>
+#include "parser/tokenizer.h"
 
 namespace Css
 {
@@ -15,12 +16,12 @@ void Parser::tokenize(const QString& contents)
 {
     m_contents = contents;
 
-    Tokenizer tokenizer(tokenStream, contents);
+    Tokenizer tokenizer(tokenStream, contents.toLatin1().data());
 
     int kind = Parser::Token_EOF;
     do
     {
-        kind = tokenizer.lex();
+        kind = tokenizer.yylex();
 
         if ( !kind ) // when the lexer returns 0, the end of file is reached
         {
