@@ -99,16 +99,6 @@ void ModelTest::testCompletionRangeSecondLine()
     delete doc;
 }
 
-bool containsCompletion(CodeCompletionModel* model, QString text)
-{
-    QStringList completions;
-    for (int i=0; i < model->rowCount(); ++i) {
-        completions << model->data(model->index(i, CodeCompletionModel::Name), Qt::DisplayRole).toString();
-        //kDebug() << model->data(model->index(i, CodeCompletionModel::Name), Qt::DisplayRole).toString();
-    }
-    return completions.contains(text);
-}
-
 void ModelTest::completionItems_data()
 {
     QTest::addColumn<QString>("text");
@@ -177,11 +167,10 @@ void ModelTest::completionItems_data()
         << "body{} |"
         << (QStringList() << "body" << "a");
 
-    /*
     QTest::newRow("selector separated with space")
         << "body |{}"
         << (QStringList() << "body" << "a");
-
+    /*
     QTest::newRow("selector separated with colon")
         << "body, |{}"
         << (QStringList() << "body" << "a");
