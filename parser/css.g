@@ -374,7 +374,7 @@ maybeSpace (SGML_CD @ maybeSpace | 0)
 --selector %prec UNIMPORTANT_TOK
 --   | selectorList ',' maybeSpace selector %prec UNIMPORTANT_TOK
 --   | selectorList error
-#selectors=selector @ COMMA
+#selectors=selector @ (COMMA maybeSpace)
 -> selectorList ;;
 
 --    selector WHITESPACE
@@ -384,7 +384,7 @@ maybeSpace (SGML_CD @ maybeSpace | 0)
 --     | selectorWithTrailingWhitespace simpleSelector
 --     | selector combinator simpleSelector
 --     | selector error
-   simpleSelector=simpleSelector
+   simpleSelector=simpleSelector maybeSpace
 -> selector ;;
 
 --     /* empty */ '|'
@@ -392,8 +392,8 @@ maybeSpace (SGML_CD @ maybeSpace | 0)
 --     | IDENT '|'
 -- -> namespaceSelector ;;
 
-    maybeSpace ( element=elementName (specifier=specifierList | 0)
-  | specifier=specifierList ) maybeSpace
+    element=elementName (specifier=specifierList | 0)
+  | specifier=specifierList
 --     | namespace_selector elementName
 --     | namespace_selector elementName specifierList
 --     | namespace_selector specifierList

@@ -797,8 +797,7 @@ bool Parser::parseImportList(ImportListAst **yynode)
         || yytoken == Token_EOF
         || yytoken == Token_IDENT
         || yytoken == Token_LBRACKET
-        || yytoken == Token_STAR
-        || yytoken == Token_WHITESPACE)
+        || yytoken == Token_STAR)
     {
         while (yytoken == Token_IMPORT_SYM)
         {
@@ -929,8 +928,7 @@ bool Parser::parseMaybeSgml(MaybeSgmlAst **yynode)
         || yytoken == Token_IDENT
         || yytoken == Token_IMPORT_SYM
         || yytoken == Token_LBRACKET
-        || yytoken == Token_STAR
-        || yytoken == Token_WHITESPACE)
+        || yytoken == Token_STAR)
     {
         MaybeSpaceAst *__node_25 = 0;
         if (!parseMaybeSpace(&__node_25))
@@ -1369,8 +1367,7 @@ bool Parser::parseRule(RuleAst **yynode)
         || yytoken == Token_DOT
         || yytoken == Token_IDENT
         || yytoken == Token_LBRACKET
-        || yytoken == Token_STAR
-        || yytoken == Token_WHITESPACE)
+        || yytoken == Token_STAR)
     {
         RulesetAst *__node_34 = 0;
         if (!parseRuleset(&__node_34))
@@ -1401,15 +1398,13 @@ bool Parser::parseRuleList(RuleListAst **yynode)
         || yytoken == Token_DOT
         || yytoken == Token_IDENT
         || yytoken == Token_LBRACKET
-        || yytoken == Token_STAR
-        || yytoken == Token_WHITESPACE || yytoken == Token_EOF)
+        || yytoken == Token_STAR || yytoken == Token_EOF)
     {
         while (yytoken == Token_COLON
                || yytoken == Token_DOT
                || yytoken == Token_IDENT
                || yytoken == Token_LBRACKET
-               || yytoken == Token_STAR
-               || yytoken == Token_WHITESPACE)
+               || yytoken == Token_STAR)
         {
             RuleAst *__node_35 = 0;
             if (!parseRule(&__node_35))
@@ -1447,8 +1442,7 @@ bool Parser::parseRuleset(RulesetAst **yynode)
         || yytoken == Token_DOT
         || yytoken == Token_IDENT
         || yytoken == Token_LBRACKET
-        || yytoken == Token_STAR
-        || yytoken == Token_WHITESPACE)
+        || yytoken == Token_STAR)
     {
         SelectorListAst *__node_37 = 0;
         if (!parseSelectorList(&__node_37))
@@ -1512,8 +1506,7 @@ bool Parser::parseSelector(SelectorAst **yynode)
         || yytoken == Token_DOT
         || yytoken == Token_IDENT
         || yytoken == Token_LBRACKET
-        || yytoken == Token_STAR
-        || yytoken == Token_WHITESPACE)
+        || yytoken == Token_STAR)
     {
         SimpleSelectorAst *__node_39 = 0;
         if (!parseSimpleSelector(&__node_39))
@@ -1523,6 +1516,12 @@ bool Parser::parseSelector(SelectorAst **yynode)
         }
         (*yynode)->simpleSelector = __node_39;
 
+        MaybeSpaceAst *__node_40 = 0;
+        if (!parseMaybeSpace(&__node_40))
+        {
+            expectedSymbol(AstNode::MaybeSpaceKind, "maybeSpace");
+            return false;
+        }
     }
     else
     {
@@ -1544,16 +1543,15 @@ bool Parser::parseSelectorList(SelectorListAst **yynode)
         || yytoken == Token_DOT
         || yytoken == Token_IDENT
         || yytoken == Token_LBRACKET
-        || yytoken == Token_STAR
-        || yytoken == Token_WHITESPACE)
+        || yytoken == Token_STAR)
     {
-        SelectorAst *__node_40 = 0;
-        if (!parseSelector(&__node_40))
+        SelectorAst *__node_41 = 0;
+        if (!parseSelector(&__node_41))
         {
             expectedSymbol(AstNode::SelectorKind, "selector");
             return false;
         }
-        (*yynode)->selectorsSequence = snoc((*yynode)->selectorsSequence, __node_40, memoryPool);
+        (*yynode)->selectorsSequence = snoc((*yynode)->selectorsSequence, __node_41, memoryPool);
 
         while (yytoken == Token_COMMA)
         {
@@ -1564,13 +1562,19 @@ bool Parser::parseSelectorList(SelectorListAst **yynode)
             }
             yylex();
 
-            SelectorAst *__node_41 = 0;
-            if (!parseSelector(&__node_41))
+            MaybeSpaceAst *__node_42 = 0;
+            if (!parseMaybeSpace(&__node_42))
+            {
+                expectedSymbol(AstNode::MaybeSpaceKind, "maybeSpace");
+                return false;
+            }
+            SelectorAst *__node_43 = 0;
+            if (!parseSelector(&__node_43))
             {
                 expectedSymbol(AstNode::SelectorKind, "selector");
                 return false;
             }
-            (*yynode)->selectorsSequence = snoc((*yynode)->selectorsSequence, __node_41, memoryPool);
+            (*yynode)->selectorsSequence = snoc((*yynode)->selectorsSequence, __node_43, memoryPool);
 
         }
     }
@@ -1594,37 +1598,30 @@ bool Parser::parseSimpleSelector(SimpleSelectorAst **yynode)
         || yytoken == Token_DOT
         || yytoken == Token_IDENT
         || yytoken == Token_LBRACKET
-        || yytoken == Token_STAR
-        || yytoken == Token_WHITESPACE)
+        || yytoken == Token_STAR)
     {
-        MaybeSpaceAst *__node_42 = 0;
-        if (!parseMaybeSpace(&__node_42))
-        {
-            expectedSymbol(AstNode::MaybeSpaceKind, "maybeSpace");
-            return false;
-        }
         if (yytoken == Token_IDENT
             || yytoken == Token_STAR)
         {
-            ElementNameAst *__node_43 = 0;
-            if (!parseElementName(&__node_43))
+            ElementNameAst *__node_44 = 0;
+            if (!parseElementName(&__node_44))
             {
                 expectedSymbol(AstNode::ElementNameKind, "elementName");
                 return false;
             }
-            (*yynode)->element = __node_43;
+            (*yynode)->element = __node_44;
 
             if (yytoken == Token_COLON
                 || yytoken == Token_DOT
                 || yytoken == Token_LBRACKET)
             {
-                SpecifierListAst *__node_44 = 0;
-                if (!parseSpecifierList(&__node_44))
+                SpecifierListAst *__node_45 = 0;
+                if (!parseSpecifierList(&__node_45))
                 {
                     expectedSymbol(AstNode::SpecifierListKind, "specifierList");
                     return false;
                 }
-                (*yynode)->specifier = __node_44;
+                (*yynode)->specifier = __node_45;
 
             }
             else if (true /*epsilon*/)
@@ -1639,23 +1636,17 @@ bool Parser::parseSimpleSelector(SimpleSelectorAst **yynode)
                  || yytoken == Token_DOT
                  || yytoken == Token_LBRACKET)
         {
-            SpecifierListAst *__node_45 = 0;
-            if (!parseSpecifierList(&__node_45))
+            SpecifierListAst *__node_46 = 0;
+            if (!parseSpecifierList(&__node_46))
             {
                 expectedSymbol(AstNode::SpecifierListKind, "specifierList");
                 return false;
             }
-            (*yynode)->specifier = __node_45;
+            (*yynode)->specifier = __node_46;
 
         }
         else
         {
-            return false;
-        }
-        MaybeSpaceAst *__node_46 = 0;
-        if (!parseMaybeSpace(&__node_46))
-        {
-            expectedSymbol(AstNode::MaybeSpaceKind, "maybeSpace");
             return false;
         }
     }
