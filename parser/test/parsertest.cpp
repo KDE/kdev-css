@@ -82,6 +82,7 @@ void TestParser::parser_data()
     QTest::newRow("id element selector") << "body#foo{}";
     QTest::newRow("id element selector2") << "#foo a{}";
     QTest::newRow("selector with space") << "a a{}";
+    QTest::newRow("empty declaration with space") << "a{ }";
 }
 
 void TestParser::parser()

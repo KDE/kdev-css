@@ -366,7 +366,7 @@ maybeSpace (SGML_CD @ maybeSpace | 0)
   | PLUS
 -> unaryOperator ;;
 
-  selectors=selectorList (lbrace=LBRACE | 0 [: reportProblem( Error, "Expected '{'" ); :]) declarations=declarationList
+  selectors=selectorList (lbrace=LBRACE | 0 [: reportProblem( Error, "Expected '{'" ); :]) maybeSpace declarations=declarationList
   (  rbrace=RBRACE
    | 0 [: reportProblem( Error, "Expected '}'" ); :])
 -> ruleset ;;
