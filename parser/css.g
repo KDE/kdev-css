@@ -366,7 +366,7 @@ maybeSpace (SGML_CD @ maybeSpace | 0)
   | PLUS
 -> unaryOperator ;;
 
-  selectors=selectorList LBRACE declarations=declarationList
+  selectors=selectorList (LBRACE | 0 [: reportProblem( Error, "Expected '{'" ); :]) declarations=declarationList
   (  RBRACE
    | 0 [: reportProblem( Error, "Expected '}'" ); :])
 -> ruleset ;;
@@ -376,7 +376,7 @@ maybeSpace (SGML_CD @ maybeSpace | 0)
 --   | selectorList error
 #selectors=selector
     @ (COMMA maybeSpace
-        [: if(LA(1).kind == Token_LBRACE) {
+        [: if(LA(1).kind == Token_LBRACE || LA(1).kind == Token_EOF) {
             reportProblem( Error, "Expected Selector" );
             break;}
         :])

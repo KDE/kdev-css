@@ -1452,13 +1452,24 @@ bool Parser::parseRuleset(RulesetAst **yynode)
         }
         (*yynode)->selectors = __node_37;
 
-        if (yytoken != Token_LBRACE)
+        if (yytoken == Token_LBRACE)
         {
-            expectedToken(yytoken, Token_LBRACE, "{");
+            if (yytoken != Token_LBRACE)
+            {
+                expectedToken(yytoken, Token_LBRACE, "{");
+                return false;
+            }
+            yylex();
+
+        }
+        else if (true /*epsilon*/)
+        {
+            reportProblem( Error, "Expected '{'" );
+        }
+        else
+        {
             return false;
         }
-        yylex();
-
         DeclarationListAst *__node_38 = 0;
         if (!parseDeclarationList(&__node_38))
         {
@@ -1568,7 +1579,7 @@ bool Parser::parseSelectorList(SelectorListAst **yynode)
                 expectedSymbol(AstNode::MaybeSpaceKind, "maybeSpace");
                 return false;
             }
-            if (LA(1).kind == Token_LBRACE)
+            if (LA(1).kind == Token_LBRACE || LA(1).kind == Token_EOF)
             {
                 reportProblem( Error, "Expected Selector" );
                 break;
