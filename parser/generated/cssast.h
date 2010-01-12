@@ -117,6 +117,7 @@ struct KDEVCSSPARSER_EXPORT DeclarationAst: public AstNode
     PropertyAst *property;
     qint64 colon;
     ExprAst *expr;
+    qint64 semicolon;
 };
 
 struct KDEVCSSPARSER_EXPORT DeclarationListAst: public AstNode

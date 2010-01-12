@@ -444,7 +444,7 @@ maybeSpace (SGML_CD @ maybeSpace | 0)
     )
 -> pseudo ;;
 
-    (#declarations=declaration (SEMICOLON maybeSpace | 0 ))+ | 0
+    (#declarations=declaration)+ | 0
 -> declarationList ;;
 
 --     variable_reference maybeSpace
@@ -485,6 +485,7 @@ maybeSpace (SGML_CD @ maybeSpace | 0)
   property=property
     (colon=COLON | 0 [: reportProblem( Error, "Expected Colon" ); :])
     maybeSpace expr=expr prio
+    (semicolon=SEMICOLON maybeSpace | 0 )
 -> declaration ;;
 
 

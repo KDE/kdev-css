@@ -288,6 +288,7 @@ bool Parser::parseDeclaration(DeclarationAst **yynode)
 
     (*yynode)->startToken = tokenStream->index() - 1;
     (*yynode)->colon = -1;
+    (*yynode)->semicolon = -1;
 
     if (yytoken == Token_IDENT)
     {
@@ -338,6 +339,30 @@ bool Parser::parseDeclaration(DeclarationAst **yynode)
             expectedSymbol(AstNode::PrioKind, "prio");
             return false;
         }
+        if (yytoken == Token_SEMICOLON)
+        {
+            if (yytoken != Token_SEMICOLON)
+            {
+                expectedToken(yytoken, Token_SEMICOLON, ";");
+                return false;
+            }
+            (*yynode)->semicolon = tokenStream->index() - 1;
+            yylex();
+
+            MaybeSpaceAst *__node_13 = 0;
+            if (!parseMaybeSpace(&__node_13))
+            {
+                expectedSymbol(AstNode::MaybeSpaceKind, "maybeSpace");
+                return false;
+            }
+        }
+        else if (true /*epsilon*/)
+        {
+        }
+        else
+        {
+            return false;
+        }
     }
     else
     {
@@ -369,37 +394,14 @@ bool Parser::parseDeclarationList(DeclarationListAst **yynode)
         {
             do
             {
-                DeclarationAst *__node_13 = 0;
-                if (!parseDeclaration(&__node_13))
+                DeclarationAst *__node_14 = 0;
+                if (!parseDeclaration(&__node_14))
                 {
                     expectedSymbol(AstNode::DeclarationKind, "declaration");
                     return false;
                 }
-                (*yynode)->declarationsSequence = snoc((*yynode)->declarationsSequence, __node_13, memoryPool);
+                (*yynode)->declarationsSequence = snoc((*yynode)->declarationsSequence, __node_14, memoryPool);
 
-                if (yytoken == Token_SEMICOLON)
-                {
-                    if (yytoken != Token_SEMICOLON)
-                    {
-                        expectedToken(yytoken, Token_SEMICOLON, ";");
-                        return false;
-                    }
-                    yylex();
-
-                    MaybeSpaceAst *__node_14 = 0;
-                    if (!parseMaybeSpace(&__node_14))
-                    {
-                        expectedSymbol(AstNode::MaybeSpaceKind, "maybeSpace");
-                        return false;
-                    }
-                }
-                else if (true /*epsilon*/)
-                {
-                }
-                else
-                {
-                    return false;
-                }
             }
             while (yytoken == Token_IDENT);
         }

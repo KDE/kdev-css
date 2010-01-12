@@ -152,12 +152,10 @@ void ModelTest::completionItems_data()
         << "body{font-weight: |"
         << (QStringList() << "normal" << "bold");
 
-    /*
     QTest::newRow("second field")
           //01234567890123456789
         << "body{font-weight:normal; |}"
-        << (QStringList() << "normal" << "bold");
-    */
+        << (QStringList() << "font-weight");
 
     QTest::newRow("element second line")
         << "body{color:red;}\nbody{font|-w:normal;}"

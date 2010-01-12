@@ -66,6 +66,12 @@ public:
                 }
             }
         }
+        {
+            if (node->semicolon != -1 && m_range.start() >= m_editor->findPosition(node->semicolon, EditorIntegrator::FrontEdge).textCursor()) {
+                debug() << "using PropertyContext";
+                m_context = PropertyContext;
+            }
+        }
         DefaultVisitor::visitDeclaration(node);
     }
 
