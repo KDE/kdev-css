@@ -489,7 +489,7 @@ maybeSpace (SGML_CD @ maybeSpace | 0)
 -> declaration ;;
 
 
-    ident=IDENT maybeSpace
+  maybeSpace ident=IDENT maybeSpace
 -> property ;;
 
 IMPORTANT_SYM maybeSpace | 0
