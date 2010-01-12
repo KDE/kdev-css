@@ -93,7 +93,7 @@ public:
 
     virtual void visitSimpleSelector(SimpleSelectorAst* node)
     {
-        m_lastSelectorElement = node->element->ident;
+        if (node->element) m_lastSelectorElement = node->element->ident;
         DefaultVisitor::visitSimpleSelector(node);
     }
 
