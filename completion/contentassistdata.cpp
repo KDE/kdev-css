@@ -64,7 +64,7 @@ ContentAssistData::ContentAssistData()
                                 xml.readNext();
                                 if (xml.isEndElement() && xml.name() == "fields") break;
                                 if (xml.isStartElement() && xml.name() == "field") {
-                                    el.fields << xml.attributes().value("name").toString();
+                                    el.fields << xml.attributes().value("name").toString().append(':');
                                 }
                             }
                         }
