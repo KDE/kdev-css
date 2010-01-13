@@ -150,6 +150,10 @@ void ModelTest::completionItems_data()
         << "body{font-weight: normal; float: |}"
         << (QStringList() << "right" << "left");
 
+    QTest::newRow("second field without value")
+        << "body{font-weight: |; float: left}"
+        << (QStringList() << "normal" << "bold");
+
     QTest::newRow("second field")
           //01234567890123456789
         << "body{font-weight:normal; |}"

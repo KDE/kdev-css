@@ -29,6 +29,8 @@
 
 namespace Css {
 
+#define ifDebug(x) x
+
 extern int debugArea();
 #define debug() kDebug(debugArea())
 
@@ -51,20 +53,21 @@ public:
     {
         {
             KDevelop::SimpleCursor pos = m_editor->findPosition(node->startToken, EditorIntegrator::FrontEdge);
-            debug() << m_editor->tokenToString(node->startToken) << m_range.start() << pos.textCursor();
+            ifDebug( debug() << m_editor->tokenToString(node->startToken) << m_range.start() << pos.textCursor(); )
             if (m_range.start() >= pos.textCursor()) {
                 if (node->colon != -1 && m_range.start() >= m_editor->findPosition(node->colon, EditorIntegrator::FrontEdge).textCursor()) {
-                    debug() << "using ValueContext";
+                    ifDebug( debug() << "using ValueContext"; )
                     m_context = CodeCompletionModel::ValueContext;
                 } else {
-                    debug() << "using PropertyContext";
+                    ifDebug( debug() << "using PropertyContext 1"; )
                     m_context = CodeCompletionModel::PropertyContext;
                 }
             }
         }
-        {
-            if (node->semicolon != -1 && m_range.start() >= m_editor->findPosition(node->semicolon, EditorIntegrator::FrontEdge).textCursor()) {
-                debug() << "using PropertyContext";
+        if (node->semicolon != -1) {
+            ifDebug( debug() << m_range.start() << m_editor->findPosition(node->semicolon, EditorIntegrator::FrontEdge).textCursor(); )
+            if (m_range.start() > m_editor->findPosition(node->semicolon, EditorIntegrator::FrontEdge).textCursor()) {
+                ifDebug( debug() << "using PropertyContext 2"; )
                 m_context = CodeCompletionModel::PropertyContext;
             }
         }
@@ -74,15 +77,15 @@ public:
     virtual void visitRuleset(RulesetAst* node)
     {
         if (node->lbrace != -1 && m_range.start() >= m_editor->findPosition(node->lbrace).textCursor()) {
-            debug() << "using PropertyContext";
+            ifDebug( debug() << "using PropertyContext"; )
             m_context = CodeCompletionModel::PropertyContext;
         } else if (m_range.start() >= m_editor->findPosition(node->startToken, EditorIntegrator::FrontEdge).textCursor()) {
-            debug() << "using SelectorContext 1";
+            ifDebug( debug() << "using SelectorContext 1"; )
             m_context = CodeCompletionModel::SelectorContext;
         }
         DefaultVisitor::visitRuleset(node);
         if (node->rbrace != -1 && m_range.start() >= m_editor->findPosition(node->rbrace).textCursor()) {
-            debug() << "using SelectorContext 2";
+            ifDebug( debug() << "using SelectorContext 2"; )
             m_context = CodeCompletionModel::SelectorContext;
         }
     }
@@ -90,10 +93,10 @@ public:
     virtual void visitSimpleSelector(SimpleSelectorAst* node)
     {
         if (node->element) {
-            kDebug() << m_lastProperty << m_range.start() << m_editor->findPosition(node->endToken).textCursor();
+            ifDebug( debug() << m_lastProperty << m_range.start() << m_editor->findPosition(node->endToken).textCursor(); )
             if (m_range.start() > m_editor->findPosition(node->endToken).textCursor()) {
                 m_lastSelectorElement = node->element->ident;
-                kDebug() << "set lastSelectorElement" << m_editor->tokenToString(m_lastSelectorElement);
+                ifDebug( debug() << "set lastSelectorElement" << m_editor->tokenToString(m_lastSelectorElement); )
             }
         }
         DefaultVisitor::visitSimpleSelector(node);
@@ -101,10 +104,10 @@ public:
 
     virtual void visitProperty(PropertyAst* node)
     {
-        kDebug() << m_lastProperty << m_range.start() << m_editor->findPosition(node->endToken).textCursor();
+        ifDebug( debug() << m_lastProperty << m_range.start() << m_editor->findPosition(node->endToken).textCursor(); )
         if (m_range.start() > m_editor->findPosition(node->endToken).textCursor()) {
             m_lastProperty = node->ident;
-            kDebug() << "set lastProperty" << m_editor->tokenToString(m_lastProperty);
+            ifDebug( debug() << "set lastProperty" << m_editor->tokenToString(m_lastProperty); )
         }
         DefaultVisitor::visitProperty(node);
     }
@@ -130,13 +133,15 @@ void CodeCompletionModel::completionInvoked(KTextEditor::View* view, const KText
 {
     Q_UNUSED(invocationType);
 
-    debug() << range;
+    ifDebug( debug() << range; )
     ParseSession session;
     session.setContents(view->document()->text());
     Css::StartAst* ast = 0;
     session.parse(&ast);
-    DebugVisitor vis(session.tokenStream(), session.contents());
-    vis.visitNode(ast);
+    ifDebug(
+        DebugVisitor vis(session.tokenStream(), session.contents());
+        vis.visitNode(ast);
+    )
 
     if (ast) {
         EditorIntegrator editor(&session);
