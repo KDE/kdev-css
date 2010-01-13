@@ -142,6 +142,14 @@ void ModelTest::completionItems_data()
         << "body{font-weight: |"
         << (QStringList() << "normal" << "bold");
 
+    QTest::newRow("second field different property2")
+        << "body{font-weight: n|; float: left; }"
+        << (QStringList() << "normal" << "bold");
+
+    QTest::newRow("second field different property")
+        << "body{font-weight: normal; float: |}"
+        << (QStringList() << "right" << "left");
+
     QTest::newRow("second field")
           //01234567890123456789
         << "body{font-weight:normal; |}"

@@ -48,7 +48,7 @@ class FindCurrentNodeVisitor : public DefaultVisitor
 {
 public:
     FindCurrentNodeVisitor(EditorIntegrator* editor, const KTextEditor::Range& range)
-        : m_editor(editor), m_range(range), m_lastSelectorElement(-1), m_context(SelectorContext)
+        : m_editor(editor), m_range(range), m_lastSelectorElement(-1), m_lastProperty(-1), m_context(SelectorContext)
     {}
 
     virtual void visitDeclaration(DeclarationAst* node)
@@ -93,13 +93,23 @@ public:
 
     virtual void visitSimpleSelector(SimpleSelectorAst* node)
     {
-        if (node->element) m_lastSelectorElement = node->element->ident;
+        if (node->element) {
+            kDebug() << m_lastProperty << m_range.start() << m_editor->findPosition(node->endToken).textCursor();
+            if (m_range.start() > m_editor->findPosition(node->endToken).textCursor()) {
+                m_lastSelectorElement = node->element->ident;
+                kDebug() << "set lastSelectorElement" << m_editor->tokenToString(m_lastSelectorElement);
+            }
+        }
         DefaultVisitor::visitSimpleSelector(node);
     }
 
     virtual void visitProperty(PropertyAst* node)
     {
-        m_lastProperty = node->ident;
+        kDebug() << m_lastProperty << m_range.start() << m_editor->findPosition(node->endToken).textCursor();
+        if (m_range.start() > m_editor->findPosition(node->endToken).textCursor()) {
+            m_lastProperty = node->ident;
+            kDebug() << "set lastProperty" << m_editor->tokenToString(m_lastProperty);
+        }
         DefaultVisitor::visitProperty(node);
     }
 
