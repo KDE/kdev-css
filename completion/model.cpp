@@ -33,22 +33,18 @@ extern int debugArea();
 #define debug() kDebug(debugArea())
 
 CodeCompletionModel::CodeCompletionModel(QObject *parent)
-    : CodeCompletionModel2(parent), m_assistData(new ContentAssistData)
+    : CodeCompletionModel2(parent), m_completionContext(NoContext), m_assistData(new ContentAssistData)
 {
 }
 
-enum CompletionContext {
-    NoContext,
-    SelectorContext,
-    PropertyContext,
-    ValueContext
-};
+
 
 class FindCurrentNodeVisitor : public DefaultVisitor
 {
 public:
     FindCurrentNodeVisitor(EditorIntegrator* editor, const KTextEditor::Range& range)
-        : m_editor(editor), m_range(range), m_lastSelectorElement(-1), m_lastProperty(-1), m_context(SelectorContext)
+        : m_editor(editor), m_range(range), m_lastSelectorElement(-1), m_lastProperty(-1),
+          m_context(CodeCompletionModel::SelectorContext)
     {}
 
     virtual void visitDeclaration(DeclarationAst* node)
@@ -59,17 +55,17 @@ public:
             if (m_range.start() >= pos.textCursor()) {
                 if (node->colon != -1 && m_range.start() >= m_editor->findPosition(node->colon, EditorIntegrator::FrontEdge).textCursor()) {
                     debug() << "using ValueContext";
-                    m_context = ValueContext;
+                    m_context = CodeCompletionModel::ValueContext;
                 } else {
                     debug() << "using PropertyContext";
-                    m_context = PropertyContext;
+                    m_context = CodeCompletionModel::PropertyContext;
                 }
             }
         }
         {
             if (node->semicolon != -1 && m_range.start() >= m_editor->findPosition(node->semicolon, EditorIntegrator::FrontEdge).textCursor()) {
                 debug() << "using PropertyContext";
-                m_context = PropertyContext;
+                m_context = CodeCompletionModel::PropertyContext;
             }
         }
         DefaultVisitor::visitDeclaration(node);
@@ -79,15 +75,15 @@ public:
     {
         if (node->lbrace != -1 && m_range.start() >= m_editor->findPosition(node->lbrace).textCursor()) {
             debug() << "using PropertyContext";
-            m_context = PropertyContext;
+            m_context = CodeCompletionModel::PropertyContext;
         } else if (m_range.start() >= m_editor->findPosition(node->startToken, EditorIntegrator::FrontEdge).textCursor()) {
             debug() << "using SelectorContext 1";
-            m_context = SelectorContext;
+            m_context = CodeCompletionModel::SelectorContext;
         }
         DefaultVisitor::visitRuleset(node);
         if (node->rbrace != -1 && m_range.start() >= m_editor->findPosition(node->rbrace).textCursor()) {
             debug() << "using SelectorContext 2";
-            m_context = SelectorContext;
+            m_context = CodeCompletionModel::SelectorContext;
         }
     }
 
@@ -113,7 +109,7 @@ public:
         DefaultVisitor::visitProperty(node);
     }
 
-    CompletionContext currentContext() { return m_context; }
+    CodeCompletionModel::CompletionContext currentContext() { return m_context; }
     QString lastSelectorElement() {
         if (m_lastSelectorElement == -1) return QString();
         return m_editor->tokenToString(m_lastSelectorElement);
@@ -127,7 +123,7 @@ private:
     KTextEditor::Range m_range;
     qint64 m_lastSelectorElement;
     qint64 m_lastProperty;
-    CompletionContext m_context;
+    CodeCompletionModel::CompletionContext m_context;
 };
 
 void CodeCompletionModel::completionInvoked(KTextEditor::View* view, const KTextEditor::Range& range, InvocationType invocationType)
@@ -147,8 +143,9 @@ void CodeCompletionModel::completionInvoked(KTextEditor::View* view, const KText
 
         FindCurrentNodeVisitor visitor(&editor, range);
         visitor.visitNode(ast);
-        debug() << "context" << visitor.currentContext();
-        switch (visitor.currentContext()) {
+        m_completionContext = visitor.currentContext();
+        debug() << "context" << m_completionContext;
+        switch (m_completionContext) {
             case PropertyContext:
             {
                 debug() << "lastSelectorElement" << visitor.lastSelectorElement();
@@ -227,6 +224,18 @@ bool CodeCompletionModel::shouldAbortCompletion(KTextEditor::View* view, const K
     debug() << currentCompletion << "shouldAbort:" << ret;
     return ret;
 }
+
+void CodeCompletionModel::executeCompletionItem2(KTextEditor::Document* document, const KTextEditor::Range& word, const QModelIndex& index) const
+{
+    QString text = data(index.sibling(index.row(), Name), Qt::DisplayRole).toString();
+    if (m_completionContext == PropertyContext) {
+        text += ':';
+    } else if (m_completionContext == ValueContext) {
+        text += ';';
+    }
+    document->replaceText(word, text);
+}
+
 
 }
 

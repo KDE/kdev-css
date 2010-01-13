@@ -40,8 +40,16 @@ public:
     virtual KTextEditor::Range completionRange(KTextEditor::View* view, const KTextEditor::Cursor &position);
     virtual bool shouldAbortCompletion(KTextEditor::View* view, const KTextEditor::SmartRange& range, const QString &currentCompletion);
 
+    virtual void executeCompletionItem2(KTextEditor::Document* document, const KTextEditor::Range& word, const QModelIndex& index) const;
 
+    enum CompletionContext {
+        NoContext,
+        SelectorContext,
+        PropertyContext,
+        ValueContext
+    };
 private:
+    CompletionContext m_completionContext;
     QList<QString> m_items;
     ContentAssistData *m_assistData;
 };

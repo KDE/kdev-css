@@ -108,20 +108,20 @@ void ModelTest::completionItems_data()
 
     QTest::newRow("element")
         << "body{font-|w:normal;}"
-        << (QStringList() << "font-weight:");
+        << (QStringList() << "font-weight");
 
     QTest::newRow("new element")
         << "body{|}"
-        << (QStringList() << "font-weight:");
+        << (QStringList() << "font-weight");
 
     QTest::newRow("new element without value")
         << "body{font-w|}"
-        << (QStringList() << "font-weight:");
+        << (QStringList() << "font-weight");
 
     QTest::newRow("new element without value and without brace")
           //01234567890123456789
         << "body{font-w|"
-        << (QStringList() << "font-weight:");
+        << (QStringList() << "font-weight");
 
     QTest::newRow("field")
           //01234567890123456789
@@ -153,11 +153,11 @@ void ModelTest::completionItems_data()
     QTest::newRow("second field")
           //01234567890123456789
         << "body{font-weight:normal; |}"
-        << (QStringList() << "font-weight:");
+        << (QStringList() << "font-weight");
 
     QTest::newRow("element second line")
         << "body{color:red;}\nbody{font|-w:normal;}"
-        << (QStringList() << "font-weight:");
+        << (QStringList() << "font-weight");
 
     QTest::newRow("selector at start")
         << "|body{}"
