@@ -20,6 +20,8 @@
 
 #include <kpluginfactory.h>
 #include <kpluginloader.h>
+#include <kaboutdata.h>
+
 #include <language/codecompletion/codecompletion.h>
 
 #include "completion/model.h"
@@ -27,7 +29,7 @@
 using namespace KDevelop;
 
 K_PLUGIN_FACTORY(KDevCssSupportFactory, registerPlugin<Css::LanguageSupport>();)
-K_EXPORT_PLUGIN(KDevCssSupportFactory("kdevcsssupport"))
+K_EXPORT_PLUGIN(KDevCssSupportFactory(KAboutData("kdevcsssupport","kdevcss", ki18n("Css Support"), "0.1", ki18n("Support for Css Language"), KAboutData::License_GPL)))
 
 namespace Css
 {
