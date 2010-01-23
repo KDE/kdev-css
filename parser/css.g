@@ -487,8 +487,12 @@ maybeSpace (SGML_CD @ maybeSpace | 0)
 --     }
   property=property
     (colon=COLON | 0 [: reportProblem( Error, "Expected Colon" ); :])
-    maybeSpace expr=expr prio
+    maybeSpace
+    --don't parse next property as expr (happens if there is no expr and semicolon)
+    [: if (LA(2).kind != Token_COLON && !(LA(2).kind == Token_WHITESPACE && LA(3).kind == Token_COLON)) { :]
+    expr=expr prio
     (semicolon=SEMICOLON maybeSpace | 0 )
+    [: } :]
 -> declaration ;;
 
 

@@ -326,43 +326,46 @@ bool Parser::parseDeclaration(DeclarationAst **yynode)
             expectedSymbol(AstNode::MaybeSpaceKind, "maybeSpace");
             return false;
         }
-        ExprAst *__node_11 = 0;
-        if (!parseExpr(&__node_11))
+        if (LA(2).kind != Token_COLON && !(LA(2).kind == Token_WHITESPACE && LA(3).kind == Token_COLON))
         {
-            expectedSymbol(AstNode::ExprKind, "expr");
-            return false;
-        }
-        (*yynode)->expr = __node_11;
-
-        PrioAst *__node_12 = 0;
-        if (!parsePrio(&__node_12))
-        {
-            expectedSymbol(AstNode::PrioKind, "prio");
-            return false;
-        }
-        if (yytoken == Token_SEMICOLON)
-        {
-            if (yytoken != Token_SEMICOLON)
+            ExprAst *__node_11 = 0;
+            if (!parseExpr(&__node_11))
             {
-                expectedToken(yytoken, Token_SEMICOLON, ";");
+                expectedSymbol(AstNode::ExprKind, "expr");
                 return false;
             }
-            (*yynode)->semicolon = tokenStream->index() - 1;
-            yylex();
+            (*yynode)->expr = __node_11;
 
-            MaybeSpaceAst *__node_13 = 0;
-            if (!parseMaybeSpace(&__node_13))
+            PrioAst *__node_12 = 0;
+            if (!parsePrio(&__node_12))
             {
-                expectedSymbol(AstNode::MaybeSpaceKind, "maybeSpace");
+                expectedSymbol(AstNode::PrioKind, "prio");
                 return false;
             }
-        }
-        else if (true /*epsilon*/)
-        {
-        }
-        else
-        {
-            return false;
+            if (yytoken == Token_SEMICOLON)
+            {
+                if (yytoken != Token_SEMICOLON)
+                {
+                    expectedToken(yytoken, Token_SEMICOLON, ";");
+                    return false;
+                }
+                (*yynode)->semicolon = tokenStream->index() - 1;
+                yylex();
+
+                MaybeSpaceAst *__node_13 = 0;
+                if (!parseMaybeSpace(&__node_13))
+                {
+                    expectedSymbol(AstNode::MaybeSpaceKind, "maybeSpace");
+                    return false;
+                }
+            }
+            else if (true /*epsilon*/)
+            {
+            }
+            else
+            {
+                return false;
+            }
         }
     }
     else

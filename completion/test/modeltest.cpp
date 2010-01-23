@@ -154,6 +154,10 @@ void ModelTest::completionItems_data()
         << "body{font-weight: |; float: left}"
         << (QStringList() << "normal" << "bold");
 
+    QTest::newRow("second field without value without semicolon")
+        << "body{font-weight: | float: left}"
+        << (QStringList() << "normal" << "bold");
+
     QTest::newRow("second field")
           //01234567890123456789
         << "body{font-weight:normal; |}"

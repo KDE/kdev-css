@@ -83,6 +83,12 @@ void TestParser::parser_data()
     QTest::newRow("id element selector2") << "#foo a{}";
     QTest::newRow("selector with space") << "a a{}";
     QTest::newRow("empty declaration with space") << "a{ }";
+    QTest::newRow("first property no value") << "a{color:;width:0;}";
+    QTest::newRow("first property no value2") << "a{color: ; width:0;}";
+    QTest::newRow("first property no value no semicolon") << "a{color:width :0;}";
+    QTest::newRow("first property no value no semicolon2") << "a{color:width:0;}";
+    QTest::newRow("first property no value no semicolon3") << "a{color: width:0;}";
+    QTest::newRow("first property no value no semicolon4") << "a { color : width : 0 ; }";
 }
 
 void TestParser::parser()
