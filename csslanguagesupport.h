@@ -44,6 +44,10 @@ public:
 
     virtual KDevelop::ParseJob *createParseJob(const KUrl &url);
 
+    static LanguageSupport* self();
+
+private:
+    static LanguageSupport* m_self;
 };
 
 }

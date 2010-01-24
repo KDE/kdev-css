@@ -25,8 +25,7 @@
 #include <language/codecompletion/codecompletion.h>
 
 #include "completion/model.h"
-
-using namespace KDevelop;
+#include "parsejob.h"
 
 K_PLUGIN_FACTORY(KDevCssSupportFactory, registerPlugin<Css::LanguageSupport>();)
 K_EXPORT_PLUGIN(KDevCssSupportFactory(KAboutData("kdevcsssupport","kdevcss", ki18n("Css Support"), "0.1", ki18n("Support for Css Language"), KAboutData::License_GPL)
@@ -35,6 +34,7 @@ K_EXPORT_PLUGIN(KDevCssSupportFactory(KAboutData("kdevcsssupport","kdevcss", ki1
 
 namespace Css
 {
+LanguageSupport* LanguageSupport::m_self = 0;
 
 int debugArea() { static int s_area = KDebug::registerArea("kdevcsssupport"); return s_area; }
 
@@ -43,6 +43,8 @@ LanguageSupport::LanguageSupport(QObject* parent, const QVariantList& /*args*/)
       KDevelop::ILanguageSupport()
 {
     KDEV_USE_EXTENSION_INTERFACE(KDevelop::ILanguageSupport)
+
+    m_self = this;
 
     CodeCompletionModel* ccModel = new CodeCompletionModel(this);
     new KDevelop::CodeCompletion(this, ccModel, name());
@@ -55,8 +57,13 @@ QString LanguageSupport::name() const
 
 KDevelop::ParseJob *LanguageSupport::createParseJob(const KUrl &url)
 {
-    Q_UNUSED(url);
-    return 0;
+    kDebug(debugArea()) << url;
+    return new ParseJob(url);
+}
+
+LanguageSupport *LanguageSupport::self()
+{
+    return m_self;
 }
 
 

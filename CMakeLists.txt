@@ -36,6 +36,7 @@ set(kdevcsslanguagesupport_PART_SRCS
     csslanguagesupport.cpp
     completion/model.cpp
     completion/contentassistdata.cpp
+    parsejob.cpp
 )
 
 kde4_add_plugin(kdevcsslanguagesupport ${kdevcsslanguagesupport_PART_SRCS})
