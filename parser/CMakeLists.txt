@@ -38,7 +38,6 @@ if(FLEX_FOUND)
     add_custom_command(
         OUTPUT  "${CMAKE_CURRENT_BINARY_DIR}/tokenizer.cpp"
         MAIN_DEPENDENCY "${CMAKE_CURRENT_BINARY_DIR}/tokenizer.flex"
-        DEPENDS "${CMAKE_CURRENT_BINARY_DIR}/cssparser.h"
         COMMAND ${FLEX_EXECUTABLE}
         ARGS    -o"tokenizer.cpp"
                 "tokenizer.flex"
@@ -52,8 +51,8 @@ else(FLEX_FOUND)
         COMMAND ${CMAKE_COMMAND}  ARGS -E copy_if_different
                 "${CMAKE_CURRENT_SOURCE_DIR}/generated/tokenizer.cpp"
                 "${CMAKE_CURRENT_BINARY_DIR}/tokenizer.cpp"
-        COMMENT "flex is not installed, using the pre-generated lexer from SVN."
     )
+    message(STATUS "flex is not installed, using the pre-generated lexer from SVN.")
 endif(FLEX_FOUND)
 
 
