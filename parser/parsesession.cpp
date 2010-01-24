@@ -103,11 +103,10 @@ bool ParseSession::parse(Css::StartAst** ast)
     Parser* parser = createParser();
     StartAst* phpAst;
     bool matched = parser->parseStart(&phpAst);
+    *ast = phpAst;
     if (matched) {
         kDebug() << "Successfully parsed";
-        *ast = phpAst;
     } else {
-        *ast = 0;
         parser->expectedSymbol(AstNode::StartKind, "start");
         kDebug() << "Couldn't parse content";
     }
