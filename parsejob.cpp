@@ -31,10 +31,13 @@
 #include <language/duchain/topducontext.h>
 #include <interfaces/ilanguage.h>
 #include <language/duchain/parsingenvironment.h>
+#include <language/duchain/declaration.h>
 
 #include "parser/editorintegrator.h"
 #include "parser/parsesession.h"
 #include "csslanguagesupport.h"
+#include <language/duchain/functiondeclaration.h>
+#include "duchain/builders/contextbuilder.h"
 
 
 namespace Css
@@ -179,20 +182,28 @@ void ParseJob::run()
         top = KDevelop::DUChain::self()->chainForDocument(document());
     }
 
-    if (top) {
-        KDevelop::DUChainWriteLocker lock(KDevelop::DUChain::lock());
-        top->clearImportedParentContexts();
-        top->parsingEnvironmentFile()->clearModificationRevisions();
-        top->clearProblems();
-    } else {
-        KDevelop::DUChainWriteLocker lock(KDevelop::DUChain::lock());
-        KDevelop::ParsingEnvironmentFile *file = new KDevelop::ParsingEnvironmentFile(document());
-        file->setLanguage(KDevelop::IndexedString("Css"));
-        top = new KDevelop::TopDUContext(document(), KDevelop::SimpleRange(KDevelop::SimpleCursor(0, 0), KDevelop::SimpleCursor(INT_MAX, INT_MAX)), file);
-        KDevelop::DUChain::self()->addDocumentChain(top);
-    }
+    ContextBuilder builder(&session);
+    top = builder.build(document(), ast, top);
+    Q_ASSERT(top);
     setDuChain(top);
 
+/*
+that would display as something in the outline:
+    {
+        KDevelop::DUChainWriteLocker lock(KDevelop::DUChain::lock());
+
+        KDevelop::Declaration* td = new KDevelop::Declaration(KDevelop::SimpleRange(0, 0, 0, 10), top);
+        td->setKind(KDevelop::Declaration::Type);
+        td->setIdentifier(KDevelop::Identifier("test1"));
+        KDevelop::DUContext* ctx = new KDevelop::DUContext(KDevelop::SimpleRange(1, 0, 1, 10), top);
+        ctx->setType(KDevelop::DUContext::Class);
+        td->setInternalContext(ctx);
+
+        td = new KDevelop::FunctionDeclaration(KDevelop::SimpleRange(2, 0, 2, 10), top);
+        td->setKind(KDevelop::Declaration::Type);
+        td->setIdentifier(KDevelop::Identifier("test4"));
+    }
+*/
     if (abortRequested()) {
         return abortJob();
     }

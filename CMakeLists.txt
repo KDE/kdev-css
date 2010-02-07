@@ -37,6 +37,7 @@ set(kdevcsslanguagesupport_PART_SRCS
     completion/model.cpp
     completion/contentassistdata.cpp
     parsejob.cpp
+    duchain/builders/contextbuilder.cpp
 )
 
 kde4_add_plugin(kdevcsslanguagesupport ${kdevcsslanguagesupport_PART_SRCS})
@@ -63,6 +64,22 @@ set(completionmodeltest_SRCS
 )
 kde4_add_unit_test(completionmodeltest ${completionmodeltest_SRCS})
 target_link_libraries(completionmodeltest
+    kdev4cssparser
+    ${KDE4_KDEUI_LIBS}
+    ${KDE4_KTEXTEDITOR_LIBS}
+    ${QT_QTGUI_LIBRARY}
+    ${QT_QTTEST_LIBRARY}
+)
+
+
+### next target
+set(duchaintest_SRCS
+    duchain/tests/duchain.cpp
+    duchain/tests/duchaintestbase.cpp
+    duchain/builders/contextbuilder.cpp
+)
+kde4_add_unit_test(duchaintest ${duchaintest_SRCS})
+target_link_libraries(duchaintest
     kdev4cssparser
     ${KDE4_KDEUI_LIBS}
     ${KDE4_KTEXTEDITOR_LIBS}
