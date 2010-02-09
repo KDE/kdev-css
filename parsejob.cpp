@@ -36,8 +36,7 @@
 #include "parser/editorintegrator.h"
 #include "parser/parsesession.h"
 #include "csslanguagesupport.h"
-#include <language/duchain/functiondeclaration.h>
-#include "duchain/builders/contextbuilder.h"
+#include "duchain/builders/declarationbuilder.h"
 
 
 namespace Css
@@ -182,7 +181,7 @@ void ParseJob::run()
         top = KDevelop::DUChain::self()->chainForDocument(document());
     }
 
-    ContextBuilder builder(&session);
+    DeclarationBuilder builder(&session);
     top = builder.build(document(), ast, top);
     Q_ASSERT(top);
     setDuChain(top);

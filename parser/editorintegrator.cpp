@@ -79,6 +79,12 @@ QString EditorIntegrator::tokenToString(qint64 token) const
     return m_session->symbol(token);
 }
 
+QString EditorIntegrator::nodeToString(AstNode* node) const
+{
+    return m_session->symbol(node);
+}
+
+
 ParseSession * EditorIntegrator::parseSession() const
 {
     return m_session;

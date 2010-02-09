@@ -30,7 +30,7 @@
 
 #include "../../parser/parsesession.h"
 #include "cssdebugvisitor.h"
-#include "../builders/contextbuilder.h"
+#include "../builders/declarationbuilder.h"
 
 
 namespace Css
@@ -69,7 +69,7 @@ KDevelop::TopDUContext* DUChainTestBase::parse(const QByteArray& unit, DumpAreas
     if (url.isEmpty()) url = QString("file:///internal/%1").arg(testNumber++);
 
 
-    ContextBuilder builder(session);
+    DeclarationBuilder builder(session);
     KDevelop::TopDUContext* top = builder.build(KDevelop::IndexedString(url), ast);
 
     if (dump & DumpDUChain) {

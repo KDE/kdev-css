@@ -115,6 +115,7 @@ public:
      * Retrieve the string represented by a token.
      */
     QString tokenToString(qint64 token) const;
+    QString nodeToString(AstNode *node) const;
 
 private:
     ParseSession* m_session;

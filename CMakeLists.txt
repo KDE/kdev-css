@@ -38,6 +38,7 @@ set(kdevcsslanguagesupport_PART_SRCS
     completion/contentassistdata.cpp
     parsejob.cpp
     duchain/builders/contextbuilder.cpp
+    duchain/builders/declarationbuilder.cpp
 )
 
 kde4_add_plugin(kdevcsslanguagesupport ${kdevcsslanguagesupport_PART_SRCS})
@@ -77,6 +78,7 @@ set(duchaintest_SRCS
     duchain/tests/duchain.cpp
     duchain/tests/duchaintestbase.cpp
     duchain/builders/contextbuilder.cpp
+    duchain/builders/declarationbuilder.cpp
 )
 kde4_add_unit_test(duchaintest ${duchaintest_SRCS})
 target_link_libraries(duchaintest

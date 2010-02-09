@@ -40,9 +40,8 @@
 namespace Css
 {
 
-ContextBuilder::ContextBuilder(ParseSession* session) : m_reportErrors(true)
+ContextBuilder::ContextBuilder() : m_reportErrors(true)
 {
-    setEditor(session);
 }
 
 ContextBuilder::~ContextBuilder()

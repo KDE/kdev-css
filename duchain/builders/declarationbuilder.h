@@ -18,55 +18,39 @@
  *   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.         *
  ***************************************************************************/
 
-#ifndef CONTEXTBUILDER_H
-#define CONTEXTBUILDER_H
+#ifndef DECLARATIONBUILDER_H
+#define DECLARATIONBUILDER_H
 
-#include "cssdefaultvisitor.h"
-#include <language/duchain/builders/abstractcontextbuilder.h>
+#include "contextbuilder.h"
+#include <language/duchain/builders/abstractdeclarationbuilder.h>
 
-// #include "cssduchainexport.h"
-// #include "helper.h"
-
-
+namespace KDvelop
+{
+class Declaration;
+}
 namespace Css
 {
-class EditorIntegrator;
 class ParseSession;
+class EditorIntegrator;
 
-typedef KDevelop::AbstractContextBuilder<AstNode, SpecifierAst> ContextBuilderBase;
+typedef KDevelop::AbstractDeclarationBuilder<AstNode, SpecifierAst, ContextBuilder> DeclarationBuilderBase;
 
-class ContextBuilder: public ContextBuilderBase, public DefaultVisitor
+class DeclarationBuilder : public DeclarationBuilderBase
 {
-
 public:
-    ContextBuilder();
-    virtual ~ContextBuilder();
-
-    void setEditor(EditorIntegrator* editor);
-    void setEditor(ParseSession* session);
-    virtual KDevelop::ReferencedTopDUContext build(const KDevelop::IndexedString& url, AstNode* node,
-            KDevelop::ReferencedTopDUContext updateContext
-            = KDevelop::ReferencedTopDUContext(), bool useSmart = true);
+    DeclarationBuilder(ParseSession* session) {
+        setEditor(session);
+    }
+    DeclarationBuilder(EditorIntegrator* editor) {
+        setEditor(editor);
+    }
 protected:
-    EditorIntegrator* editor() const;
-
-    virtual KDevelop::TopDUContext* newTopContext(const KDevelop::SimpleRange& range, KDevelop::ParsingEnvironmentFile* file = 0);
-
-    virtual void startVisiting(AstNode* node);
-    virtual void setContextOnNode(AstNode* node, KDevelop::DUContext* ctx);
-    virtual KDevelop::DUContext* contextFromNode(AstNode* node);
-    virtual KTextEditor::Range editorFindRange(AstNode* fromRange, AstNode* toRange);
-    /// Find Cursor for start of a node, useful to limit findLocalDeclarations() searches.
-    KDevelop::SimpleCursor startPos(AstNode* node);
-
-    virtual KDevelop::QualifiedIdentifier identifierForNode(SpecifierAst* id);
-
     virtual void visitRuleset(RulesetAst* node);
 
-    /// Whether semantic problems should get reported
-    bool m_reportErrors;
+    virtual void closeDeclaration();
 };
 
 }
 
-#endif
+#endif // DECLARATIONBUILDER_H
+
