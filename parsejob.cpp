@@ -25,6 +25,7 @@
 #include <QtCore/QThread>
 
 #include <kdebug.h>
+#include <KMimeType>
 
 #include <language/duchain/duchainlock.h>
 #include <language/duchain/duchain.h>
@@ -158,7 +159,8 @@ void ParseJob::run()
     }
 
     QList<HtmlParser::Part> parts;
-    if (document().str().endsWith(".css")) { //TODO use mime type
+
+    if (KMimeType::findByUrl(document().toUrl())->name() == "text/css") {
         HtmlParser::Part part;
         part.contents = contents;
         part.range.start = KDevelop::SimpleCursor(0, 0);
