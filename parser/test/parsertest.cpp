@@ -116,7 +116,8 @@ void TestParser::multiline()
     RuleAst* el = ast->rules->rulesSequence->at(1)->element;
     debugVisitor.visitNode(el);
 
-    EditorIntegrator editor(&session);
+    EditorIntegrator editor;
+    editor.setParseSession(&session);
     kDebug() << editor.findPosition(el->startToken, KDevelop::EditorIntegrator::FrontEdge).textCursor();
     kDebug() << editor.findPosition(el->endToken, KDevelop::EditorIntegrator::BackEdge).textCursor();
     QCOMPARE(editor.findPosition(el->endToken, KDevelop::EditorIntegrator::BackEdge),

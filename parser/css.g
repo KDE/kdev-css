@@ -28,6 +28,7 @@
 #include <QtCore/QString>
 #include <kdebug.h>
 #include <language/interfaces/iproblem.h>
+#include "parser/editorintegrator.h"
 
 :]
 
@@ -118,6 +119,19 @@
 
 
 -- The actual grammar starts here.
+
+-- these rule isn't used by the parser, it's as ast node
+-- to support multiple style elements in one html file
+  0
+-> html [
+     member variable elements: QList<StyleElementAst*>;
+];;
+
+  start=start
+-> styleElement [
+     member variable session: ParseSession*;
+];;
+-- end custom rules
 
 
   (charset=charset | 0)

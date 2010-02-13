@@ -20,6 +20,7 @@ public:
     virtual void visitElementName(ElementNameAst *node);
     virtual void visitExpr(ExprAst *node);
     virtual void visitHexcolor(HexcolorAst *node);
+    virtual void visitHtml(HtmlAst *node);
     virtual void visitIdentOrString(IdentOrStringAst *node);
     virtual void visitImport(ImportAst *node);
     virtual void visitImportList(ImportListAst *node);
@@ -41,6 +42,7 @@ public:
     virtual void visitSpecifierList(SpecifierListAst *node);
     virtual void visitStart(StartAst *node);
     virtual void visitStringOrUri(StringOrUriAst *node);
+    virtual void visitStyleElement(StyleElementAst *node);
     virtual void visitTerm(TermAst *node);
     virtual void visitUnaryOperator(UnaryOperatorAst *node);
     virtual void visitUnaryTerm(UnaryTermAst *node);

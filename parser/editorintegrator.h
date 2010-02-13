@@ -43,8 +43,8 @@ class AstNode;
 class KDEVCSSPARSER_EXPORT EditorIntegrator : public KDevelop::EditorIntegrator
 {
 public:
-    EditorIntegrator(ParseSession* session);
-
+    EditorIntegrator();
+    void setParseSession(ParseSession* session);
     ParseSession* parseSession() const;
 
     /**

@@ -174,7 +174,8 @@ void CodeCompletionModel::completionInvoked(KTextEditor::View* view, const KText
     )
 
     if (ast) {
-        EditorIntegrator editor(&session);
+        EditorIntegrator editor;
+        editor.setParseSession(&session);
 
         FindCurrentNodeVisitor visitor(&editor, range);
         visitor.visitNode(ast);

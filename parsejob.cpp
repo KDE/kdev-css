@@ -95,6 +95,13 @@ LanguageSupport *ParseJob::css() const
     return LanguageSupport::self();
 }
 
+
+struct MyAst : public StyleElementAst {
+    ~MyAst() {
+        kDebug() << "********************";
+    }
+};
+
 void ParseJob::run()
 {
     UrlParseLock urlLock(document());
@@ -176,6 +183,29 @@ void ParseJob::run()
     }
     Q_ASSERT(!parts.isEmpty());
 
+    HtmlAst *fileAst = new HtmlAst;
+    fileAst->kind = HtmlAst::KIND;
+    foreach (const HtmlParser::Part &part, parts) {
+
+        ParseSession *session = new ParseSession;
+        session->setCurrentDocument(document().str());
+        session->setOffset(part.range.start);
+        session->setContents(part.contents);
+
+        StyleElementAst *el = new StyleElementAst;
+        el->kind = StyleElementAst::KIND;
+        StartAst* ast = 0;
+        session->parse(&ast);
+        el->start = ast;
+        el->session = session;
+        fileAst->elements << el;
+
+        if (abortRequested())
+        {
+            return abortJob();
+        }
+    }
+
     KDevelop::ReferencedTopDUContext top;
     {
         KDevelop::DUChainReadLocker lock(KDevelop::DUChain::lock());
@@ -190,31 +220,23 @@ void ParseJob::run()
     } else {
         debug() << "compiling" << document().str();
     }
-    foreach (const HtmlParser::Part &part, parts) {
-        ParseSession session;
-        session.setCurrentDocument(document().str());
-        session.setOffset(part.range.start);
-        session.setContents(part.contents);
 
-        StartAst* ast = 0;
-        session.parse(&ast);
+    QReadLocker parseLock(css()->language()->parseLock());
 
-        if (abortRequested()) {
-            return abortJob();
-        }
+    EditorIntegrator editor;
+    DeclarationBuilder builder;
+    builder.setEditor(&editor);
+    top = builder.build(document(), fileAst, top);
+    Q_ASSERT(top);
 
-        EditorIntegrator editor(&session);
+    foreach (StyleElementAst *el, fileAst->elements) {
 
-        QReadLocker parseLock(css()->language()->parseLock());
-
-        DeclarationBuilder builder(&session);
-        top = builder.build(document(), ast, top);
-        Q_ASSERT(top);
-
-        foreach(const KDevelop::ProblemPointer &p, session.problems()) {
+        foreach(const KDevelop::ProblemPointer &p, el->session->problems()) {
             KDevelop::DUChainWriteLocker lock(KDevelop::DUChain::lock());
             top->addProblem(p);
         }
+        delete el->session;
+        el->session = 0;
 
         if (abortRequested()) {
             return abortJob();
@@ -235,7 +257,6 @@ void ParseJob::run()
     } else {
         file->setModificationRevision(KDevelop::ModificationRevision(lastModified, revisionToken()));
     }
-
     KDevelop::DUChain::self()->updateContextEnvironment( top->topContext(), file.data() );
 }
 

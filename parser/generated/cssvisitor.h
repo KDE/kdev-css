@@ -28,6 +28,7 @@ public:
     virtual void visitElementName(ElementNameAst *) {}
     virtual void visitExpr(ExprAst *) {}
     virtual void visitHexcolor(HexcolorAst *) {}
+    virtual void visitHtml(HtmlAst *) {}
     virtual void visitIdentOrString(IdentOrStringAst *) {}
     virtual void visitImport(ImportAst *) {}
     virtual void visitImportList(ImportListAst *) {}
@@ -49,6 +50,7 @@ public:
     virtual void visitSpecifierList(SpecifierListAst *) {}
     virtual void visitStart(StartAst *) {}
     virtual void visitStringOrUri(StringOrUriAst *) {}
+    virtual void visitStyleElement(StyleElementAst *) {}
     virtual void visitTerm(TermAst *) {}
     virtual void visitUnaryOperator(UnaryOperatorAst *) {}
     virtual void visitUnaryTerm(UnaryTermAst *) {}

@@ -190,6 +190,7 @@ public:
     bool parseElementName(ElementNameAst **yynode);
     bool parseExpr(ExprAst **yynode);
     bool parseHexcolor(HexcolorAst **yynode);
+    bool parseHtml(HtmlAst **yynode);
     bool parseIdentOrString(IdentOrStringAst **yynode);
     bool parseImport(ImportAst **yynode);
     bool parseImportList(ImportListAst **yynode);
@@ -211,6 +212,7 @@ public:
     bool parseSpecifierList(SpecifierListAst **yynode);
     bool parseStart(StartAst **yynode);
     bool parseStringOrUri(StringOrUriAst **yynode);
+    bool parseStyleElement(StyleElementAst **yynode);
     bool parseTerm(TermAst **yynode);
     bool parseUnaryOperator(UnaryOperatorAst **yynode);
     bool parseUnaryTerm(UnaryTermAst **yynode);

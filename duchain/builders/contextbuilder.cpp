@@ -54,7 +54,6 @@ KDevelop::ReferencedTopDUContext ContextBuilder::build(const KDevelop::IndexedSt
     if ( KDevelop::ICore::self() ) {
         m_reportErrors = KDevelop::ICore::self()->languageController()->completionSettings()->highlightSemanticProblems();
     }
-
     return ContextBuilderBase::build(url, node, updateContext, useSmart);
 }
 
@@ -63,15 +62,18 @@ void ContextBuilder::setEditor(EditorIntegrator* editor)
     ContextBuilderBase::setEditor(editor, false);
 }
 
-void ContextBuilder::setEditor(ParseSession* session)
-{
-    EditorIntegrator* e = new EditorIntegrator(session);
-    ContextBuilderBase::setEditor(e, true);
-}
-
 void ContextBuilder::startVisiting(AstNode* node)
 {
-    visitNode(node);
+    if (node->kind == HtmlAst::KIND) {
+        foreach (StyleElementAst *el, static_cast<HtmlAst*>(node)->elements) {
+            editor()->setParseSession(el->session);
+            visitNode(el->start);
+        }
+    } else {
+        qDebug()  << node->kind;
+        Q_ASSERT(node->kind == StartAst::KIND);
+        visitNode(node);
+    }
 }
 
 KDevelop::TopDUContext* ContextBuilder::newTopContext(const KDevelop::SimpleRange& range, KDevelop::ParsingEnvironmentFile* file)

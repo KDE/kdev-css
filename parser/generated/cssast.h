@@ -13,6 +13,7 @@
 #include <QtCore/QString>
 #include <kdebug.h>
 #include <language/interfaces/iproblem.h>
+#include "parser/editorintegrator.h"
 
 
 namespace Css
@@ -25,6 +26,7 @@ struct DeclarationListAst;
 struct ElementNameAst;
 struct ExprAst;
 struct HexcolorAst;
+struct HtmlAst;
 struct IdentOrStringAst;
 struct ImportAst;
 struct ImportListAst;
@@ -46,6 +48,7 @@ struct SpecifierAst;
 struct SpecifierListAst;
 struct StartAst;
 struct StringOrUriAst;
+struct StyleElementAst;
 struct TermAst;
 struct UnaryOperatorAst;
 struct UnaryTermAst;
@@ -64,30 +67,32 @@ struct KDEVCSSPARSER_EXPORT AstNode
         ElementNameKind = 1004,
         ExprKind = 1005,
         HexcolorKind = 1006,
-        IdentOrStringKind = 1007,
-        ImportKind = 1008,
-        ImportListKind = 1009,
-        MatchKind = 1010,
-        MaybeSgmlKind = 1011,
-        MaybeSpaceKind = 1012,
-        OperatorKind = 1013,
-        PrioKind = 1014,
-        PropertyKind = 1015,
-        PseudoKind = 1016,
-        RuleKind = 1017,
-        RuleListKind = 1018,
-        RulesetKind = 1019,
-        SelectorKind = 1020,
-        SelectorListKind = 1021,
-        SimpleSelectorKind = 1022,
-        SimpleSelectorWithWhitespaceKind = 1023,
-        SpecifierKind = 1024,
-        SpecifierListKind = 1025,
-        StartKind = 1026,
-        StringOrUriKind = 1027,
-        TermKind = 1028,
-        UnaryOperatorKind = 1029,
-        UnaryTermKind = 1030,
+        HtmlKind = 1007,
+        IdentOrStringKind = 1008,
+        ImportKind = 1009,
+        ImportListKind = 1010,
+        MatchKind = 1011,
+        MaybeSgmlKind = 1012,
+        MaybeSpaceKind = 1013,
+        OperatorKind = 1014,
+        PrioKind = 1015,
+        PropertyKind = 1016,
+        PseudoKind = 1017,
+        RuleKind = 1018,
+        RuleListKind = 1019,
+        RulesetKind = 1020,
+        SelectorKind = 1021,
+        SelectorListKind = 1022,
+        SimpleSelectorKind = 1023,
+        SimpleSelectorWithWhitespaceKind = 1024,
+        SpecifierKind = 1025,
+        SpecifierListKind = 1026,
+        StartKind = 1027,
+        StringOrUriKind = 1028,
+        StyleElementKind = 1029,
+        TermKind = 1030,
+        UnaryOperatorKind = 1031,
+        UnaryTermKind = 1032,
         AST_NODE_KIND_COUNT
     };
 
@@ -148,6 +153,13 @@ struct KDEVCSSPARSER_EXPORT HexcolorAst: public AstNode
 {
     enum { KIND = HexcolorKind };
 
+};
+
+struct KDEVCSSPARSER_EXPORT HtmlAst: public AstNode
+{
+    enum { KIND = HtmlKind };
+
+    QList<StyleElementAst*> elements;
 };
 
 struct KDEVCSSPARSER_EXPORT IdentOrStringAst: public AstNode
@@ -300,6 +312,14 @@ struct KDEVCSSPARSER_EXPORT StringOrUriAst: public AstNode
 
     qint64 string;
     qint64 uri;
+};
+
+struct KDEVCSSPARSER_EXPORT StyleElementAst: public AstNode
+{
+    enum { KIND = StyleElementKind };
+
+    ParseSession* session;
+    StartAst *start;
 };
 
 struct KDEVCSSPARSER_EXPORT TermAst: public AstNode

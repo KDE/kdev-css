@@ -31,9 +31,14 @@
 using namespace KTextEditor;
 using namespace Css;
 
-EditorIntegrator::EditorIntegrator(ParseSession* session)
-        : m_session(session)
+EditorIntegrator::EditorIntegrator()
+        : m_session(0)
 {
+}
+
+void EditorIntegrator::setParseSession(ParseSession* session)
+{
+    m_session = session;
 }
 
 KDevelop::SimpleCursor EditorIntegrator::findPosition(qint64 token, Edge edge) const

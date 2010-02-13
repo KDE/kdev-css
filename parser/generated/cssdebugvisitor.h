@@ -99,6 +99,14 @@ public:
         m_indent--;
     }
 
+    virtual void visitHtml(HtmlAst *node)
+    {
+        if (!m_indent) printToken(node, "html");
+        m_indent++;
+        DefaultVisitor::visitHtml(node);
+        m_indent--;
+    }
+
     virtual void visitIdentOrString(IdentOrStringAst *node)
     {
         if (!m_indent) printToken(node, "identOrString");
@@ -316,6 +324,15 @@ public:
         if (!m_indent) printToken(node, "stringOrUri");
         m_indent++;
         DefaultVisitor::visitStringOrUri(node);
+        m_indent--;
+    }
+
+    virtual void visitStyleElement(StyleElementAst *node)
+    {
+        if (!m_indent) printToken(node, "styleElement");
+        if (node->start) printToken(node->start, "start", "start");
+        m_indent++;
+        DefaultVisitor::visitStyleElement(node);
         m_indent--;
     }
 

@@ -38,12 +38,10 @@ typedef KDevelop::AbstractDeclarationBuilder<AstNode, SpecifierAst, ContextBuild
 class DeclarationBuilder : public DeclarationBuilderBase
 {
 public:
-    DeclarationBuilder(ParseSession* session) {
-        setEditor(session);
-    }
     DeclarationBuilder(EditorIntegrator* editor) {
         setEditor(editor);
     }
+    DeclarationBuilder() {}
 protected:
     virtual void visitRuleset(RulesetAst* node);
 

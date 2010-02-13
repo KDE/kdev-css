@@ -68,8 +68,9 @@ KDevelop::TopDUContext* DUChainTestBase::parse(const QByteArray& unit, DumpAreas
     static int testNumber = 0;
     if (url.isEmpty()) url = QString("file:///internal/%1").arg(testNumber++);
 
-
-    DeclarationBuilder builder(session);
+    EditorIntegrator editor;
+    editor.setParseSession(session);
+    DeclarationBuilder builder(&editor);
     KDevelop::TopDUContext* top = builder.build(KDevelop::IndexedString(url), ast);
 
     if (dump & DumpDUChain) {

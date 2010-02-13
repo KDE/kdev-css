@@ -58,6 +58,10 @@ void DefaultVisitor::visitHexcolor(HexcolorAst *)
 {
 }
 
+void DefaultVisitor::visitHtml(HtmlAst *)
+{
+}
+
 void DefaultVisitor::visitIdentOrString(IdentOrStringAst *)
 {
 }
@@ -192,6 +196,11 @@ void DefaultVisitor::visitStart(StartAst *node)
 
 void DefaultVisitor::visitStringOrUri(StringOrUriAst *)
 {
+}
+
+void DefaultVisitor::visitStyleElement(StyleElementAst *node)
+{
+    visitNode(node->start);
 }
 
 void DefaultVisitor::visitTerm(TermAst *node)
