@@ -101,107 +101,126 @@ void ModelTest::testCompletionRangeSecondLine()
 
 void ModelTest::completionItems_data()
 {
+    QTest::addColumn<QString>("type");
     QTest::addColumn<QString>("text");
     QTest::addColumn<QStringList>("result");
 
     // | is the cursor
 
-    QTest::newRow("element")
+    QTest::newRow("element") << "css"
         << "body{font-|w:normal;}"
         << (QStringList() << "font-weight");
 
-    QTest::newRow("new element")
+    QTest::newRow("new element") << "css"
         << "body{|}"
         << (QStringList() << "font-weight");
 
-    QTest::newRow("new element without value")
+    QTest::newRow("new element without value") << "css"
         << "body{font-w|}"
         << (QStringList() << "font-weight");
 
-    QTest::newRow("new element without value and without brace")
+    QTest::newRow("new element without value and without brace") << "css"
           //01234567890123456789
         << "body{font-w|"
         << (QStringList() << "font-weight");
 
-    QTest::newRow("field")
+    QTest::newRow("field") << "css"
           //01234567890123456789
         << "body{font-weight:|normal;}"
         << (QStringList() << "normal" << "bold");
 
-    QTest::newRow("field without expression")
+    QTest::newRow("field without expression") << "css"
         << "body{font-weight:|}"
         << (QStringList() << "normal" << "bold");
 
-    QTest::newRow("field without expression and without brace")
+    QTest::newRow("field without expression and without brace") << "css"
           //012345678901234567
         << "body{font-weight:|"
         << (QStringList() << "normal" << "bold");
 
-    QTest::newRow("field without expression and without brace with space")
+    QTest::newRow("field without expression and without brace with space") << "css"
           //0123456789012345678
         << "body{font-weight: |"
         << (QStringList() << "normal" << "bold");
 
-    QTest::newRow("second field different property2")
+    QTest::newRow("second field different property2") << "css"
         << "body{font-weight: n|; float: left; }"
         << (QStringList() << "normal" << "bold");
 
-    QTest::newRow("second field different property")
+    QTest::newRow("second field different property") << "css"
         << "body{font-weight: normal; float: |}"
         << (QStringList() << "right" << "left");
 
-    QTest::newRow("second field without value")
+    QTest::newRow("second field without value") << "css"
         << "body{font-weight: |; float: left}"
         << (QStringList() << "normal" << "bold");
 
-    QTest::newRow("second field without value without semicolon")
+    QTest::newRow("second field without value without semicolon") << "css"
         << "body{font-weight: | float: left}"
         << (QStringList() << "normal" << "bold");
 
-    QTest::newRow("second field")
+    QTest::newRow("second field") << "css"
           //01234567890123456789
         << "body{font-weight:normal; |}"
         << (QStringList() << "font-weight");
 
-    QTest::newRow("element second line")
+    QTest::newRow("element second line") << "css"
         << "body{color:red;}\nbody{font|-w:normal;}"
         << (QStringList() << "font-weight");
 
-    QTest::newRow("selector at start")
+    QTest::newRow("selector at start") << "css"
         << "|body{}"
         << (QStringList() << "body" << "a");
 
-    QTest::newRow("selector")
+    QTest::newRow("selector") << "css"
         << "body{}|"
         << (QStringList() << "body" << "a");
 
-    QTest::newRow("selector second line")
+    QTest::newRow("selector second line") << "css"
         << "body{font-weight: bolder;}|\nbody{font-weight: asdf;}"
         << (QStringList() << "body" << "a");
 
-    QTest::newRow("selector with space")
+    QTest::newRow("selector with space") << "css"
         << "body{} |"
         << (QStringList() << "body" << "a");
 
-    QTest::newRow("selector separated with space")
+    QTest::newRow("selector separated with space") << "css"
         << "body |{}"
         << (QStringList() << "body" << "a");
     
-    QTest::newRow("selector separated with comma")
+    QTest::newRow("selector separated with comma") << "css"
         << "body, |{}"
         << (QStringList() << "body" << "a");
 
-    QTest::newRow("selector separated with space without braces")
+    QTest::newRow("selector separated with space without braces") << "css"
         << "body |"
         << (QStringList() << "body" << "a");
 
-    QTest::newRow("selector separated with comma without braces")
+    QTest::newRow("selector separated with comma without braces") << "css"
         << "body, |"
         << (QStringList() << "body" << "a");
 
-    QTest::newRow("selector empty text")
+    QTest::newRow("selector empty text") << "css"
         << "|"
         << (QStringList() << "body" << "a");
+
+    //************************** HTML
+
+    QTest::newRow("in empty style element") << "html"
+        << "<html><style>|</style></html>"
+        << (QStringList() << "body" << "a");
+
+    QTest::newRow("outside style element") << "html"
+        << "<html>|<style></style></html>"
+        << (QStringList());
+
+    QTest::newRow("empty html") << "html"
+        << ""
+        << (QStringList());
+
+    QTest::newRow("html fields") << "html"
+        << "<html><style>a { font-weight: b|; }</style></html>"
+        << (QStringList() << "bold" << "normal");
 }
 
 void ModelTest::completionItems()
@@ -209,12 +228,23 @@ void ModelTest::completionItems()
     KTextEditor::Document* doc = KTextEditor::EditorChooser::editor()->createDocument(0);
 
     QFETCH(QString, text);
+    QFETCH(QString, type);
+
     KTextEditor::Cursor position;
     QString textBeforeCursor = text.left(text.indexOf('|'));
     position.setLine(textBeforeCursor.count('\n'));
     position.setColumn(textBeforeCursor.mid(textBeforeCursor.lastIndexOf('\n')).length());
+
     text.replace('|', "");
-    doc->setText(text);
+
+    QTemporaryFile file("XXXXXXXXX."+type);
+    file.open();
+    file.write(text.toUtf8());
+    file.close();
+
+    doc->openUrl(KUrl("file://"+QDir::current().absoluteFilePath(file.fileName())));
+
+    QCOMPARE(doc->mimeType(), QString("text/")+type);
 
     KTextEditor::View* view = doc->createView(0);
     CodeCompletionModel* model = new CodeCompletionModel(doc);

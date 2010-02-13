@@ -36,7 +36,11 @@ namespace Css
 {
 LanguageSupport* LanguageSupport::m_self = 0;
 
+#if KDE_VERSION > KDE_MAKE_VERSION(4, 3, 80)
 int debugArea() { static int s_area = KDebug::registerArea("kdevcsssupport"); return s_area; }
+#else
+int debugArea() { return 1; }
+#endif
 
 LanguageSupport::LanguageSupport(QObject* parent, const QVariantList& /*args*/)
     : KDevelop::IPlugin(KDevCssSupportFactory::componentData(), parent),

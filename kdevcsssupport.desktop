@@ -51,6 +51,6 @@ X-KDevelop-Version=8
 X-KDevelop-Language=Css
 X-KDevelop-Args=CSS
 X-KDevelop-Interfaces=ILanguageSupport
-X-KDevelop-SupportedMimeTypes=text/css
+X-KDevelop-SupportedMimeTypes=text/css,text/html
 X-KDE-PluginInfo-Name=KDevCssSupport
 X-KDevelop-Mode=NoGUI

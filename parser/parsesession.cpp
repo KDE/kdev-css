@@ -29,6 +29,7 @@
 
 #include <QFile>
 #include <QTextCodec>
+#include <KLocalizedString>
 
 namespace Css
 {
@@ -60,6 +61,10 @@ void ParseSession::setCurrentDocument(const QString& filename)
     m_currentDocument = filename;
 }
 
+void ParseSession::setDebug(bool debug)
+{
+    m_debug = debug;
+}
 bool ParseSession::readFile(const QString& filename, const char* codec)
 {
     m_currentDocument = filename;
@@ -75,9 +80,10 @@ bool ParseSession::readFile(const QString& filename, const char* codec)
     m_contents = s.readAll();
     return true;
 }
-void ParseSession::setDebug(bool debug)
+
+void ParseSession::setOffset(const KDevelop::SimpleCursor& offset)
 {
-    m_debug = debug;
+    m_offset = offset;
 }
 
 KDevPG::TokenStream* ParseSession::tokenStream() const
@@ -110,7 +116,7 @@ bool ParseSession::parse(Css::StartAst** ast)
         parser->expectedSymbol(AstNode::StartKind, "start");
         kDebug() << "Couldn't parse content";
     }
-    m_problems = parser->problems();
+    m_problems << parser->problems();
     delete parser;
     return matched;
 }
@@ -119,6 +125,10 @@ KDevelop::SimpleCursor ParseSession::positionAt(qint64 offset) const
 {
     qint64 line, column;
     m_tokenStream->locationTable()->positionAt(offset, &line, &column);
+    if (m_offset.isValid()) {
+        if (line == 0) column += m_offset.column;
+        line += m_offset.line;
+    }
     return KDevelop::SimpleCursor(line, column);
 }
 

@@ -88,3 +88,15 @@ target_link_libraries(duchaintest
     ${QT_QTGUI_LIBRARY}
     ${QT_QTTEST_LIBRARY}
 )
+
+
+### next target
+set(parsejobtest_SRCS
+    duchain/tests/parsejobtest.cpp
+)
+kde4_add_unit_test(parsejobtest ${parsejobtest_SRCS})
+target_link_libraries(parsejobtest
+    ${KDEVPLATFORM_INTERFACES_LIBRARIES}
+    ${KDEVPLATFORM_TESTS_LIBRARIES}
+    ${QT_QTTEST_LIBRARY}
+)

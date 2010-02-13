@@ -26,7 +26,7 @@
 #include "../parser/parsesession.h"
 #include "../parser/editorintegrator.h"
 #include "contentassistdata.h"
-
+#include "../parser/htmlparser.h"
 namespace Css {
 
 #define ifDebug(x) x
@@ -134,13 +134,43 @@ void CodeCompletionModel::completionInvoked(KTextEditor::View* view, const KText
     Q_UNUSED(invocationType);
 
     ifDebug( debug() << range; )
+
+    QList<HtmlParser::Part> parts;
+    if (view->document()->mimeType() == "text/css") {
+        ifDebug( debug() << "css"; )
+        HtmlParser::Part part;
+        part.contents = view->document()->text();
+        part.range.start = KDevelop::SimpleCursor(0, 0);
+        part.range.end = KDevelop::SimpleCursor(view->document()->documentEnd());
+        qDebug() << part.range.textRange();
+        parts << part;
+    } else {
+        ifDebug( debug() << "html"; )
+        HtmlParser p;
+        p.setContents(view->document()->text());
+        parts = p.parse();
+        if (parts.isEmpty()) {
+            parts << HtmlParser::Part(); //empty part
+        }
+    }
+    Q_ASSERT(!parts.isEmpty());
+
     ParseSession session;
-    session.setContents(view->document()->text());
     Css::StartAst* ast = 0;
-    session.parse(&ast);
+    foreach (const HtmlParser::Part &part, parts) {
+        if (part.range.contains(KDevelop::SimpleCursor(range.start()))
+                || part.range.start.textCursor() == range.start()
+                || part.range.end.textCursor() == range.end()
+                ) {
+            session.setContents(part.contents);
+            session.setOffset(part.range.start);
+            session.parse(&ast);
+        }
+    }
+
     ifDebug(
-        DebugVisitor vis(session.tokenStream(), session.contents());
-        vis.visitNode(ast);
+//         DebugVisitor vis(session.tokenStream(), session.contents());
+//         vis.visitNode(ast);
     )
 
     if (ast) {

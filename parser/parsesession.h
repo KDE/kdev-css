@@ -53,6 +53,7 @@ public:
     void setCurrentDocument(const QString& filename);
     bool readFile(const QString& filename, const char* charset = 0);
     void setDebug(bool);
+    void setOffset(const KDevelop::SimpleCursor &offset);
     KDevPG::TokenStream* tokenStream() const;
     QString contents() const;
 
@@ -82,6 +83,7 @@ private:
     QString m_contents;
     bool m_debug;
     QString m_currentDocument;
+    KDevelop::SimpleCursor m_offset;
     KDevPG::MemoryPool* m_pool;
     KDevPG::TokenStream* m_tokenStream;
     QList<KDevelop::ProblemPointer> m_problems;

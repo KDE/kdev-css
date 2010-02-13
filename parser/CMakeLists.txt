@@ -60,6 +60,7 @@ set(parser_STAT_SRCS
     ${CMAKE_CURRENT_BINARY_DIR}/tokenizer.cpp
     parsesession.cpp
     editorintegrator.cpp
+    htmlparser.cpp
     )
 
 ### next target

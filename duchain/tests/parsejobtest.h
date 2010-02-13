@@ -1,6 +1,5 @@
-/*
-   This file is part of KDevelop
-   Copyright 2009 Niko Sams <niko.sams@gmail.com>
+/* This file is part of KDevelop
+    Copyright 2010 Niko Sams <niko.sams@gmail.com>
 
    This library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Library General Public
@@ -17,28 +16,34 @@
    Boston, MA 02110-1301, USA.
 */
 
-#ifndef CSS_PARSERTEST_H
-#define CSS_PARSERTEST_H
+#ifndef TESTPARSEJOB_H
+#define TESTPARSEJOB_H
 
 #include <QObject>
 
+namespace KDevelop {
+class TestCore;
+class TestProjectController;
+}
+
 namespace Css
 {
-
-class TestParser : public QObject
+class TestParseJob : public QObject
 {
     Q_OBJECT
 
-public:
-    TestParser();
+private slots:
+    void init();
+    void cleanup();
 
-private Q_SLOTS:
-    void parser_data();
-    void parser();
+    void testSimple();
+    void testSimpleHtml();
+    void testHtmlTwoStyleElements();
 
-    void multiline();
 
-    void html();
+private:
+    KDevelop::TestCore* m_core;
+    KDevelop::TestProjectController* m_projectController;
 
 };
 

@@ -37,6 +37,7 @@
 #include "parser/parsesession.h"
 #include "csslanguagesupport.h"
 #include "duchain/builders/declarationbuilder.h"
+#include "parser/htmlparser.h"
 
 
 namespace Css
@@ -118,12 +119,10 @@ void ParseJob::run()
 
     bool readFromDisk = !contentsAvailableFromEditor();
 
-    ParseSession session;
-
-    QString fileName = document().str();
+    QString contents;
 
     if (readFromDisk) {
-        QFile file(fileName);
+        QFile file(document().str());
         //TODO: Read the first lines to determine encoding using Css encoding and use that for the text stream
 
         if (!file.open(QIODevice::ReadOnly | QIODevice::Text)) {
@@ -152,72 +151,82 @@ void ParseJob::run()
         }
 
         QTextStream s(&file);
-//         if( codec )
-//             s.setCodec( QTextCodec::codecForName(codec) );
-        session.setContents(s.readAll());
+        contents = s.readAll();
         file.close();
     } else {
-        session.setContents(contentsFromEditor());
-        session.setCurrentDocument(document().str());
+        contents = contentsFromEditor();
     }
 
-
-    // 2) parse
-    StartAst* ast = 0;
-    session.parse(&ast);
-
-    if (abortRequested()) {
-        return abortJob();
+    QList<HtmlParser::Part> parts;
+    if (document().str().endsWith(".css")) { //TODO use mime type
+        HtmlParser::Part part;
+        part.contents = contents;
+        part.range.start = KDevelop::SimpleCursor(0, 0);
+        //part.range.end = TODO (needed?)
+        parts << part;
+    } else {
+        HtmlParser p;
+        p.setContents(contents);
+        parts = p.parse();
+        if (parts.isEmpty()) {
+            parts << HtmlParser::Part(); //empty part
+        }
     }
-
-    EditorIntegrator editor(&session);
-
-    QReadLocker parseLock(css()->language()->parseLock());
-
+    Q_ASSERT(!parts.isEmpty());
 
     KDevelop::ReferencedTopDUContext top;
     {
         KDevelop::DUChainReadLocker lock(KDevelop::DUChain::lock());
         top = KDevelop::DUChain::self()->chainForDocument(document());
     }
+    if (top) {
+        debug() << "re-compiling" << document().str();
+        KDevelop::DUChainWriteLocker lock(KDevelop::DUChain::lock());
+        top->clearImportedParentContexts();
+        top->parsingEnvironmentFile()->clearModificationRevisions();
+        top->clearProblems();
+    } else {
+        debug() << "compiling" << document().str();
+    }
+    foreach (const HtmlParser::Part &part, parts) {
+        ParseSession session;
+        session.setCurrentDocument(document().str());
+        session.setOffset(part.range.start);
+        session.setContents(part.contents);
 
-    DeclarationBuilder builder(&session);
-    top = builder.build(document(), ast, top);
-    Q_ASSERT(top);
+        StartAst* ast = 0;
+        session.parse(&ast);
+
+        if (abortRequested()) {
+            return abortJob();
+        }
+
+        EditorIntegrator editor(&session);
+
+        QReadLocker parseLock(css()->language()->parseLock());
+
+        DeclarationBuilder builder(&session);
+        top = builder.build(document(), ast, top);
+        Q_ASSERT(top);
+
+        foreach(const KDevelop::ProblemPointer &p, session.problems()) {
+            KDevelop::DUChainWriteLocker lock(KDevelop::DUChain::lock());
+            top->addProblem(p);
+        }
+
+        if (abortRequested()) {
+            return abortJob();
+        }
+    }
     setDuChain(top);
 
-/*
-that would display as something in the outline:
-    {
-        KDevelop::DUChainWriteLocker lock(KDevelop::DUChain::lock());
-
-        KDevelop::Declaration* td = new KDevelop::Declaration(KDevelop::SimpleRange(0, 0, 0, 10), top);
-        td->setKind(KDevelop::Declaration::Type);
-        td->setIdentifier(KDevelop::Identifier("test1"));
-        KDevelop::DUContext* ctx = new KDevelop::DUContext(KDevelop::SimpleRange(1, 0, 1, 10), top);
-        ctx->setType(KDevelop::DUContext::Class);
-        td->setInternalContext(ctx);
-
-        td = new KDevelop::FunctionDeclaration(KDevelop::SimpleRange(2, 0, 2, 10), top);
-        td->setKind(KDevelop::Declaration::Type);
-        td->setIdentifier(KDevelop::Identifier("test4"));
-    }
-*/
-    if (abortRequested()) {
-        return abortJob();
-    }
-
-    foreach(const KDevelop::ProblemPointer &p, session.problems()) {
-        KDevelop::DUChainWriteLocker lock(KDevelop::DUChain::lock());
-        top->addProblem(p);
-    }
 
     KDevelop::DUChainWriteLocker lock(KDevelop::DUChain::lock());
 
     top->setFeatures(minimumFeatures());
     KDevelop::ParsingEnvironmentFilePointer file = top->parsingEnvironmentFile();
 
-    QFileInfo fileInfo(fileName);
+    QFileInfo fileInfo(document().str());
     QDateTime lastModified = fileInfo.lastModified();
     if (readFromDisk) {
         file->setModificationRevision(KDevelop::ModificationRevision(lastModified));

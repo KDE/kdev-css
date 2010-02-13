@@ -24,6 +24,7 @@
 #include "../parsesession.h"
 #include "cssdebugvisitor.h"
 #include "../editorintegrator.h"
+#include "../htmlparser.h"
 
 QTEST_MAIN(Css::TestParser)
 
@@ -122,6 +123,20 @@ void TestParser::multiline()
                 KDevelop::SimpleCursor(1, 16));
 }
 
+void TestParser::html()
+{
+    HtmlParser p;
+                 //0         1          2          3         4
+                 //012345678901234567 890123456 78901234567890123456789
+    p.setContents("<html><style type=\"text/css\">a{color:red}</style></html>");
+    QList<HtmlParser::Part> res = p.parse();
+    QCOMPARE(res.count(), 1);
+    QCOMPARE(res[0].contents, QString("a{color:red}"));
+    QCOMPARE(res[0].range.start.line, 0);
+    QCOMPARE(res[0].range.start.column, 29);
+    QCOMPARE(res[0].range.end.line, 0);
+    QCOMPARE(res[0].range.end.column, 41);
+}
 
 }
 

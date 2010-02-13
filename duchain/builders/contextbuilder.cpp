@@ -55,15 +55,6 @@ KDevelop::ReferencedTopDUContext ContextBuilder::build(const KDevelop::IndexedSt
         m_reportErrors = KDevelop::ICore::self()->languageController()->completionSettings()->highlightSemanticProblems();
     }
 
-    if (updateContext) {
-        kDebug() << "re-compiling" << url.str();
-        KDevelop::DUChainWriteLocker lock(KDevelop::DUChain::lock());
-        updateContext->clearImportedParentContexts();
-        updateContext->parsingEnvironmentFile()->clearModificationRevisions();
-        updateContext->clearProblems();
-    } else {
-        kDebug() << "compiling" << url.str();
-    }
     return ContextBuilderBase::build(url, node, updateContext, useSmart);
 }
 
@@ -129,7 +120,7 @@ KDevelop::QualifiedIdentifier ContextBuilder::identifierForNode(SpecifierAst* id
 
 void ContextBuilder::visitRuleset(RulesetAst* node)
 {
-    kDebug() << node << node->declarations;
+    kDebug(1) << node << node->declarations;
     Q_ASSERT(node->declarations);
     KDevelop::SimpleCursor starPos;
     KDevelop::SimpleRange range;
