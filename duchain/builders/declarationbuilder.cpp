@@ -40,7 +40,7 @@ void DeclarationBuilder::visitRuleset(RulesetAst *node)
 {
     {
         KDevelop::SimpleRange range = editor()->findRange(node->selectors);
-        KDevelop::QualifiedIdentifier id(editor()->nodeToString(node->selectors));
+        KDevelop::QualifiedIdentifier id(KDevelop::Identifier(KDevelop::IndexedString(editor()->nodeToString(node->selectors))));
         KDevelop::DUChainWriteLocker lock(KDevelop::DUChain::lock());
         KDevelop::ClassDeclaration* dec = openDefinition<KDevelop::ClassDeclaration>(id, range);
         dec->setKind(KDevelop::Declaration::Type);

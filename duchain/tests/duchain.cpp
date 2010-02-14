@@ -24,6 +24,7 @@
 #include <language/duchain/duchain.h>
 #include <language/duchain/duchainlock.h>
 #include <language/duchain/topducontext.h>
+#include <language/duchain/declaration.h>
 
 QTEST_MAIN(Css::TestDUChain)
 
@@ -44,9 +45,29 @@ void TestDUChain::testContext()
     KDevelop::DUChainWriteLocker lock(KDevelop::DUChain::lock());
 
     QCOMPARE(top->childContexts().count(), 1);
-    kDebug() << top->childContexts().first()->range().textRange();
     QVERIFY(top->childContexts().first()->range() == KDevelop::SimpleRange(0, 2, 0, 16));
+    KDevelop::Declaration *dec = top->findDeclarationAt(KDevelop::SimpleCursor(0, 0));
+    QCOMPARE(dec->qualifiedIdentifier().toString(), QString("a ")); //TODO: this should not include the space
+    QVERIFY(dec->range() == KDevelop::SimpleRange(0, 0, 0, 2)); 
 }
+
+void TestDUChain::testPseudoClass()
+{
+    //                 0123456789012345678901234
+    QByteArray method("a:active { color: red; }");
+
+    KDevelop::TopDUContext* top = parse(method, DumpAll);
+    DUChainReleaser releaseTop(top);
+    KDevelop::DUChainWriteLocker lock(KDevelop::DUChain::lock());
+
+    QCOMPARE(top->childContexts().count(), 1);
+    kDebug() << top->childContexts().first()->range().textRange();
+    QVERIFY(top->childContexts().first()->range() == KDevelop::SimpleRange(0, 9, 0, 23));
+    KDevelop::Declaration *dec = top->findDeclarationAt(KDevelop::SimpleCursor(0, 0));
+    QVERIFY(dec->range() == KDevelop::SimpleRange(0, 0, 0, 9));
+    QCOMPARE(dec->qualifiedIdentifier().toString(), QString("a:active ")); //TODO: this should not include the space
+}
+
 
 }
 

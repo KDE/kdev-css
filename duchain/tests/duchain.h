@@ -32,6 +32,7 @@ public:
 
 private slots:
     void testContext();
+    void testPseudoClass();
 };
 
 }
