@@ -15,6 +15,7 @@ else(KDEVPGQT_FOUND)
         generated/cssdefaultvisitor.cpp )
 endif(KDEVPGQT_FOUND)
 
+include_directories( ${CMAKE_CURRENT_BINARY_DIR} )
 
 find_package(Flex)
 
