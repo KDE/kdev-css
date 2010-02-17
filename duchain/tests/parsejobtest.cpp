@@ -17,7 +17,7 @@ namespace Css {
 
 void TestParseJob::init()
 {
-    AutoTestShell::init();
+    KDevelop::AutoTestShell::init();
     m_core = new KDevelop::TestCore();
     m_core->initialize(KDevelop::Core::NoUi);
     m_projectController = new KDevelop::TestProjectController(m_core);
