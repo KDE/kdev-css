@@ -224,6 +224,8 @@ void ParseJob::run()
         file->setModificationRevision(KDevelop::ModificationRevision(lastModified, revisionToken()));
     }
     KDevelop::DUChain::self()->updateContextEnvironment( top->topContext(), file.data() );
+
+    cleanupSmartRevision();
 }
 
 }
