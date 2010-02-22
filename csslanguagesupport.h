@@ -46,7 +46,12 @@ public:
 
     static LanguageSupport* self();
 
+    virtual KDevelop::SimpleRange specialLanguageObjectRange(const KUrl& url, const KDevelop::SimpleCursor& position);
+    virtual QWidget* specialLanguageObjectNavigationWidget(const KUrl& url, const KDevelop::SimpleCursor& position);
+
 private:
+    QPair<QPair<QString, KDevelop::SimpleRange>, QString> cursorIdentifier(const KUrl& url, const KDevelop::SimpleCursor& position) const;
+
     static LanguageSupport* m_self;
 };
 

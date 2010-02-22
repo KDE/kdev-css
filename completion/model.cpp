@@ -35,7 +35,7 @@ extern int debugArea();
 #define debug() kDebug(debugArea())
 
 CodeCompletionModel::CodeCompletionModel(QObject *parent)
-    : CodeCompletionModel2(parent), m_completionContext(NoContext), m_assistData(new ContentAssistData)
+    : CodeCompletionModel2(parent), m_completionContext(NoContext)
 {
 }
 
@@ -185,7 +185,7 @@ void CodeCompletionModel::completionInvoked(KTextEditor::View* view, const KText
             case PropertyContext:
             {
                 debug() << "lastSelectorElement" << visitor.lastSelectorElement();
-                ContentAssistData::Element element = m_assistData->element(visitor.lastSelectorElement());
+                ContentAssistData::Element element = ContentAssistData::self()->element(visitor.lastSelectorElement());
                 m_items = element.fields;
                 setRowCount(m_items.count());
                 reset();
@@ -194,14 +194,14 @@ void CodeCompletionModel::completionInvoked(KTextEditor::View* view, const KText
             case ValueContext:
             {
                 debug() << "lastProperty" << visitor.lastProperty();
-                ContentAssistData::Field field = m_assistData->field(visitor.lastProperty());
+                ContentAssistData::Field field = ContentAssistData::self()->field(visitor.lastProperty());
                 m_items = field.values.keys();
                 setRowCount(m_items.count());
                 reset();
                 return;
             }
             case SelectorContext:
-                m_items = m_assistData->elements();
+                m_items = ContentAssistData::self()->elements();
                 setRowCount(m_items.count());
                 reset();
                 return;

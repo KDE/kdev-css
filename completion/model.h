@@ -24,8 +24,6 @@
 
 namespace Css {
 
-class ContentAssistData;
-
 class CodeCompletionModel : public KTextEditor::CodeCompletionModel2, public KTextEditor::CodeCompletionModelControllerInterface
 {
     Q_OBJECT
@@ -51,7 +49,6 @@ public:
 private:
     CompletionContext m_completionContext;
     QList<QString> m_items;
-    ContentAssistData *m_assistData;
 };
 
 }

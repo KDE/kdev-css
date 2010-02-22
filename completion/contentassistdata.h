@@ -52,14 +52,16 @@ public:
         QMap<QString, QString> values;
         QList<Browser> browsers;
         QString example;
+        QString remarks;
     };
 
-    ContentAssistData();
+    static ContentAssistData *self();
 
     Element element(const QString &name);
     Field field(const QString &name);
     QStringList elements();
 private:
+    ContentAssistData();
     QList<Browser> readBrowsers(QXmlStreamReader &xml);
     QHash<QString, Element> m_elements;
     QHash<QString, Field> m_fields;

@@ -39,6 +39,8 @@ set(kdevcsslanguagesupport_PART_SRCS
     parsejob.cpp
     duchain/builders/contextbuilder.cpp
     duchain/builders/declarationbuilder.cpp
+    navigation/fieldnavigationcontext.cpp
+    navigation/navigationwidget.cpp
 )
 
 kde4_add_plugin(kdevcsslanguagesupport ${kdevcsslanguagesupport_PART_SRCS})

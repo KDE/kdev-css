@@ -50,10 +50,12 @@ extern int debugArea();
 ParseJob::ParseJob(const KUrl &url)
         : KDevelop::ParseJob(url)
 {
+    kDebug();
 }
 
 ParseJob::~ParseJob()
 {
+    kDebug();
 }
 
 LanguageSupport *ParseJob::css() const
@@ -61,12 +63,6 @@ LanguageSupport *ParseJob::css() const
     return LanguageSupport::self();
 }
 
-
-struct MyAst : public StyleElementAst {
-    ~MyAst() {
-        kDebug() << "********************";
-    }
-};
 
 void ParseJob::run()
 {
@@ -193,6 +189,7 @@ void ParseJob::run()
     DeclarationBuilder builder;
     builder.setEditor(&editor);
     top = builder.build(document(), fileAst, top);
+    kDebug() << top;
     Q_ASSERT(top);
 
     foreach (StyleElementAst *el, fileAst->elements) {
@@ -209,6 +206,8 @@ void ParseJob::run()
         }
     }
     setDuChain(top);
+
+    cleanupSmartRevision();
 
 
     KDevelop::DUChainWriteLocker lock(KDevelop::DUChain::lock());

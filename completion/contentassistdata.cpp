@@ -26,6 +26,13 @@
 
 namespace Css {
 
+ContentAssistData* ContentAssistData::self()
+{
+    static ContentAssistData* ret = 0;
+    if (!ret) ret = new ContentAssistData;
+    return ret;
+}
+
 ContentAssistData::ContentAssistData()
 {
     QString fileName = KStandardDirs::locate("data", "kdevcsssupport/completion/CSS.xml");
@@ -95,6 +102,9 @@ ContentAssistData::ContentAssistData()
                         }
                         if (xml.isStartElement() && xml.name() == "example") {
                             field.example = xml.readElementText();
+                        }
+                        if (xml.isStartElement() && xml.name() == "remarks") {
+                            field.remarks = xml.readElementText();
                         }
                         if (xml.isStartElement() && xml.name() == "values") {
                             while (!xml.atEnd()) {
