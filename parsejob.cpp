@@ -68,7 +68,7 @@ void ParseJob::run()
 {
     KDevelop::UrlParseLock urlLock(document());
 
-    {
+    if ( !(minimumFeatures() & KDevelop::TopDUContext::ForceUpdate) ) {
         KDevelop::DUChainReadLocker lock(KDevelop::DUChain::lock());
         bool needsUpdate = true;
         foreach(const KDevelop::ParsingEnvironmentFilePointer &file, KDevelop::DUChain::self()->allEnvironmentFiles(document())) {
@@ -79,7 +79,7 @@ void ParseJob::run()
                 needsUpdate = false;
             }
         }
-        if (!(minimumFeatures() & KDevelop::TopDUContext::ForceUpdate) && !needsUpdate) {
+        if (!needsUpdate) {
             debug() << "Already up to date" << document().str();
             return;
         }
