@@ -41,6 +41,7 @@ set(kdevcsslanguagesupport_PART_SRCS
     duchain/builders/declarationbuilder.cpp
     navigation/fieldnavigationcontext.cpp
     navigation/navigationwidget.cpp
+    navigation/valuenavigationcontext.cpp
 )
 
 kde4_add_plugin(kdevcsslanguagesupport ${kdevcsslanguagesupport_PART_SRCS})

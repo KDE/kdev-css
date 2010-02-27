@@ -16,21 +16,28 @@
    Boston, MA 02110-1301, USA.
 */
 
-#ifndef NAVIGATIONWIDGET_H
-#define NAVIGATIONWIDGET_H
+#ifndef CSS_VALUENAVIGATIONCONTEXT_H
+#define CSS_VALUENAVIGATIONCONTEXT_H
 
-#include <language/duchain/navigation/abstractnavigationwidget.h>
+#include <language/duchain/navigation/abstractnavigationcontext.h>
 #include "../completion/contentassistdata.h"
+
 
 namespace Css {
 
-class NavigationWidget : public KDevelop::AbstractNavigationWidget
+class ValueNavigationContext : public KDevelop::AbstractNavigationContext
 {
 public:
-    NavigationWidget(KDevelop::TopDUContextPointer topContext, const ContentAssistData::Field &field);
-    NavigationWidget(KDevelop::TopDUContextPointer topContext, const ContentAssistData::Value &value);
+    ValueNavigationContext(KDevelop::TopDUContextPointer topContext,
+                                   const ContentAssistData::Value &value);
+
+    virtual QString name() const;
+    virtual QString html(bool shorten = false);
+
+private:
+    ContentAssistData::Value m_value;
 };
 
 }
 
-#endif // NAVIGATIONWIDGET_H
+#endif // CSS_VALUENAVIGATIONCONTEXT_H

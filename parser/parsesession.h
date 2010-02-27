@@ -58,6 +58,7 @@ public:
     QString contents() const;
 
     bool parse(Css::StartAst**);
+    bool parse(Css::DeclarationListAst**);
     Parser* createParser();
 
     QString symbol(qint64 token) const;

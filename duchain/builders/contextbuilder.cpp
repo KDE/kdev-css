@@ -127,7 +127,7 @@ void ContextBuilder::visitRuleset(RulesetAst* node)
     KDevelop::SimpleCursor starPos;
     KDevelop::SimpleRange range;
     if (node->lbrace != -1) {
-        range.start = editor()->findPosition(node->lbrace, EditorIntegrator::FrontEdge);
+        range.start = editor()->findPosition(node->lbrace, EditorIntegrator::BackEdge);
     } else {
         range.start = editor()->findPosition(node->declarations->startToken, EditorIntegrator::FrontEdge);
     }

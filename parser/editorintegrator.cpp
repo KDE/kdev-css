@@ -64,6 +64,11 @@ KDevelop::SimpleRange EditorIntegrator::findRange(AstNode * node, RangeEdge edge
     return KDevelop::SimpleRange(findPosition(node->startToken, FrontEdge), findPosition(node->endToken, BackEdge));
 }
 
+KDevelop::SimpleRange EditorIntegrator::findRange(qint64 token)
+{
+    return KDevelop::SimpleRange(findPosition(token, FrontEdge), findPosition(token, BackEdge));
+}
+
 KDevelop::SimpleRange EditorIntegrator::findRange(qint64 startToken, qint64 endToken)
 {
     return KDevelop::SimpleRange(findPosition(startToken, FrontEdge), findPosition(endToken, BackEdge));

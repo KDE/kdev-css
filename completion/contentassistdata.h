@@ -44,12 +44,16 @@ public:
         QString remarks;
         QList<QString> fields;
     };
+    struct Value {
+        QString name;
+        QString description;
+    };
     struct Field {
         QString name;
         QString type;
         QString hint;
         QString description;
-        QMap<QString, QString> values;
+        QMap<QString, Value> values;
         QList<Browser> browsers;
         QString example;
         QString remarks;

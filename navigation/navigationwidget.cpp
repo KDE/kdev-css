@@ -1,4 +1,6 @@
 /*
+   Copyright (C) 2010 Niko Sams <niko.sams@gmail.com>
+
    This library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Library General Public
    License version 2 as published by the Free Software Foundation.
@@ -17,6 +19,7 @@
 #include "navigationwidget.h"
 
 #include "fieldnavigationcontext.h"
+#include "valuenavigationcontext.h"
 
 namespace Css {
 
@@ -24,13 +27,22 @@ NavigationWidget::NavigationWidget(KDevelop::TopDUContextPointer topContext, con
     : KDevelop::AbstractNavigationWidget()
 {
   m_topContext = topContext;
-kDebug() << field.name;
   initBrowser(200);
 
   //The first context is registered so it is kept alive by the shared-pointer mechanism
   m_startContext = KDevelop::NavigationContextPointer(new FieldNavigationContext(topContext, field));
   setContext( m_startContext );
+}
 
+NavigationWidget::NavigationWidget(KDevelop::TopDUContextPointer topContext, const Css::ContentAssistData::Value& value)
+    : AbstractNavigationWidget()
+{
+  m_topContext = topContext;
+  initBrowser(200);
+
+  //The first context is registered so it is kept alive by the shared-pointer mechanism
+  m_startContext = KDevelop::NavigationContextPointer(new ValueNavigationContext(topContext, value));
+  setContext( m_startContext );
 }
 
 

@@ -111,7 +111,10 @@ ContentAssistData::ContentAssistData()
                                 xml.readNext();
                                 if (xml.isEndElement() && xml.name() == "values") break;
                                 if (xml.isStartElement() && xml.name() == "value") {
-                                    field.values[xml.attributes().value("name").toString()] = xml.attributes().value("description").toString();
+                                    Value v;
+                                    v.name = xml.attributes().value("name").toString();
+                                    v.description = xml.attributes().value("description").toString();
+                                    field.values[v.name] = v;
                                 }
                             }
                         }

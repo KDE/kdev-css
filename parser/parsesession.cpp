@@ -107,13 +107,30 @@ Parser* ParseSession::createParser()
 bool ParseSession::parse(Css::StartAst** ast)
 {
     Parser* parser = createParser();
-    StartAst* phpAst;
-    bool matched = parser->parseStart(&phpAst);
-    *ast = phpAst;
+    StartAst* cssAst;
+    bool matched = parser->parseStart(&cssAst);
+    *ast = cssAst;
     if (matched) {
         kDebug() << "Successfully parsed";
     } else {
         parser->expectedSymbol(AstNode::StartKind, "start");
+        kDebug() << "Couldn't parse content";
+    }
+    m_problems << parser->problems();
+    delete parser;
+    return matched;
+}
+
+bool ParseSession::parse(DeclarationListAst** ast)
+{
+    Parser* parser = createParser();
+    DeclarationListAst* cssAst;
+    bool matched = parser->parseDeclarationList(&cssAst);
+    *ast = cssAst;
+    if (matched) {
+        kDebug() << "Successfully parsed";
+    } else {
+        parser->expectedSymbol(AstNode::DeclarationListKind, "declarationList");
         kDebug() << "Couldn't parse content";
     }
     m_problems << parser->problems();
