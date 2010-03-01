@@ -34,8 +34,15 @@ public:
     void setContents(const QString& contents);
 
     struct Part {
+        enum Kind {
+            Standalone,
+            StyleElement,
+            InlineStyle
+        };
+        Kind kind;
         KDevelop::SimpleRange range;
         QString contents;
+        QString tag; //only for InlineStyle
     };
     QList<Part> parse();
 

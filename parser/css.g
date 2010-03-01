@@ -124,11 +124,16 @@
 -- to support multiple style elements in one html file
   0
 -> html [
-     member variable elements: QList<StyleElementAst*>;
+     member variable elements: QList<AstNode*>;
 ];;
 
   start=start
 -> styleElement [
+     member variable session: ParseSession*;
+];;
+
+  declarationList=declarationList
+-> inlineStyle [
      member variable session: ParseSession*;
 ];;
 -- end custom rules

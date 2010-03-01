@@ -141,6 +141,15 @@ public:
         m_indent--;
     }
 
+    virtual void visitInlineStyle(InlineStyleAst *node)
+    {
+        if (!m_indent) printToken(node, "inlineStyle");
+        if (node->declarationList) printToken(node->declarationList, "declarationList", "declarationList");
+        m_indent++;
+        DefaultVisitor::visitInlineStyle(node);
+        m_indent--;
+    }
+
     virtual void visitMatch(MatchAst *node)
     {
         if (!m_indent) printToken(node, "match");

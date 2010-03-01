@@ -139,6 +139,7 @@ void CodeCompletionModel::completionInvoked(KTextEditor::View* view, const KText
     if (view->document()->mimeType() == "text/css") {
         ifDebug( debug() << "css"; )
         HtmlParser::Part part;
+        part.kind = HtmlParser::Part::Standalone;
         part.contents = view->document()->text();
         part.range.start = KDevelop::SimpleCursor(0, 0);
         part.range.end = KDevelop::SimpleCursor(view->document()->documentEnd());
@@ -156,15 +157,26 @@ void CodeCompletionModel::completionInvoked(KTextEditor::View* view, const KText
     Q_ASSERT(!parts.isEmpty());
 
     ParseSession session;
-    Css::StartAst* ast = 0;
-    foreach (const HtmlParser::Part &part, parts) {
-        if (part.range.contains(KDevelop::SimpleCursor(range.start()))
-                || part.range.start.textCursor() == range.start()
-                || part.range.end.textCursor() == range.end()
+    Css::AstNode* ast = 0;
+    HtmlParser::Part part;
+    foreach (const HtmlParser::Part &p, parts) {
+        if (p.range.contains(KDevelop::SimpleCursor(range.start()))
+                || p.range.start.textCursor() == range.start()
+                || p.range.end.textCursor() == range.end()
                 ) {
-            session.setContents(part.contents);
-            session.setOffset(part.range.start);
-            session.parse(&ast);
+            session.setContents(p.contents);
+            session.setOffset(p.range.start);
+            if (p.kind != HtmlParser::Part::InlineStyle) {
+                StartAst* a = static_cast<StartAst*>(ast);
+                session.parse(&a);
+                ast = a;
+            } else {
+                DeclarationListAst* a = static_cast<DeclarationListAst*>(ast);
+                session.parse(&a);
+                ast = a;
+            }
+            part = p;
+            break;
         }
     }
 
@@ -184,8 +196,14 @@ void CodeCompletionModel::completionInvoked(KTextEditor::View* view, const KText
         switch (m_completionContext) {
             case PropertyContext:
             {
-                debug() << "lastSelectorElement" << visitor.lastSelectorElement();
-                ContentAssistData::Element element = ContentAssistData::self()->element(visitor.lastSelectorElement());
+                QString el;
+                if (part.kind != HtmlParser::Part::InlineStyle) {
+                    debug() << "lastSelectorElement" << visitor.lastSelectorElement();
+                    el = visitor.lastSelectorElement();
+                } else {
+                    el = part.tag;
+                }
+                ContentAssistData::Element element = ContentAssistData::self()->element(el);
                 m_items = element.fields;
                 setRowCount(m_items.count());
                 reset();

@@ -65,9 +65,26 @@ void ContextBuilder::setEditor(EditorIntegrator* editor)
 void ContextBuilder::startVisiting(AstNode* node)
 {
     if (node->kind == HtmlAst::KIND) {
-        foreach (StyleElementAst *el, static_cast<HtmlAst*>(node)->elements) {
-            editor()->setParseSession(el->session);
-            visitNode(el->start);
+        foreach (AstNode *el, static_cast<HtmlAst*>(node)->elements) {
+            kDebug() << el->kind;
+            if (el->kind == StyleElementAst::KIND) {
+                editor()->setParseSession(static_cast<StyleElementAst*>(el)->session);
+                visitNode(static_cast<StyleElementAst*>(el)->start);
+            } else if (el->kind == InlineStyleAst::KIND) {
+                editor()->setParseSession(static_cast<InlineStyleAst*>(el)->session);
+                InlineStyleAst* n = static_cast<InlineStyleAst*>(el);
+
+                KDevelop::SimpleRange range;
+                range = editor()->findRange(n->declarationList);
+                kDebug() << range.textRange();
+                openContext(n, range,
+                            KDevelop::DUContext::Class,
+                            KDevelop::QualifiedIdentifier("TODO"));
+                visitNode(n->declarationList);
+                closeContext();
+            } else {
+                Q_ASSERT(0);
+            }
         }
     } else {
         qDebug()  << node->kind;
@@ -124,7 +141,6 @@ void ContextBuilder::visitRuleset(RulesetAst* node)
 {
     kDebug(1) << node << node->declarations;
     Q_ASSERT(node->declarations);
-    KDevelop::SimpleCursor starPos;
     KDevelop::SimpleRange range;
     if (node->lbrace != -1) {
         range.start = editor()->findPosition(node->lbrace, EditorIntegrator::BackEdge);

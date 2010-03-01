@@ -30,6 +30,7 @@ struct HtmlAst;
 struct IdentOrStringAst;
 struct ImportAst;
 struct ImportListAst;
+struct InlineStyleAst;
 struct MatchAst;
 struct MaybeSgmlAst;
 struct MaybeSpaceAst;
@@ -71,28 +72,29 @@ struct KDEVCSSPARSER_EXPORT AstNode
         IdentOrStringKind = 1008,
         ImportKind = 1009,
         ImportListKind = 1010,
-        MatchKind = 1011,
-        MaybeSgmlKind = 1012,
-        MaybeSpaceKind = 1013,
-        OperatorKind = 1014,
-        PrioKind = 1015,
-        PropertyKind = 1016,
-        PseudoKind = 1017,
-        RuleKind = 1018,
-        RuleListKind = 1019,
-        RulesetKind = 1020,
-        SelectorKind = 1021,
-        SelectorListKind = 1022,
-        SimpleSelectorKind = 1023,
-        SimpleSelectorWithWhitespaceKind = 1024,
-        SpecifierKind = 1025,
-        SpecifierListKind = 1026,
-        StartKind = 1027,
-        StringOrUriKind = 1028,
-        StyleElementKind = 1029,
-        TermKind = 1030,
-        UnaryOperatorKind = 1031,
-        UnaryTermKind = 1032,
+        InlineStyleKind = 1011,
+        MatchKind = 1012,
+        MaybeSgmlKind = 1013,
+        MaybeSpaceKind = 1014,
+        OperatorKind = 1015,
+        PrioKind = 1016,
+        PropertyKind = 1017,
+        PseudoKind = 1018,
+        RuleKind = 1019,
+        RuleListKind = 1020,
+        RulesetKind = 1021,
+        SelectorKind = 1022,
+        SelectorListKind = 1023,
+        SimpleSelectorKind = 1024,
+        SimpleSelectorWithWhitespaceKind = 1025,
+        SpecifierKind = 1026,
+        SpecifierListKind = 1027,
+        StartKind = 1028,
+        StringOrUriKind = 1029,
+        StyleElementKind = 1030,
+        TermKind = 1031,
+        UnaryOperatorKind = 1032,
+        UnaryTermKind = 1033,
         AST_NODE_KIND_COUNT
     };
 
@@ -159,7 +161,7 @@ struct KDEVCSSPARSER_EXPORT HtmlAst: public AstNode
 {
     enum { KIND = HtmlKind };
 
-    QList<StyleElementAst*> elements;
+    QList<AstNode*> elements;
 };
 
 struct KDEVCSSPARSER_EXPORT IdentOrStringAst: public AstNode
@@ -181,6 +183,14 @@ struct KDEVCSSPARSER_EXPORT ImportListAst: public AstNode
     enum { KIND = ImportListKind };
 
     const KDevPG::ListNode<ImportAst *> *importsSequence;
+};
+
+struct KDEVCSSPARSER_EXPORT InlineStyleAst: public AstNode
+{
+    enum { KIND = InlineStyleKind };
+
+    ParseSession* session;
+    DeclarationListAst *declarationList;
 };
 
 struct KDEVCSSPARSER_EXPORT MatchAst: public AstNode

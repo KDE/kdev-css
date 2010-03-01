@@ -32,6 +32,7 @@ public:
     virtual void visitIdentOrString(IdentOrStringAst *) {}
     virtual void visitImport(ImportAst *) {}
     virtual void visitImportList(ImportListAst *) {}
+    virtual void visitInlineStyle(InlineStyleAst *) {}
     virtual void visitMatch(MatchAst *) {}
     virtual void visitMaybeSgml(MaybeSgmlAst *) {}
     virtual void visitMaybeSpace(MaybeSpaceAst *) {}

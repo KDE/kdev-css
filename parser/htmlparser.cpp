@@ -20,6 +20,8 @@
 
 #include "htmlparser.h"
 #include <QXmlStreamReader>
+#include <QRegExp>
+#include <QBuffer>
 
 namespace Css {
 
@@ -34,11 +36,12 @@ void HtmlParser::setContents(const QString& contents)
 
 QList<HtmlParser::Part> HtmlParser::parse()
 {
-    QList<HtmlParser::Part> ret; 
+    QList<HtmlParser::Part> ret;
     QXmlStreamReader reader(m_contents);
     while (!reader.atEnd()) {
         if (reader.isStartElement() && reader.name() == "style") {
             Part p;
+            p.kind = Part::StyleElement;
             p.range.start.line = reader.lineNumber()-1;
             p.range.start.column = reader.columnNumber();
             while (!reader.isEndElement() && !reader.atEnd()) {
@@ -48,6 +51,33 @@ QList<HtmlParser::Part> HtmlParser::parse()
                 reader.readNext();
             }
             ret << p;
+        }
+        if (reader.attributes().hasAttribute("style")) {
+            Part p;
+            p.kind = Part::InlineStyle;
+            QString c = m_contents.left(reader.characterOffset());
+            static QRegExp rx("<[^<>]+\\sstyle=[\"'](([^<>]*)[\"'][^<>]*>)$");
+            if (rx.indexIn(c) != -1) {
+                kDebug() << rx.cap(0);
+                p.contents = rx.cap(2); //don't use reader.attributes() as it doesn't contain newlines correctly
+                p.range.start.line = reader.lineNumber()-1-rx.cap(1).count('\n');
+                if (!rx.cap(1).contains('\n')) {
+                    p.range.start.column = reader.columnNumber()-rx.cap(1).length();
+                } else {
+                    p.range.start.column = rx.cap(1).mid(rx.cap(1).indexOf('\n')).length();
+                }
+                p.range.end.line = p.range.start.line + p.contents.count('\n');
+                if (!p.contents.contains('\n')) {
+                    p.range.end.column = p.range.start.column+p.contents.length();
+                } else {
+                    p.range.end.column = p.contents.mid(p.contents.lastIndexOf('\n')+1).length();
+                }
+                p.tag = reader.name().toString();
+                ret << p;
+            } else {
+                kDebug() << c;
+                Q_ASSERT(0);
+            }
         }
         reader.readNext();
     }

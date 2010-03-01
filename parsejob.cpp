@@ -131,6 +131,7 @@ void ParseJob::run()
 
     if (KMimeType::findByUrl(document().toUrl())->name() == "text/css") {
         HtmlParser::Part part;
+        part.kind = HtmlParser::Part::Standalone;
         part.contents = contents;
         part.range.start = KDevelop::SimpleCursor(0, 0);
         //part.range.end = TODO (needed?)
@@ -153,14 +154,23 @@ void ParseJob::run()
         session->setCurrentDocument(document().str());
         session->setOffset(part.range.start);
         session->setContents(part.contents);
-
-        StyleElementAst *el = new StyleElementAst;
-        el->kind = StyleElementAst::KIND;
-        StartAst* ast = 0;
-        session->parse(&ast);
-        el->start = ast;
-        el->session = session;
-        fileAst->elements << el;
+        if (part.kind != HtmlParser::Part::InlineStyle) {
+            StyleElementAst *el = new StyleElementAst;
+            el->kind = StyleElementAst::KIND;
+            StartAst* ast = 0;
+            session->parse(&ast);
+            el->start = ast;
+            el->session = session;
+            fileAst->elements << el;
+        } else {
+            InlineStyleAst *el = new InlineStyleAst;
+            el->kind = InlineStyleAst::KIND;
+            DeclarationListAst* ast = 0;
+            session->parse(&ast);
+            el->declarationList = ast;
+            el->session = session;
+            fileAst->elements << el;
+        }
 
         if (abortRequested())
         {
@@ -192,19 +202,29 @@ void ParseJob::run()
     kDebug() << top;
     Q_ASSERT(top);
 
-    foreach (StyleElementAst *el, fileAst->elements) {
+    foreach (AstNode *el, fileAst->elements) {
 
-        foreach(const KDevelop::ProblemPointer &p, el->session->problems()) {
+        ParseSession *session = 0;
+        if (el->kind == StyleElementAst::KIND) {
+            session = static_cast<StyleElementAst*>(el)->session;
+            static_cast<StyleElementAst*>(el)->session = 0; //deleted below
+        } else if (el->kind == InlineStyleAst::KIND) {
+            session = static_cast<InlineStyleAst*>(el)->session;
+            static_cast<InlineStyleAst*>(el)->session = 0; //deleted below
+        }
+        Q_ASSERT(session);
+        foreach(const KDevelop::ProblemPointer &p, session->problems()) {
             KDevelop::DUChainWriteLocker lock(KDevelop::DUChain::lock());
             top->addProblem(p);
         }
-        delete el->session;
-        el->session = 0;
+        delete session;
 
         if (abortRequested()) {
             return abortJob();
         }
+        delete el;
     }
+    delete fileAst;
     setDuChain(top);
 
     cleanupSmartRevision();

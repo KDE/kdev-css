@@ -38,7 +38,10 @@ private Q_SLOTS:
 
     void multiline();
 
-    void html();
+    void htmlStyleElement();
+    void htmlInlineStyle();
+    void htmlInlineStyle2();
+    void htmlInlineStyle3();
 
 };
 

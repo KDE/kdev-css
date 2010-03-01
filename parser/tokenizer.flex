@@ -161,7 +161,6 @@ Tokenizer::Tokenizer( KDevPG::TokenStream *tokenStream, const QByteArray &conten
 
 void Tokenizer::restart( KDevPG::TokenStream *tokenStream, const QByteArray &contents )
 {
-    kDebug() << contents;
     m_locationTable = tokenStream->locationTable();
     m_contents = contents;
     m_tokenBegin = 0;

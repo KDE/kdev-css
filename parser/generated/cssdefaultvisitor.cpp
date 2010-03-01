@@ -84,6 +84,11 @@ void DefaultVisitor::visitImportList(ImportListAst *node)
     }
 }
 
+void DefaultVisitor::visitInlineStyle(InlineStyleAst *node)
+{
+    visitNode(node->declarationList);
+}
+
 void DefaultVisitor::visitMatch(MatchAst *)
 {
 }

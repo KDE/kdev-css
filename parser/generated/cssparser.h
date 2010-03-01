@@ -194,6 +194,7 @@ public:
     bool parseIdentOrString(IdentOrStringAst **yynode);
     bool parseImport(ImportAst **yynode);
     bool parseImportList(ImportListAst **yynode);
+    bool parseInlineStyle(InlineStyleAst **yynode);
     bool parseMatch(MatchAst **yynode);
     bool parseMaybeSgml(MaybeSgmlAst **yynode);
     bool parseMaybeSpace(MaybeSpaceAst **yynode);

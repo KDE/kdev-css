@@ -24,6 +24,7 @@ public:
     virtual void visitIdentOrString(IdentOrStringAst *node);
     virtual void visitImport(ImportAst *node);
     virtual void visitImportList(ImportListAst *node);
+    virtual void visitInlineStyle(InlineStyleAst *node);
     virtual void visitMatch(MatchAst *node);
     virtual void visitMaybeSgml(MaybeSgmlAst *node);
     virtual void visitMaybeSpace(MaybeSpaceAst *node);

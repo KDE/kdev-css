@@ -124,7 +124,7 @@ void TestParser::multiline()
                 KDevelop::SimpleCursor(1, 16));
 }
 
-void TestParser::html()
+void TestParser::htmlStyleElement()
 {
     HtmlParser p;
                  //0         1          2          3         4
@@ -138,6 +138,54 @@ void TestParser::html()
     QCOMPARE(res[0].range.end.line, 0);
     QCOMPARE(res[0].range.end.column, 41);
 }
+
+void TestParser::htmlInlineStyle()
+{
+    HtmlParser p;
+                 //0         1          2          3         4
+                 //012345678901234 5678901234 5678901234567890123456789
+    p.setContents("<html><p style=\"color:red\"></p></html>");
+    QList<HtmlParser::Part> res = p.parse();
+    QCOMPARE(res.count(), 1);
+    QCOMPARE(res[0].contents, QString("color:red"));
+    QCOMPARE(res[0].range.start.line, 0);
+    QCOMPARE(res[0].range.start.column, 16);
+    QCOMPARE(res[0].range.end.line, 0);
+    QCOMPARE(res[0].range.end.column, 25);
+    QCOMPARE(res[0].tag, QString("p"));
+}
+
+void TestParser::htmlInlineStyle2()
+{
+    HtmlParser p;
+                 //0         1           2          3          4
+                 //0123456789012345 6789 01234567 8901234567 890123456789
+    p.setContents("<html>  <div id=\"foo\" style=\"color:red\"></html>");
+    QList<HtmlParser::Part> res = p.parse();
+    QCOMPARE(res.count(), 1);
+    QCOMPARE(res[0].contents, QString("color:red"));
+    QCOMPARE(res[0].range.start.line, 0);
+    QCOMPARE(res[0].range.start.column, 29);
+    QCOMPARE(res[0].range.end.line, 0);
+    QCOMPARE(res[0].range.end.column, 38);
+}
+
+void TestParser::htmlInlineStyle3()
+{
+    HtmlParser p;
+                 //0                         1                   2      3
+                 //0         1           2   0          1        0      0
+                 //0123456789012345 6789 01 2012345 67890123456 7012 3 40123456
+    p.setContents("<html>  <div id=\"foo\" \nstyle=\"color:red;\nabc\"\n></html>");
+    QList<HtmlParser::Part> res = p.parse();
+    QCOMPARE(res.count(), 1);
+    QCOMPARE(res[0].contents, QString("color:red;\nabc"));
+    QCOMPARE(res[0].range.start.line, 1);
+    QCOMPARE(res[0].range.start.column, 7);
+    QCOMPARE(res[0].range.end.line, 2);
+    QCOMPARE(res[0].range.end.column, 3);
+}
+
 
 }
 
