@@ -136,7 +136,7 @@ CursorIdentifier cursorIdentifier(const KUrl& url, const KDevelop::SimpleCursor&
     {
         KDevelop::DUChainReadLocker lock(KDevelop::DUChain::lock());
         KDevelop::TopDUContext* top = KDevelop::DUChain::self()->chainForDocument(url);
-        if (!top) CursorIdentifier(0);
+        if (!top) return CursorIdentifier(0);
         KDevelop::DUContext* ctx = top->findContextAt(position);
         if (!ctx || ctx->type() != KDevelop::DUContext::Class) {
             return CursorIdentifier(0);
