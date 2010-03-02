@@ -136,6 +136,7 @@ CursorIdentifier cursorIdentifier(const KUrl& url, const KDevelop::SimpleCursor&
     {
         KDevelop::DUChainReadLocker lock(KDevelop::DUChain::lock());
         KDevelop::TopDUContext* top = KDevelop::DUChain::self()->chainForDocument(url);
+        if (!top) CursorIdentifier(0);
         KDevelop::DUContext* ctx = top->findContextAt(position);
         if (!ctx || ctx->type() != KDevelop::DUContext::Class) {
             return CursorIdentifier(0);
@@ -191,6 +192,7 @@ QWidget* LanguageSupport::specialLanguageObjectNavigationWidget(const KUrl& url,
         {
             KDevelop::DUChainReadLocker lock(KDevelop::DUChain::lock());
             top = KDevelop::DUChain::self()->chainForDocument(url);
+            if (!top) return 0;
         }
         if (id.kind == PropertyAst::KIND) {
             ContentAssistData::Field field = ContentAssistData::self()->field(id.contents);
