@@ -90,6 +90,10 @@ void TestParser::parser_data()
     QTest::newRow("first property no value no semicolon2") << "a{color:width:0;}";
     QTest::newRow("first property no value no semicolon3") << "a{color: width:0;}";
     QTest::newRow("first property no value no semicolon4") << "a { color : width : 0 ; }";
+    QTest::newRow("rgb value") << "a { color: rgb(1,2,3); }";
+    QTest::newRow("rgb value2") << "a { color: rgb(1%,2%,3%); }";
+    QTest::newRow("rgb value3") << "a { color: rgb(255,0,0); }";
+    QTest::newRow("rgba value") << "a { color: rgba(255,0,0,127); }";
 }
 
 void TestParser::parser()

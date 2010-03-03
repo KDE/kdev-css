@@ -27,6 +27,7 @@ public:
     virtual void visitDeclarationList(DeclarationListAst *) {}
     virtual void visitElementName(ElementNameAst *) {}
     virtual void visitExpr(ExprAst *) {}
+    virtual void visitFunction(FunctionAst *) {}
     virtual void visitHexcolor(HexcolorAst *) {}
     virtual void visitHtml(HtmlAst *) {}
     virtual void visitIdentOrString(IdentOrStringAst *) {}

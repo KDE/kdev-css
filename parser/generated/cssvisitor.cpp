@@ -14,6 +14,7 @@ Visitor::ParserFuncType Visitor::sParserTable[] =
     reinterpret_cast<ParserFuncType>(&Visitor::visitDeclarationList),
     reinterpret_cast<ParserFuncType>(&Visitor::visitElementName),
     reinterpret_cast<ParserFuncType>(&Visitor::visitExpr),
+    reinterpret_cast<ParserFuncType>(&Visitor::visitFunction),
     reinterpret_cast<ParserFuncType>(&Visitor::visitHexcolor),
     reinterpret_cast<ParserFuncType>(&Visitor::visitHtml),
     reinterpret_cast<ParserFuncType>(&Visitor::visitIdentOrString),

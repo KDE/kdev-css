@@ -19,6 +19,7 @@ public:
     virtual void visitDeclarationList(DeclarationListAst *node);
     virtual void visitElementName(ElementNameAst *node);
     virtual void visitExpr(ExprAst *node);
+    virtual void visitFunction(FunctionAst *node);
     virtual void visitHexcolor(HexcolorAst *node);
     virtual void visitHtml(HtmlAst *node);
     virtual void visitIdentOrString(IdentOrStringAst *node);

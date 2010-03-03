@@ -532,8 +532,6 @@ IMPORTANT_SYM maybeSpace | 0
 -> operator ;;
 
 --   | '#' maybeSpace /* Handle error case: "color: #;" */
---   /* FIXME: according to the specs a function can have a unaryOperator in front. I know no case where this makes sense */
---   | function
 --   | variable_reference maybeSpace
 --   | '%' maybeSpace /* Handle width: %; */
     string=STRING maybeSpace
@@ -542,6 +540,7 @@ IMPORTANT_SYM maybeSpace | 0
   | uri=URI maybeSpace
   | unicoderange=UNICODERANGE maybeSpace
   | hexcolor=hexcolor
+  | function=function --   /* FIXME: according to the specs a function can have a unaryOperator in front. I know no case where this makes sense */
 -> term ;;
 
 
@@ -573,11 +572,10 @@ IMPORTANT_SYM maybeSpace | 0
 --   VARCALL
 --   ;
 
--- function:
---     FUNCTION maybeSpace expr ')' maybeSpace
---     |
---     FUNCTION maybeSpace error
---   ;
+    FUNCTION maybeSpace expr RPAREN maybeSpace
+    --|
+    --FUNCTION maybeSpace error
+-> function ;;
 
 
 -- /*

@@ -91,6 +91,14 @@ public:
         m_indent--;
     }
 
+    virtual void visitFunction(FunctionAst *node)
+    {
+        if (!m_indent) printToken(node, "function");
+        m_indent++;
+        DefaultVisitor::visitFunction(node);
+        m_indent--;
+    }
+
     virtual void visitHexcolor(HexcolorAst *node)
     {
         if (!m_indent) printToken(node, "hexcolor");
@@ -351,6 +359,7 @@ public:
         if (node->op) printToken(node->op, "unaryOperator", "op");
         if (node->term) printToken(node->term, "unaryTerm", "term");
         if (node->hexcolor) printToken(node->hexcolor, "hexcolor", "hexcolor");
+        if (node->function) printToken(node->function, "function", "function");
         m_indent++;
         DefaultVisitor::visitTerm(node);
         m_indent--;

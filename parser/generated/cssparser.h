@@ -189,6 +189,7 @@ public:
     bool parseDeclarationList(DeclarationListAst **yynode);
     bool parseElementName(ElementNameAst **yynode);
     bool parseExpr(ExprAst **yynode);
+    bool parseFunction(FunctionAst **yynode);
     bool parseHexcolor(HexcolorAst **yynode);
     bool parseHtml(HtmlAst **yynode);
     bool parseIdentOrString(IdentOrStringAst **yynode);

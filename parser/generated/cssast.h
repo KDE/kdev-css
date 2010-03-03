@@ -25,6 +25,7 @@ struct DeclarationAst;
 struct DeclarationListAst;
 struct ElementNameAst;
 struct ExprAst;
+struct FunctionAst;
 struct HexcolorAst;
 struct HtmlAst;
 struct IdentOrStringAst;
@@ -67,34 +68,35 @@ struct KDEVCSSPARSER_EXPORT AstNode
         DeclarationListKind = 1003,
         ElementNameKind = 1004,
         ExprKind = 1005,
-        HexcolorKind = 1006,
-        HtmlKind = 1007,
-        IdentOrStringKind = 1008,
-        ImportKind = 1009,
-        ImportListKind = 1010,
-        InlineStyleKind = 1011,
-        MatchKind = 1012,
-        MaybeSgmlKind = 1013,
-        MaybeSpaceKind = 1014,
-        OperatorKind = 1015,
-        PrioKind = 1016,
-        PropertyKind = 1017,
-        PseudoKind = 1018,
-        RuleKind = 1019,
-        RuleListKind = 1020,
-        RulesetKind = 1021,
-        SelectorKind = 1022,
-        SelectorListKind = 1023,
-        SimpleSelectorKind = 1024,
-        SimpleSelectorWithWhitespaceKind = 1025,
-        SpecifierKind = 1026,
-        SpecifierListKind = 1027,
-        StartKind = 1028,
-        StringOrUriKind = 1029,
-        StyleElementKind = 1030,
-        TermKind = 1031,
-        UnaryOperatorKind = 1032,
-        UnaryTermKind = 1033,
+        FunctionKind = 1006,
+        HexcolorKind = 1007,
+        HtmlKind = 1008,
+        IdentOrStringKind = 1009,
+        ImportKind = 1010,
+        ImportListKind = 1011,
+        InlineStyleKind = 1012,
+        MatchKind = 1013,
+        MaybeSgmlKind = 1014,
+        MaybeSpaceKind = 1015,
+        OperatorKind = 1016,
+        PrioKind = 1017,
+        PropertyKind = 1018,
+        PseudoKind = 1019,
+        RuleKind = 1020,
+        RuleListKind = 1021,
+        RulesetKind = 1022,
+        SelectorKind = 1023,
+        SelectorListKind = 1024,
+        SimpleSelectorKind = 1025,
+        SimpleSelectorWithWhitespaceKind = 1026,
+        SpecifierKind = 1027,
+        SpecifierListKind = 1028,
+        StartKind = 1029,
+        StringOrUriKind = 1030,
+        StyleElementKind = 1031,
+        TermKind = 1032,
+        UnaryOperatorKind = 1033,
+        UnaryTermKind = 1034,
         AST_NODE_KIND_COUNT
     };
 
@@ -149,6 +151,12 @@ struct KDEVCSSPARSER_EXPORT ExprAst: public AstNode
     enum { KIND = ExprKind };
 
     const KDevPG::ListNode<TermAst *> *termsSequence;
+};
+
+struct KDEVCSSPARSER_EXPORT FunctionAst: public AstNode
+{
+    enum { KIND = FunctionKind };
+
 };
 
 struct KDEVCSSPARSER_EXPORT HexcolorAst: public AstNode
@@ -343,6 +351,7 @@ struct KDEVCSSPARSER_EXPORT TermAst: public AstNode
     qint64 uri;
     qint64 unicoderange;
     HexcolorAst *hexcolor;
+    FunctionAst *function;
 };
 
 struct KDEVCSSPARSER_EXPORT UnaryOperatorAst: public AstNode

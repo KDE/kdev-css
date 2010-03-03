@@ -54,6 +54,10 @@ void DefaultVisitor::visitExpr(ExprAst *node)
     }
 }
 
+void DefaultVisitor::visitFunction(FunctionAst *)
+{
+}
+
 void DefaultVisitor::visitHexcolor(HexcolorAst *)
 {
 }
@@ -213,6 +217,7 @@ void DefaultVisitor::visitTerm(TermAst *node)
     visitNode(node->op);
     visitNode(node->term);
     visitNode(node->hexcolor);
+    visitNode(node->function);
 }
 
 void DefaultVisitor::visitUnaryOperator(UnaryOperatorAst *)
