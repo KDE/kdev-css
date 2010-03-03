@@ -163,11 +163,13 @@ CursorIdentifier cursorIdentifier(const KUrl& url, const KDevelop::SimpleCursor&
             return ret;
         } else if (v.node() && v.node()->kind == TermAst::KIND && v.property()) {
             TermAst* n = static_cast<TermAst*>(v.node());
-            CursorIdentifier ret(v.node()->kind);
-            ret.property = editor.tokenToString(v.property()->ident);
-            ret.contents = editor.tokenToString(n->ident);
-            ret.range = editor.findRange(n->ident);
-            return ret;
+            if (n->ident != -1) {
+                CursorIdentifier ret(v.node()->kind);
+                ret.property = editor.tokenToString(v.property()->ident);
+                ret.contents = editor.tokenToString(n->ident);
+                ret.range = editor.findRange(n->ident);
+                return ret;
+            }
         }
     }
     return CursorIdentifier(0);
