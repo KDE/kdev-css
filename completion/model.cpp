@@ -279,6 +279,20 @@ bool CodeCompletionModel::shouldAbortCompletion(KTextEditor::View* view, const K
     return ret;
 }
 
+bool CodeCompletionModel::shouldStartCompletion(KTextEditor::View* view, const QString& insertedText, bool userInsertion, const KTextEditor::Cursor& position)
+{
+        Q_UNUSED(view);
+    Q_UNUSED(position);
+    if(insertedText.isEmpty())
+        return false;
+
+    QChar lastChar = insertedText.at(insertedText.count() - 1);
+    if (userInsertion && (lastChar.isLetter() || lastChar.isNumber() || lastChar == ':')) {
+        return true;
+    }
+    return false;
+}
+
 void CodeCompletionModel::executeCompletionItem2(KTextEditor::Document* document, const KTextEditor::Range& word, const QModelIndex& index) const
 {
     QString text = data(index.sibling(index.row(), Name), Qt::DisplayRole).toString();
