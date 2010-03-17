@@ -22,6 +22,7 @@
 #include <QXmlStreamReader>
 #include <QRegExp>
 #include <QBuffer>
+#include <KDebug>
 
 namespace Css {
 
@@ -75,8 +76,7 @@ QList<HtmlParser::Part> HtmlParser::parse()
                 p.tag = reader.name().toString();
                 ret << p;
             } else {
-                kDebug() << c;
-                Q_ASSERT(0);
+                kWarning() << "failed parsing style attribute" << c;
             }
         }
         reader.readNext();
