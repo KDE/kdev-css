@@ -60,6 +60,10 @@ set(completionmodeltest_SRCS
     completion/test/modeltest.cpp
     completion/model.cpp
     completion/contentassistdata.cpp
+    ##TODO: put this into a shared lib
+    duchain/tests/duchaintestbase.cpp
+    duchain/builders/contextbuilder.cpp
+    duchain/builders/declarationbuilder.cpp
 )
 kde4_add_unit_test(completionmodeltest ${completionmodeltest_SRCS})
 target_link_libraries(completionmodeltest
@@ -68,6 +72,7 @@ target_link_libraries(completionmodeltest
     ${KDE4_KTEXTEDITOR_LIBS}
     ${KDEVPLATFORM_LANGUAGE_LIBRARIES}
     ${KDEVPLATFORM_INTERFACES_LIBRARIES}
+    ${KDEVPLATFORM_TESTS_LIBRARIES}
     ${QT_QTGUI_LIBRARY}
     ${QT_QTTEST_LIBRARY}
     ${KDE4_KDECORE_LIBS}
@@ -88,6 +93,7 @@ target_link_libraries(duchaintest
     ${KDE4_KTEXTEDITOR_LIBS}
     ${QT_QTGUI_LIBRARY}
     ${KDEVPLATFORM_LANGUAGE_LIBRARIES}
+    ${KDEVPLATFORM_TESTS_LIBRARIES}
     ${KDEVPLATFORM_INTERFACES_LIBRARIES}
     ${QT_QTTEST_LIBRARY}
     ${KDE4_KDECORE_LIBS}
