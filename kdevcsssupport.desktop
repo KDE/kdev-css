@@ -2,7 +2,7 @@
 Encoding=UTF-8
 Type=Service
 Exec=blubb
-Comment=Css Language Support
+Comment=CSS Language Support
 Comment[da]=Understøttelse af CSS-sproget
 Comment[de]=Sprachunterstützung für Css
 Comment[en_GB]=Css Language Support
@@ -37,7 +37,7 @@ Name[sv]=KDevelop CSS-stöd
 Name[uk]=KDevCssSupport
 Name[x-test]=xxKDevCssSupportxx
 Name[zh_CN]=KDevCss 支持
-GenericName=Css Support
+GenericName=CSS Support
 GenericName[da]=CSS-understøttelse
 GenericName[de]=Css-Unterstützung
 GenericName[en_GB]=Css Support
