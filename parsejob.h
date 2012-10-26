@@ -39,10 +39,8 @@ class ParseJob : public KDevelop::ParseJob
     Q_OBJECT
 
 public:
-    explicit ParseJob(const KUrl &url);
+    explicit ParseJob(const KDevelop::IndexedString &url, KDevelop::ILanguageSupport* languageSupport);
     virtual ~ParseJob();
-
-    LanguageSupport* css() const;
 
 protected:
     virtual void run();

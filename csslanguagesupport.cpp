@@ -71,10 +71,10 @@ QString LanguageSupport::name() const
     return "Css";
 }
 
-KDevelop::ParseJob *LanguageSupport::createParseJob(const KUrl &url)
+KDevelop::ParseJob *LanguageSupport::createParseJob(const KDevelop::IndexedString& url)
 {
     kDebug(debugArea()) << url;
-    return new ParseJob(url);
+    return new ParseJob(url, this);
 }
 
 LanguageSupport *LanguageSupport::self()

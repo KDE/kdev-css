@@ -47,8 +47,8 @@ namespace Css
 extern int debugArea();
 #define debug() kDebug(debugArea())
 
-ParseJob::ParseJob(const KUrl &url)
-        : KDevelop::ParseJob(url)
+ParseJob::ParseJob(const KDevelop::IndexedString& url, KDevelop::ILanguageSupport* languageSupport)
+        : KDevelop::ParseJob(url, languageSupport)
 {
     kDebug();
 }
@@ -57,12 +57,6 @@ ParseJob::~ParseJob()
 {
     kDebug();
 }
-
-LanguageSupport *ParseJob::css() const
-{
-    return LanguageSupport::self();
-}
-
 
 void ParseJob::run()
 {
@@ -158,7 +152,7 @@ void ParseJob::run()
         debug() << "compiling" << document().str();
     }
 
-    QReadLocker parseLock(css()->language()->parseLock());
+    QReadLocker parseLock(languageSupport()->language()->parseLock());
 
     EditorIntegrator editor;
     DeclarationBuilder builder;
