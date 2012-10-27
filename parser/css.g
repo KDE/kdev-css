@@ -533,6 +533,7 @@ IMPORTANT_SYM maybeSpace | 0
 
     DIVIDE maybeSpace
   | COMMA maybeSpace
+  | EQUALS maybeSpace --non standard, for eg. filter: alpha(opacity=0);
 -> operator ;;
 
 --   | '#' maybeSpace /* Handle error case: "color: #;" */
