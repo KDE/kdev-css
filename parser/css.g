@@ -430,7 +430,7 @@ maybeSpace (SGML_CD @ maybeSpace | 0)
     (#specifiers=specifier)+
 -> specifierList ;;
 
-    DOT className=IDENT
+    DOT ( className=IDENT | INVALID [: reportProblem( Error, "Invalid Token" ); :] )
   | attrib=attrib
   | pseudo=pseudo
   | idSel=IDSEL

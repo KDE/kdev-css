@@ -91,6 +91,7 @@ void TestParser::parser_data()
     QTest::newRow("rgb value3") << "a { color: rgb(255,0,0); }";
     QTest::newRow("rgba value") << "a { color: rgba(255,0,0,127); }";
     QTest::newRow("missing closing brace") << "body{font-w";
+    QTest::newRow("invalid character in class name") << ".$cssClass .submitWrapper {\n    float: right;\n    margin-top: -47px;\n}";
 }
 
 void TestParser::parser()
