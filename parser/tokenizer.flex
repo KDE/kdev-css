@@ -193,7 +193,7 @@ int Tokenizer::LexerInput( char *buf, int /*max_size*/ )
     {
     case '\r':
         c = '\n'; // only have one single line break character: '\n'
-        if ( m_contents.at(m_currentOffset + 1) == '\n' )
+        if ( m_currentOffset + 1 < m_contents.size() && m_contents.at(m_currentOffset + 1) == '\n' )
         {
             m_currentOffset++;
             m_tokenEnd++;
