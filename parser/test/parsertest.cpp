@@ -90,6 +90,7 @@ void TestParser::parser_data()
     QTest::newRow("rgb value2") << "a { color: rgb(1%,2%,3%); }";
     QTest::newRow("rgb value3") << "a { color: rgb(255,0,0); }";
     QTest::newRow("rgba value") << "a { color: rgba(255,0,0,127); }";
+    QTest::newRow("missing closing brace") << "body{font-w";
 }
 
 void TestParser::parser()
