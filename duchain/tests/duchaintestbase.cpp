@@ -49,11 +49,15 @@ DUChainTestBase::DUChainTestBase()
 void DUChainTestBase::initTestCase()
 {
     KDevelop::AutoTestShell::init();
-    KDevelop::TestCore* core = new KDevelop::TestCore();
-    core->initialize(KDevelop::Core::NoUi);
+    KDevelop::TestCore::initialize(KDevelop::Core::NoUi);
 
     KDevelop::DUChain::self()->disablePersistentStorage();
     KDevelop::CodeRepresentation::setDiskChangesForbidden(true);
+}
+
+void DUChainTestBase::cleanupTestCase()
+{
+    KDevelop::TestCore::shutdown();
 }
 
 KDevelop::TopDUContext* DUChainTestBase::parse(const QByteArray& unit, DumpAreas dump, QString url)

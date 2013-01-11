@@ -22,7 +22,6 @@
 #include <QObject>
 
 namespace KDevelop {
-class TestCore;
 class TestProjectController;
 }
 
@@ -33,18 +32,15 @@ class TestParseJob : public QObject
     Q_OBJECT
 
 private slots:
-    void init();
-    void cleanup();
+    void initTestCase();
+    void cleanupTestCase();
 
     void testSimple();
     void testSimpleHtml();
     void testHtmlTwoStyleElements();
 
-
 private:
-    KDevelop::TestCore* m_core;
     KDevelop::TestProjectController* m_projectController;
-
 };
 
 }
