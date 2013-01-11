@@ -35,10 +35,11 @@
 #include "navigation/navigationwidget.h"
 #include "parser/parsesession.h"
 #include "parser/editorintegrator.h"
-#include <cssdebugvisitor.h>
+#include "parser/cssdebugvisitor.h"
+#include "version.h"
 
 K_PLUGIN_FACTORY(KDevCssSupportFactory, registerPlugin<Css::LanguageSupport>();)
-K_EXPORT_PLUGIN(KDevCssSupportFactory(KAboutData("kdevcsssupport","kdevcss", ki18n("CSS Support"), "0.1", ki18n("Support for CSS Language"), KAboutData::License_GPL)
+K_EXPORT_PLUGIN(KDevCssSupportFactory(KAboutData("kdevcsssupport","kdevcss", ki18n("CSS Support"), KDEVCSS_VERSION_STR, ki18n("Support for CSS Language"), KAboutData::License_GPL)
     .addAuthor(ki18n("Niko Sams"), ki18n("Author"), "niko.sams@gmail.com", "http://nikosams.blogspot.com")
 ))
 
