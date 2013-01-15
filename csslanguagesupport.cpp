@@ -39,7 +39,7 @@
 #include "version.h"
 
 K_PLUGIN_FACTORY(KDevCssSupportFactory, registerPlugin<Css::LanguageSupport>();)
-K_EXPORT_PLUGIN(KDevCssSupportFactory(KAboutData("kdevcsssupport","kdevcss", ki18n("CSS Support"), VERSION_STR, ki18n("Support for CSS Language"), KAboutData::License_GPL)
+K_EXPORT_PLUGIN(KDevCssSupportFactory(KAboutData("kdevcsssupport","kdevcss", ki18n("CSS Support"), KDEVCSS_VERSION_STR, ki18n("Support for CSS Language"), KAboutData::License_GPL)
     .addAuthor(ki18n("Niko Sams"), ki18n("Author"), "niko.sams@gmail.com", "http://nikosams.blogspot.com")
 ))
 

@@ -4,9 +4,9 @@ set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${css_SOURCE_DIR}/cmake)
 find_package(KDE4 REQUIRED)
 find_package(KDevPlatform 1.5.60 REQUIRED)
 
-set(VERSION_MAJOR 1)
-set(VERSION_MINOR 5)
-set(VERSION_PATCH 60)
+set(KDEVCSS_VERSION_MAJOR 1)
+set(KDEVCSS_VERSION_MINOR 5)
+set(KDEVCSS_VERSION_PATCH 60)
 
 configure_file(
   "${CMAKE_CURRENT_SOURCE_DIR}/version.h.cmake"
