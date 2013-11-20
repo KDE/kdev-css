@@ -62,7 +62,8 @@ target_link_libraries(kdevcsslanguagesupport
 
 install(TARGETS kdevcsslanguagesupport DESTINATION ${PLUGIN_INSTALL_DIR})
 
-install(FILES kdevcsssupport.desktop DESTINATION ${SERVICES_INSTALL_DIR})
+configure_file(kdevcsssupport.desktop.cmake ${CMAKE_CURRENT_BINARY_DIR}/kdevcsssupport.desktop)
+install(FILES ${CMAKE_CURRENT_BINARY_DIR}/kdevcsssupport.desktop DESTINATION ${SERVICES_INSTALL_DIR})
 install(FILES completion/CSS.xml DESTINATION ${DATA_INSTALL_DIR}/kdevcsssupport/completion)
 
 
