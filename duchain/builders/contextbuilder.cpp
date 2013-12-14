@@ -98,12 +98,12 @@ KDevelop::TopDUContext* ContextBuilder::newTopContext(const KDevelop::RangeInRev
     return new KDevelop::TopDUContext(document(), range, file);
 }
 
-void ContextBuilder::setContextOnNode(AstNode* node, KDevelop::DUContext* ctx)
+void ContextBuilder::setContextOnNode(AstNode* /*node*/, KDevelop::DUContext* /*ctx*/)
 {
     //node->ducontext = ctx;
 }
 
-KDevelop::DUContext* ContextBuilder::contextFromNode(AstNode* node)
+KDevelop::DUContext* ContextBuilder::contextFromNode(AstNode* /*node*/)
 {
     //return node->ducontext;
     return 0;

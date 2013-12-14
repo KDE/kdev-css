@@ -30,7 +30,7 @@
 
 namespace Css
 {
-class AstNode;
+struct AstNode;
 class LanguageSupport;
 class EditorIntegrator;
 

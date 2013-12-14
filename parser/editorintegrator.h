@@ -28,7 +28,7 @@ namespace Css
 {
 
 class ParseSession;
-class AstNode;
+struct AstNode;
 
 
 /**

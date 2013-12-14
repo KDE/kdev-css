@@ -36,7 +36,7 @@ class MemoryPool;
 
 namespace Css
 {
-class StartAst;
+struct StartAst;
 
 typedef QPair<KDevelop::DUContextPointer, KDevelop::RangeInRevision> SimpleUse;
 
