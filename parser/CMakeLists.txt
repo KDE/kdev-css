@@ -47,7 +47,7 @@ set(parser_STAT_SRCS
 
 ### next target
 kde4_add_library( kdev4cssparser SHARED ${parser_SRCS} ${parser_STAT_SRCS} )
-target_link_libraries( kdev4cssparser
+target_link_libraries( kdev4cssparser LINK_PRIVATE
     ${KDE4_KDECORE_LIBS}
     ${KDEVPLATFORM_LANGUAGE_LIBRARIES}
     ${KDE4_KTEXTEDITOR_LIBS}
