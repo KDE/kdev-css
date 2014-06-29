@@ -21,7 +21,7 @@
 
 #include <QtTest/QtTest>
 
-#include <language/duchain/dumpchain.h>
+#include <language/duchain/duchaindumper.h>
 #include <language/duchain/parsingenvironment.h>
 #include <language/duchain/duchainlock.h>
 #include <language/duchain/topducontext.h>
@@ -91,7 +91,8 @@ KDevelop::TopDUContext* DUChainTestBase::parse(const QByteArray& unit, DumpAreas
         kDebug() << "===== DUChain:";
 
         KDevelop::DUChainReadLocker lock;
-        KDevelop::dumpDUContext(top);
+        KDevelop::DUChainDumper dumper;
+        dumper.dump(top);
     }
 
     if (dump)

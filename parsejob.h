@@ -26,7 +26,6 @@
 
 #include <ksharedptr.h>
 #include <ktexteditor/range.h>
-#include <language/interfaces/iproblem.h>
 
 namespace Css
 {
