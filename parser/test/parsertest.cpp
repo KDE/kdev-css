@@ -26,6 +26,8 @@
 #include "../editorintegrator.h"
 #include "../htmlparser.h"
 
+#include <KDebug>
+
 QTEST_MAIN(Css::TestParser)
 
 namespace Css
@@ -136,10 +138,7 @@ void TestParser::htmlStyleElement()
     QList<HtmlParser::Part> res = p.parse();
     QCOMPARE(res.count(), 1);
     QCOMPARE(res[0].contents, QString("a{color:red}"));
-    QCOMPARE(res[0].range.start.line, 0);
-    QCOMPARE(res[0].range.start.column, 29);
-    QCOMPARE(res[0].range.end.line, 0);
-    QCOMPARE(res[0].range.end.column, 41);
+    QCOMPARE(res[0].range, KTextEditor::Range(0, 29, 0, 41));
 }
 
 void TestParser::htmlInlineStyle()
@@ -151,10 +150,7 @@ void TestParser::htmlInlineStyle()
     QList<HtmlParser::Part> res = p.parse();
     QCOMPARE(res.count(), 1);
     QCOMPARE(res[0].contents, QString("color:red"));
-    QCOMPARE(res[0].range.start.line, 0);
-    QCOMPARE(res[0].range.start.column, 16);
-    QCOMPARE(res[0].range.end.line, 0);
-    QCOMPARE(res[0].range.end.column, 25);
+    QCOMPARE(res[0].range, KTextEditor::Range(0, 16, 0, 25));
     QCOMPARE(res[0].tag, QString("p"));
 }
 
@@ -167,10 +163,7 @@ void TestParser::htmlInlineStyle2()
     QList<HtmlParser::Part> res = p.parse();
     QCOMPARE(res.count(), 1);
     QCOMPARE(res[0].contents, QString("color:red"));
-    QCOMPARE(res[0].range.start.line, 0);
-    QCOMPARE(res[0].range.start.column, 29);
-    QCOMPARE(res[0].range.end.line, 0);
-    QCOMPARE(res[0].range.end.column, 38);
+    QCOMPARE(res[0].range, KTextEditor::Range(0, 29, 0, 38));
 }
 
 void TestParser::htmlInlineStyle3()
@@ -183,12 +176,8 @@ void TestParser::htmlInlineStyle3()
     QList<HtmlParser::Part> res = p.parse();
     QCOMPARE(res.count(), 1);
     QCOMPARE(res[0].contents, QString("color:red;\nabc"));
-    QCOMPARE(res[0].range.start.line, 1);
-    QCOMPARE(res[0].range.start.column, 7);
-    QCOMPARE(res[0].range.end.line, 2);
-    QCOMPARE(res[0].range.end.column, 3);
+    QCOMPARE(res[0].range, KTextEditor::Range(1, 7, 2, 3));
 }
-
 
 }
 

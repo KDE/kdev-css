@@ -22,7 +22,8 @@
 #define CSS_HTMLPARSER_H
 
 #include <QString>
-#include <language/editor/simplerange.h>
+#include <KTextEditor/Range>
+
 #include "parserexport.h"
 
 namespace Css {
@@ -40,7 +41,7 @@ public:
             InlineStyle
         };
         Kind kind;
-        KDevelop::SimpleRange range;
+        KTextEditor::Range range;
         QString contents;
         QString tag; //only for InlineStyle
     };

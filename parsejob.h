@@ -42,8 +42,7 @@ public:
     virtual ~ParseJob();
 
 protected:
-    virtual void run();
-
+    virtual void run(ThreadWeaver::JobPointer self, ThreadWeaver::Thread *thread) override;
 };
 
 }

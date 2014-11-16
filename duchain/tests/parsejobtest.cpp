@@ -14,76 +14,78 @@
 
 QTEST_KDEMAIN(Css::TestParseJob, GUI)
 
+using namespace KDevelop;
+
 namespace Css {
 
 void TestParseJob::initTestCase()
 {
-    KDevelop::AutoTestShell::init();
-    KDevelop::TestCore* core = KDevelop::TestCore::initialize(KDevelop::Core::NoUi);
-    m_projectController = new KDevelop::TestProjectController(core);
+    AutoTestShell::init();
+    TestCore* core = TestCore::initialize(Core::NoUi);
+    m_projectController = new TestProjectController(core);
     core->setProjectController(m_projectController);
 }
 
 void TestParseJob::cleanupTestCase()
 {
-    KDevelop::TestCore::shutdown();
+    TestCore::shutdown();
 }
 
 void TestParseJob::testSimple()
 {
-    KDevelop::TopDUContext::Features features = KDevelop::TopDUContext::VisibleDeclarationsAndContexts;
+    TopDUContext::Features features = TopDUContext::VisibleDeclarationsAndContexts;
 
-    KDevelop::TestProject* project = new KDevelop::TestProject;
+    TestProject* project = new TestProject;
     m_projectController->clearProjects();
     m_projectController->addProject(project);
 
-    KDevelop::TestFile f("a { color: red; }", "css", project);
+    TestFile f("a { color: red; }", "css", project);
     f.parse(features);
 
-    KDevelop::ReferencedTopDUContext top = f.topContext();
+    ReferencedTopDUContext top = f.topContext();
 
-    KDevelop::DUChainReadLocker lock(KDevelop::DUChain::lock());
+    DUChainReadLocker lock;
     QVERIFY(top);
-    QVERIFY(top->parsingEnvironmentFile()->language() == KDevelop::IndexedString("Css"));
+    QVERIFY(top->parsingEnvironmentFile()->language() == IndexedString("Css"));
     QCOMPARE(top->childContexts().count(), 1);
 }
 
 void TestParseJob::testSimpleHtml()
 {
-    KDevelop::TopDUContext::Features features = KDevelop::TopDUContext::VisibleDeclarationsAndContexts;
+    TopDUContext::Features features = TopDUContext::VisibleDeclarationsAndContexts;
 
-    KDevelop::TestProject* project = new KDevelop::TestProject;
+    TestProject* project = new TestProject;
     m_projectController->clearProjects();
     m_projectController->addProject(project);
 
-    KDevelop::TestFile f("<html><style>a { color: red; }</style></html>", "html", project);
+    TestFile f("<html><style>a { color: red; }</style></html>", "html", project);
     f.parse(features);
 
-    KDevelop::ReferencedTopDUContext top = f.topContext();
+    ReferencedTopDUContext top = f.topContext();
 
-    KDevelop::DUChainReadLocker lock(KDevelop::DUChain::lock());
+    DUChainReadLocker lock;
     QVERIFY(top);
-    QVERIFY(top->parsingEnvironmentFile()->language() == KDevelop::IndexedString("Css"));
+    QVERIFY(top->parsingEnvironmentFile()->language() == IndexedString("Css"));
     QCOMPARE(top->childContexts().count(), 1);
 }
 
 void TestParseJob::testHtmlTwoStyleElements()
 {
-    KDevelop::TopDUContext::Features features = KDevelop::TopDUContext::VisibleDeclarationsAndContexts;
+    TopDUContext::Features features = TopDUContext::VisibleDeclarationsAndContexts;
 
-    KDevelop::TestProject* project = new KDevelop::TestProject;
+    TestProject* project = new TestProject;
     m_projectController->clearProjects();
     m_projectController->addProject(project);
 
-    KDevelop::TestFile f("<html><style>a { color: red; }</style><style>h1 { font-weight:normal; }</style></html>",
+    TestFile f("<html><style>a { color: red; }</style><style>h1 { font-weight:normal; }</style></html>",
                          "html", project);
     f.parse(features);
 
-    KDevelop::ReferencedTopDUContext top = f.topContext();
+    ReferencedTopDUContext top = f.topContext();
 
-    KDevelop::DUChainReadLocker lock(KDevelop::DUChain::lock());
+    DUChainReadLocker lock;
     QVERIFY(top);
-    QVERIFY(top->parsingEnvironmentFile()->language() == KDevelop::IndexedString("Css"));
+    QVERIFY(top->parsingEnvironmentFile()->language() == IndexedString("Css"));
     QCOMPARE(top->childContexts().count(), 2);
 }
 

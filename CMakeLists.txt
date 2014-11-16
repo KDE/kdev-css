@@ -1,21 +1,25 @@
-PROJECT(css)
+project(css)
 
 set(VERSION_MAJOR 1)
-set(VERSION_MINOR 6)
+set(VERSION_MINOR 9)
 set(VERSION_PATCH 60)
 # KDevplatform dependency version
 set( KDEVPLATFORM_VERSION "${VERSION_MAJOR}.${VERSION_MINOR}.${VERSION_PATCH}" )
 
-set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${css_SOURCE_DIR}/cmake)
+cmake_minimum_required(VERSION 2.8.12)
+find_package (ECM 1.0.0 REQUIRED NO_MODULE)
+message(STATUS "${CMAKE_MODULE_PATH}")
+set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${ECM_MODULE_PATH})
+message(STATUS "${CMAKE_MODULE_PATH}")
 
-cmake_minimum_required(VERSION 2.8.9)
+include(ECMAddTests)
+include(KDEInstallDirs)
+include(KDECMakeSettings)
+include(KDECompilerSettings)
 
-find_package(KDE4 REQUIRED)
+find_package(Qt5 REQUIRED Core Widgets Test WebKitWidgets)
+find_package(KF5 REQUIRED COMPONENTS KDELibs4Support ConfigWidgets KIO I18n KCMUtils TextEditor ThreadWeaver )
 find_package(KDevPlatform ${KDEVPLATFORM_VERSION} REQUIRED)
-
-if(CMAKE_COMPILER_IS_GNUCXX OR CMAKE_CXX_COMPILER_ID STREQUAL "Clang" OR CMAKE_CXX_COMPILER_ID STREQUAL "Intel")
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
-endif()
 
 configure_file(
   "${CMAKE_CURRENT_SOURCE_DIR}/version.h.cmake"
@@ -23,18 +27,8 @@ configure_file(
   @ONLY
 )
 
-enable_testing()
-
-include_directories(
-    ${KDEVPLATFORM_INCLUDE_DIR}
-    ${KDE4_INCLUDES}
-    ${QT4_INCLUDES}
-    ${CMAKE_CURRENT_BINARY_DIR}
-    ${CMAKE_CURRENT_SOURCE_DIR}
-)
-
 find_package(KDevelop-PG-Qt REQUIRED)
-find_package(Flex REQUIRED)
+find_package(FLEX REQUIRED)
 
 include_directories(
     ${CMAKE_BINARY_DIR}/parser
@@ -43,7 +37,7 @@ include_directories(
 
 add_subdirectory(parser)
 
-set(kdevcsslanguagesupport_PART_SRCS
+set(kdevcss_PART_SRCS
     csslanguagesupport.cpp
     completion/model.cpp
     completion/contentassistdata.cpp
@@ -56,25 +50,27 @@ set(kdevcsslanguagesupport_PART_SRCS
     navigation/colornavigationcontext.cpp
 )
 
-kde4_add_plugin(kdevcsslanguagesupport ${kdevcsslanguagesupport_PART_SRCS})
+qt5_add_resources(kdevcss_PART_SRCS kdevcssresources.qrc)
 
-target_link_libraries(kdevcsslanguagesupport
-    ${KDE4_KDEUI_LIBS}
-    ${KDEVPLATFORM_INTERFACES_LIBRARIES}
-    ${KDEVPLATFORM_LANGUAGE_LIBRARIES}
-    ${KDE4_THREADWEAVER_LIBRARIES}
-    ${KDE4_KTEXTEDITOR_LIBS}
-    ${KDE4_KDECORE_LIBS}
-    ${KDE4_THREADWEAVER_LIBRARIES}
+add_library(kdevcsssupport MODULE ${kdevcss_PART_SRCS})
+
+target_link_libraries(kdevcsssupport
     kdev4cssparser
+
+    KDev::Interfaces
+    KDev::Language
+
+    KF5::I18n
+    KF5::TextEditor
+
+    # TODO: remove once KDevPlatform moves away from KDELibs4Support.
+    KF5::KDELibs4Support
 )
 
-install(TARGETS kdevcsslanguagesupport DESTINATION ${PLUGIN_INSTALL_DIR})
+install(TARGETS kdevcsssupport DESTINATION ${PLUGIN_INSTALL_DIR}/kdevplatform/${KDEV_PLUGIN_VERSION})
 
 configure_file(kdevcsssupport.desktop.cmake ${CMAKE_CURRENT_BINARY_DIR}/kdevcsssupport.desktop)
-install(FILES ${CMAKE_CURRENT_BINARY_DIR}/kdevcsssupport.desktop DESTINATION ${SERVICES_INSTALL_DIR})
-install(FILES completion/CSS.xml DESTINATION ${DATA_INSTALL_DIR}/kdevcsssupport/completion)
-
+kcoreaddons_desktop_to_json(kdevcsssupport ${CMAKE_CURRENT_BINARY_DIR}/kdevcsssupport.desktop)
 
 ### next target
 set(completionmodeltest_SRCS
@@ -86,19 +82,19 @@ set(completionmodeltest_SRCS
     duchain/builders/contextbuilder.cpp
     duchain/builders/declarationbuilder.cpp
 )
-kde4_add_unit_test(completionmodeltest ${completionmodeltest_SRCS})
-target_link_libraries(completionmodeltest
-    kdev4cssparser
-    ${KDE4_KDEUI_LIBS}
-    ${KDE4_KTEXTEDITOR_LIBS}
-    ${KDEVPLATFORM_LANGUAGE_LIBRARIES}
-    ${KDEVPLATFORM_INTERFACES_LIBRARIES}
-    ${KDEVPLATFORM_TESTS_LIBRARIES}
-    ${QT_QTGUI_LIBRARY}
-    ${QT_QTTEST_LIBRARY}
-    ${KDE4_KDECORE_LIBS}
-)
 
+qt5_add_resources(completionmodeltest_SRCS kdevcssresources.qrc)
+
+ecm_add_test(${completionmodeltest_SRCS}
+    TEST_NAME completionmodeltest
+    LINK_LIBRARIES
+        Qt5::Test
+        kdev4cssparser
+        KDev::Interfaces KDev::Language KDev::Tests
+        KF5::I18n KF5::TextEditor
+        # TODO: remove once KDevPlatform moves away from KDELibs4Support.
+        KF5::KDELibs4Support
+)
 
 ### next target
 set(duchaintest_SRCS
@@ -107,30 +103,27 @@ set(duchaintest_SRCS
     duchain/builders/contextbuilder.cpp
     duchain/builders/declarationbuilder.cpp
 )
-kde4_add_unit_test(duchaintest ${duchaintest_SRCS})
-target_link_libraries(duchaintest
-    kdev4cssparser
-    ${KDE4_KDEUI_LIBS}
-    ${KDE4_KTEXTEDITOR_LIBS}
-    ${QT_QTGUI_LIBRARY}
-    ${KDEVPLATFORM_LANGUAGE_LIBRARIES}
-    ${KDEVPLATFORM_TESTS_LIBRARIES}
-    ${KDEVPLATFORM_INTERFACES_LIBRARIES}
-    ${QT_QTTEST_LIBRARY}
-    ${KDE4_KDECORE_LIBS}
+ecm_add_test(${duchaintest_SRCS}
+    TEST_NAME duchaintest
+    LINK_LIBRARIES
+        kdev4cssparser
+        Qt5::Test
+        KDev::Interfaces KDev::Language KDev::Tests
+        KF5::I18n KF5::TextEditor
+        # TODO: remove once KDevPlatform moves away from KDELibs4Support.
+        KF5::KDELibs4Support
 )
-
 
 ### next target
 set(parsejobtest_SRCS
     duchain/tests/parsejobtest.cpp
 )
-kde4_add_unit_test(parsejobtest ${parsejobtest_SRCS})
-target_link_libraries(parsejobtest
-    ${KDEVPLATFORM_INTERFACES_LIBRARIES}
-    ${KDEVPLATFORM_TESTS_LIBRARIES}
-    ${KDEVPLATFORM_LANGUAGE_LIBRARIES}
-    ${KDE4_KDECORE_LIBS}
-    ${KDE4_KDEUI_LIBS}
-    ${QT_QTTEST_LIBRARY}
+ecm_add_test(${parsejobtest_SRCS}
+    TEST_NAME parsejobtest
+    LINK_LIBRARIES
+        Qt5::Test
+        KDev::Interfaces KDev::Language KDev::Tests
+        KF5::I18n KF5::TextEditor
+        # TODO: remove once KDevPlatform moves away from KDELibs4Support.
+        KF5::KDELibs4Support
 )

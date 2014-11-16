@@ -58,7 +58,7 @@ ParseJob::~ParseJob()
     kDebug();
 }
 
-void ParseJob::run()
+void ParseJob::run(ThreadWeaver::JobPointer /*self*/, ThreadWeaver::Thread */*thread*/)
 {
     KDevelop::UrlParseLock urlLock(document());
 
@@ -93,7 +93,7 @@ void ParseJob::run()
         HtmlParser::Part part;
         part.kind = HtmlParser::Part::Standalone;
         part.contents = contents().contents;
-        part.range.start = KDevelop::SimpleCursor(0, 0);
+        part.range.start() = {0, 0};
         //part.range.end = TODO (needed?)
         parts << part;
     } else {
@@ -111,7 +111,7 @@ void ParseJob::run()
     foreach (const HtmlParser::Part &part, parts) {
         ParseSession *session = new ParseSession;
         session->setCurrentDocument(document());
-        session->setOffset(KDevelop::CursorInRevision::castFromSimpleCursor(part.range.start));
+        session->setOffset(KDevelop::CursorInRevision::castFromSimpleCursor(part.range.start()));
         session->setContents(part.contents);
         if (part.kind != HtmlParser::Part::InlineStyle) {
             StyleElementAst *el = new StyleElementAst;

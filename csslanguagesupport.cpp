@@ -19,8 +19,7 @@
 #include "csslanguagesupport.h"
 
 #include <kpluginfactory.h>
-#include <kpluginloader.h>
-#include <kaboutdata.h>
+#include <KDebug>
 #include <KTextEditor/Document>
 
 #include <language/codecompletion/codecompletion.h>
@@ -38,10 +37,7 @@
 #include "parser/cssdebugvisitor.h"
 #include "version.h"
 
-K_PLUGIN_FACTORY(KDevCssSupportFactory, registerPlugin<Css::LanguageSupport>();)
-K_EXPORT_PLUGIN(KDevCssSupportFactory(KAboutData("kdevcsssupport","kdevcss", ki18n("CSS Support"), KDEVCSS_VERSION_STR, ki18n("Support for CSS Language"), KAboutData::License_GPL)
-    .addAuthor(ki18n("Niko Sams"), ki18n("Author"), "niko.sams@gmail.com", "http://nikosams.blogspot.com")
-))
+K_PLUGIN_FACTORY_WITH_JSON(KDevCssSupportFactory, "kdevcsssupport.json", registerPlugin<Css::LanguageSupport>();)
 
 namespace Css
 {
@@ -56,7 +52,7 @@ int debugArea() { return 1; }
 #define debug() kDebug(debugArea())
 
 LanguageSupport::LanguageSupport(QObject* parent, const QVariantList& /*args*/)
-    : KDevelop::IPlugin(KDevCssSupportFactory::componentData(), parent),
+    : KDevelop::IPlugin("kdevcsssupport", parent),
       KDevelop::ILanguageSupport()
 {
     KDEV_USE_EXTENSION_INTERFACE(KDevelop::ILanguageSupport)
@@ -86,11 +82,15 @@ LanguageSupport *LanguageSupport::self()
 class FindNodeVisitor : public DefaultVisitor
 {
 public:
-    FindNodeVisitor(EditorIntegrator* editor, const KDevelop::SimpleCursor& position)
-        : DefaultVisitor(), m_node(0), m_property(0), m_editor(editor), m_position(position)
+    FindNodeVisitor(EditorIntegrator* editor, const KTextEditor::Cursor& position)
+        : DefaultVisitor()
+        , m_node(0)
+        , m_property(0)
+        , m_editor(editor)
+        , m_position(position)
     {}
 
-    virtual void visitProperty(PropertyAst* node)
+    virtual void visitProperty(PropertyAst* node) override
     {
         if (!m_node && m_editor->findRange(node->ident).castToSimpleRange().contains(m_position)) {
             m_node = node;
@@ -101,7 +101,7 @@ public:
         DefaultVisitor::visitProperty(node);
     }
 
-    virtual void visitTerm(TermAst* node)
+    virtual void visitTerm(TermAst* node) override
     {
         if (!m_node && m_editor->findRange(node).castToSimpleRange().contains(m_position)) {
             m_node = node;
@@ -109,17 +109,20 @@ public:
         DefaultVisitor::visitTerm(node);
     }
 
-    AstNode *node() {
+    AstNode *node()
+    {
         return m_node;
     }
-    PropertyAst *property() {
+
+    PropertyAst *property()
+    {
         return m_property;
     }
 private:
     AstNode *m_node;
     PropertyAst *m_property;
     EditorIntegrator* m_editor;
-    KDevelop::SimpleCursor m_position;
+    KTextEditor::Cursor m_position;
 };
 
 struct CursorIdentifier {
@@ -130,10 +133,10 @@ struct CursorIdentifier {
     QString property; //when ExprKind
 };
 
-CursorIdentifier cursorIdentifier(const KUrl& url, const KDevelop::SimpleCursor& position)
+CursorIdentifier cursorIdentifier(const QUrl& url, const KTextEditor::Cursor& position)
 {
     KDevelop::IDocument* doc = KDevelop::ICore::self()->documentController()->documentForUrl(url);
-    if(!doc || !doc->textDocument() || !doc->textDocument()->activeView())
+    if(!doc || !doc->textDocument() || doc->textDocument()->views().isEmpty())
         return CursorIdentifier(0);
 
     KDevelop::RangeInRevision ctxRange;
@@ -152,7 +155,7 @@ CursorIdentifier cursorIdentifier(const KUrl& url, const KDevelop::SimpleCursor&
     ParseSession session;
     Css::DeclarationListAst* ast = 0;
     session.setOffset(ctxRange.start);
-    session.setContents(doc->textDocument()->text(ctxRange.castToSimpleRange().textRange()));
+    session.setContents(doc->textDocument()->text(ctxRange.castToSimpleRange()));
     session.parse(&ast);
     {
         EditorIntegrator editor;
@@ -184,7 +187,7 @@ CursorIdentifier cursorIdentifier(const KUrl& url, const KDevelop::SimpleCursor&
     return CursorIdentifier(0);
 }
 
-KDevelop::SimpleRange LanguageSupport::specialLanguageObjectRange(const KUrl& url, const KDevelop::SimpleCursor& position)
+KTextEditor::Range LanguageSupport::specialLanguageObjectRange(const QUrl& url, const KTextEditor::Cursor& position)
 {
     CursorIdentifier id = cursorIdentifier(url, position);
     debug() << id.kind << id.contents;
@@ -194,7 +197,7 @@ KDevelop::SimpleRange LanguageSupport::specialLanguageObjectRange(const KUrl& ur
     return KDevelop::ILanguageSupport::specialLanguageObjectRange(url, position);
 }
 
-QWidget* LanguageSupport::specialLanguageObjectNavigationWidget(const KUrl& url, const KDevelop::SimpleCursor& position)
+QWidget* LanguageSupport::specialLanguageObjectNavigationWidget(const QUrl& url, const KTextEditor::Cursor& position)
 {
     CursorIdentifier id = cursorIdentifier(url, position);
     debug() << id.kind << id.contents;

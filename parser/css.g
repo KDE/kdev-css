@@ -32,7 +32,7 @@ namespace Css
 
 %parser_declaration_header "QtCore/QString"
 %parser_bits_header "kdebug.h"
-%parser_declaration_header "language/interfaces/iproblem.h"
+%parser_declaration_header "language/duchain/problem.h"
 
 
 
@@ -40,7 +40,7 @@ namespace Css
 -- Export macro to use the parser in a shared lib
 ------------------------------------------------------------
 %export_macro "KDEVCSSPARSER_EXPORT"
-%export_macro_header "parser/parserexport.h"
+%export_macro_header "parserexport.h"
 
 
 ------------------------------------------------------------
@@ -604,7 +604,7 @@ IMPORTANT_SYM maybeSpace | 0
 
 #include <QtCore/QDebug>
 #include <KTextEditor/Range>
-#include "parser/tokenizer.h"
+#include "tokenizer.h"
 
 namespace Css
 {
@@ -672,8 +672,7 @@ void Parser::reportProblem( Parser::ProblemType type, const QString& message )
             break;
     }
     p->setDescription(message);
-    p->setFinalLocation(KDevelop::DocumentRange(m_currentDocument,
-                                                KDevelop::SimpleRange(sLine, sCol, eLine, eCol+1)));
+    p->setFinalLocation({m_currentDocument, KTextEditor::Range(sLine, sCol, eLine, eCol+1)});
     m_problems << KDevelop::ProblemPointer(p);
 }
 

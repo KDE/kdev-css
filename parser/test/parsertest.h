@@ -22,7 +22,7 @@
 
 #include <QObject>
 
-#include <duchain/tests/duchaintestbase.h>
+#include "../../duchain/tests/duchaintestbase.h"
 
 namespace Css
 {

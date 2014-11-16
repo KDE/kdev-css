@@ -30,7 +30,8 @@
 #include <interfaces/ilanguagecontroller.h>
 #include <interfaces/icompletionsettings.h>
 
-#include <klocalizedstring.h>
+#include <KLocalizedString>
+#include <KDebug>
 
 #include "../../parser/parsesession.h"
 #include "../../parser/editorintegrator.h"

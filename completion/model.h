@@ -19,15 +19,15 @@
 #ifndef CSS_CODECOMPLETIONMODEL_H
 #define CSS_CODECOMPLETIONMODEL_H
 
-#include <KDE/KTextEditor/CodeCompletionModel>
-#include <KDE/KTextEditor/CodeCompletionModelControllerInterface>
+#include <KTextEditor/CodeCompletionModel>
+#include <KTextEditor/CodeCompletionModelControllerInterface>
 
 namespace Css {
 
-class CodeCompletionModel : public KTextEditor::CodeCompletionModel2, public KTextEditor::CodeCompletionModelControllerInterface3
+class CodeCompletionModel : public KTextEditor::CodeCompletionModel, public KTextEditor::CodeCompletionModelControllerInterface
 {
     Q_OBJECT
-    Q_INTERFACES(KTextEditor::CodeCompletionModelControllerInterface3)
+    Q_INTERFACES(KTextEditor::CodeCompletionModelControllerInterface)
 
 public:
     CodeCompletionModel(QObject *parent);

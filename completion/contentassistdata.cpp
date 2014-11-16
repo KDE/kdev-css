@@ -21,7 +21,7 @@
 #include <QtCore/QXmlStreamReader>
 #include <QFile>
 
-#include <KDE/KStandardDirs>
+#include <KStandardDirs>
 #include <KDebug>
 
 namespace Css {
@@ -35,8 +35,7 @@ ContentAssistData* ContentAssistData::self()
 
 ContentAssistData::ContentAssistData()
 {
-    QString fileName = KStandardDirs::locate("data", "kdevcsssupport/completion/CSS.xml");
-    QFile f(fileName);
+    QFile f(QStringLiteral(":/kdevcsssupport/completion/CSS.xml"));
     Q_ASSERT(f.exists());
     f.open(QIODevice::ReadOnly);
     QXmlStreamReader xml(&f);

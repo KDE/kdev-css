@@ -21,7 +21,7 @@
  */
 
 #define DONT_INCLUDE_FLEXLEXER
-#include "parser/tokenizer.h"
+#include "tokenizer.h"
 
 #include "cssparser.h"
 

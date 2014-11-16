@@ -43,14 +43,14 @@ QList<HtmlParser::Part> HtmlParser::parse()
         if (reader.isStartElement() && reader.name() == "style") {
             Part p;
             p.kind = Part::StyleElement;
-            p.range.start.line = reader.lineNumber()-1;
-            p.range.start.column = reader.columnNumber();
+            KTextEditor::Cursor start(reader.lineNumber()-1, reader.columnNumber());
+            KTextEditor::Cursor end;
             while (!reader.isEndElement() && !reader.atEnd()) {
                 p.contents += reader.text();
-                p.range.end.line = reader.lineNumber()-1;
-                p.range.end.column = reader.columnNumber()-1;
+                end = KTextEditor::Cursor(reader.lineNumber()-1, reader.columnNumber()-1);
                 reader.readNext();
             }
+            p.range = {start, end};
             ret << p;
         }
         if (reader.attributes().hasAttribute("style")) {
@@ -61,18 +61,21 @@ QList<HtmlParser::Part> HtmlParser::parse()
             if (rx.indexIn(c) != -1) {
                 kDebug() << rx.cap(0);
                 p.contents = rx.cap(2); //don't use reader.attributes() as it doesn't contain newlines correctly
-                p.range.start.line = reader.lineNumber()-1-rx.cap(1).count('\n');
+                KTextEditor::Cursor start;
+                start.setLine(reader.lineNumber()-1-rx.cap(1).count('\n'));
                 if (!rx.cap(1).contains('\n')) {
-                    p.range.start.column = reader.columnNumber()-rx.cap(1).length();
+                    start.setColumn(reader.columnNumber()-rx.cap(1).length());
                 } else {
-                    p.range.start.column = rx.cap(1).mid(rx.cap(1).indexOf('\n')).length();
+                    start.setColumn(rx.cap(1).midRef(rx.cap(1).indexOf('\n')).length());
                 }
-                p.range.end.line = p.range.start.line + p.contents.count('\n');
+                KTextEditor::Cursor end;
+                end.setLine(start.line() + p.contents.count('\n'));
                 if (!p.contents.contains('\n')) {
-                    p.range.end.column = p.range.start.column+p.contents.length();
+                    end.setColumn(start.column()+p.contents.length());
                 } else {
-                    p.range.end.column = p.contents.mid(p.contents.lastIndexOf('\n')+1).length();
+                    end.setColumn(p.contents.midRef(p.contents.lastIndexOf('\n')+1).length());
                 }
+                p.range = {start, end};
                 p.tag = reader.name().toString();
                 ret << p;
             } else {

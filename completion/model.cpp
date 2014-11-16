@@ -21,6 +21,8 @@
 #include <KTextEditor/View>
 #include <KTextEditor/Document>
 
+#include <KDebug>
+
 #include <cssdefaultvisitor.h>
 #include <cssdebugvisitor.h>
 #include "../parser/parsesession.h"
@@ -35,11 +37,10 @@ extern int debugArea();
 #define debug() kDebug(debugArea())
 
 CodeCompletionModel::CodeCompletionModel(QObject *parent)
-    : CodeCompletionModel2(parent), m_completionContext(NoContext)
+    : KTextEditor::CodeCompletionModel(parent)
+    , m_completionContext(NoContext)
 {
 }
-
-
 
 class FindCurrentNodeVisitor : public DefaultVisitor
 {
@@ -52,10 +53,10 @@ public:
     virtual void visitDeclaration(DeclarationAst* node)
     {
         {
-            KDevelop::SimpleCursor pos = findPosition(node->startToken, EditorIntegrator::FrontEdge);
+            KTextEditor::Cursor pos = findPosition(node->startToken, EditorIntegrator::FrontEdge);
             ifDebug( debug() << m_editor->tokenToString(node->startToken) << m_range.start() << pos; )
-            if (m_range.start() >= pos.textCursor()) {
-                if (node->colon != -1 && m_range.start() >= findPosition(node->colon, EditorIntegrator::FrontEdge).textCursor()) {
+            if (m_range.start() >= pos) {
+                if (node->colon != -1 && m_range.start() >= findPosition(node->colon, EditorIntegrator::FrontEdge)) {
                     ifDebug( debug() << "using ValueContext"; )
                     m_context = CodeCompletionModel::ValueContext;
                 } else {
@@ -66,7 +67,7 @@ public:
         }
         if (node->semicolon != -1) {
             ifDebug( debug() << m_range.start() << findPosition(node->semicolon, EditorIntegrator::FrontEdge); )
-            if (m_range.start() > findPosition(node->semicolon, EditorIntegrator::FrontEdge).textCursor()) {
+            if (m_range.start() > findPosition(node->semicolon, EditorIntegrator::FrontEdge)) {
                 ifDebug( debug() << "using PropertyContext 2"; )
                 m_context = CodeCompletionModel::PropertyContext;
             }
@@ -77,16 +78,16 @@ public:
     virtual void visitRuleset(RulesetAst* node)
     {
         if (node->lbrace != -1
-              && m_range.start() >= findPosition(node->lbrace).textCursor())
+              && m_range.start() >= findPosition(node->lbrace))
         {
             ifDebug( debug() << "using PropertyContext"; )
             m_context = CodeCompletionModel::PropertyContext;
-        } else if (m_range.start() >= findPosition(node->startToken, EditorIntegrator::FrontEdge).textCursor()) {
+        } else if (m_range.start() >= findPosition(node->startToken, EditorIntegrator::FrontEdge)) {
             ifDebug( debug() << "using SelectorContext 1"; )
             m_context = CodeCompletionModel::SelectorContext;
         }
         DefaultVisitor::visitRuleset(node);
-        if (node->rbrace != -1 && m_range.start() >= findPosition(node->rbrace).textCursor()) {
+        if (node->rbrace != -1 && m_range.start() >= findPosition(node->rbrace)) {
             ifDebug( debug() << "using SelectorContext 2"; )
             m_context = CodeCompletionModel::SelectorContext;
         }
@@ -95,8 +96,8 @@ public:
     virtual void visitSimpleSelector(SimpleSelectorAst* node)
     {
         if (node->element) {
-            ifDebug( debug() << m_lastProperty << m_range.start() << findPosition(node->endToken).textCursor(); )
-            if (m_range.start() > findPosition(node->endToken).textCursor()) {
+            ifDebug( debug() << m_lastProperty << m_range.start() << findPosition(node->endToken); )
+            if (m_range.start() > findPosition(node->endToken)) {
                 m_lastSelectorElement = node->element->ident;
                 ifDebug( debug() << "set lastSelectorElement" << m_editor->tokenToString(m_lastSelectorElement); )
             }
@@ -106,8 +107,8 @@ public:
 
     virtual void visitProperty(PropertyAst* node)
     {
-        ifDebug( debug() << m_lastProperty << m_range.start() << findPosition(node->endToken).textCursor(); )
-        if (m_range.start() > findPosition(node->endToken).textCursor()) {
+        ifDebug( debug() << m_lastProperty << m_range.start() << findPosition(node->endToken); )
+        if (m_range.start() > findPosition(node->endToken)) {
             m_lastProperty = node->ident;
             ifDebug( debug() << "set lastProperty" << m_editor->tokenToString(m_lastProperty); )
         }
@@ -123,7 +124,7 @@ public:
         if (m_lastProperty == -1) return QString();
         return m_editor->tokenToString(m_lastProperty);
     }
-    KDevelop::SimpleCursor findPosition(qint64 token,
+    KTextEditor::Cursor findPosition(qint64 token,
                                         EditorIntegrator::Edge edge = EditorIntegrator::BackEdge)
     {
       return m_editor->findPosition(token, edge).castToSimpleCursor();
@@ -148,9 +149,7 @@ void CodeCompletionModel::completionInvoked(KTextEditor::View* view, const KText
         HtmlParser::Part part;
         part.kind = HtmlParser::Part::Standalone;
         part.contents = view->document()->text();
-        part.range.start = KDevelop::SimpleCursor(0, 0);
-        part.range.end = KDevelop::SimpleCursor(view->document()->documentEnd());
-        qDebug() << part.range.textRange();
+        part.range = view->document()->documentRange();
         parts << part;
     } else {
         ifDebug( debug() << "html"; )
@@ -167,12 +166,12 @@ void CodeCompletionModel::completionInvoked(KTextEditor::View* view, const KText
     Css::AstNode* ast = 0;
     HtmlParser::Part part;
     foreach (const HtmlParser::Part &p, parts) {
-        if (p.range.contains(KDevelop::SimpleCursor(range.start()))
-                || p.range.start.textCursor() == range.start()
-                || p.range.end.textCursor() == range.end()
+        if (p.range.contains(range.start())
+                || p.range.start() == range.start()
+                || p.range.end() == range.end()
                 ) {
             session.setContents(p.contents);
-            session.setOffset(KDevelop::CursorInRevision(p.range.start.line, p.range.start.column));
+            session.setOffset(KDevelop::CursorInRevision::castFromSimpleCursor(p.range.start()));
             if (p.kind != HtmlParser::Part::InlineStyle) {
                 StartAst* a = static_cast<StartAst*>(ast);
                 session.parse(&a);

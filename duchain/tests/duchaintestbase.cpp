@@ -21,46 +21,45 @@
 
 #include <QtTest/QtTest>
 
+#include <KComponentData>
+#include <KDebug>
+
 #include <language/duchain/duchaindumper.h>
 #include <language/duchain/parsingenvironment.h>
 #include <language/duchain/duchainlock.h>
 #include <language/duchain/topducontext.h>
-#include <language/duchain/indexedstring.h>
+#include <serialization/indexedstring.h>
 #include <language/codegen/coderepresentation.h>
 #include <tests/autotestshell.h>
 #include <tests/testcore.h>
-#include <kstandarddirs.h>
-#include <kcomponentdata.h>
 
 #include "../../parser/parsesession.h"
 #include "../../parser/editorintegrator.h"
 #include "cssdebugvisitor.h"
 #include "../builders/declarationbuilder.h"
 
-
-namespace Css
-{
+using namespace Css;
+using namespace KDevelop;
 
 DUChainTestBase::DUChainTestBase()
 {
-    KComponentData kd("kdevcsssupport");
 }
 
 void DUChainTestBase::initTestCase()
 {
-    KDevelop::AutoTestShell::init();
-    KDevelop::TestCore::initialize(KDevelop::Core::NoUi);
+    AutoTestShell::init();
+    TestCore::initialize(Core::NoUi);
 
-    KDevelop::DUChain::self()->disablePersistentStorage();
-    KDevelop::CodeRepresentation::setDiskChangesForbidden(true);
+    DUChain::self()->disablePersistentStorage();
+    CodeRepresentation::setDiskChangesForbidden(true);
 }
 
 void DUChainTestBase::cleanupTestCase()
 {
-    KDevelop::TestCore::shutdown();
+    TestCore::shutdown();
 }
 
-KDevelop::TopDUContext* DUChainTestBase::parse(const QByteArray& unit, DumpAreas dump, QString url)
+TopDUContext* DUChainTestBase::parse(const QByteArray& unit, DumpAreas dump, QString url)
 {
     if (dump)
         kDebug() << "==== Beginning new test case...:" << endl << unit;
@@ -85,13 +84,13 @@ KDevelop::TopDUContext* DUChainTestBase::parse(const QByteArray& unit, DumpAreas
     EditorIntegrator editor;
     editor.setParseSession(session);
     DeclarationBuilder builder(&editor);
-    KDevelop::TopDUContext* top = builder.build(KDevelop::IndexedString(url), ast);
+    TopDUContext* top = builder.build(IndexedString(url), ast);
 
     if (dump & DumpDUChain) {
         kDebug() << "===== DUChain:";
 
-        KDevelop::DUChainReadLocker lock;
-        KDevelop::DUChainDumper dumper;
+        DUChainReadLocker lock;
+        DUChainDumper dumper;
         dumper.dump(top);
     }
 
@@ -102,7 +101,5 @@ KDevelop::TopDUContext* DUChainTestBase::parse(const QByteArray& unit, DumpAreas
 
     return top;
 }
-}
 
 #include "duchaintestbase.moc"
-

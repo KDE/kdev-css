@@ -24,7 +24,7 @@
  *****************************************************************************/
 #include "parsesession.h"
 
-#include "parser/cssast.h"
+#include "cssast.h"
 
 #include "kdev-pg-memory-pool.h"
 #include "kdev-pg-token-stream.h"
@@ -32,6 +32,7 @@
 #include <QFile>
 #include <QTextCodec>
 #include <KLocalizedString>
+#include <KDebug>
 
 namespace Css
 {

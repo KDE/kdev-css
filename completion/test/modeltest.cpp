@@ -2,7 +2,7 @@
 
 #include <qtest_kde.h>
 #include <KDebug>
-#include <KTextEditor/EditorChooser>
+#include <KTextEditor/Editor>
 #include <KTextEditor/View>
 
 #include "../model.h"
@@ -13,7 +13,7 @@ int debugArea() { return 9043; /* static int s_area = KDebug::registerArea("kdev
 
 void ModelTest::testCompletionRange()
 {
-    KTextEditor::Document* doc = KTextEditor::EditorChooser::editor()->createDocument(0);
+    KTextEditor::Document* doc = KTextEditor::Editor::instance()->createDocument(0);
     doc->setText("body{font-w:normal;}");
                 //01234567890123456789 
     KTextEditor::View* view = doc->createView(0);
@@ -81,7 +81,7 @@ void ModelTest::testCompletionRange()
 
 void ModelTest::testCompletionRangeSecondLine()
 {
-    KTextEditor::Document* doc = KTextEditor::EditorChooser::editor()->createDocument(0);
+    KTextEditor::Document* doc = KTextEditor::Editor::instance()->createDocument(0);
     doc->setText("body{color:red;}\nbody{font-w:normal;}");
                 //                  01234567890123456789
     KTextEditor::View* view = doc->createView(0);
@@ -221,7 +221,7 @@ void ModelTest::completionItems_data()
 
 void ModelTest::completionItems()
 {
-    KTextEditor::Document* doc = KTextEditor::EditorChooser::editor()->createDocument(0);
+    KTextEditor::Document* doc = KTextEditor::Editor::instance()->createDocument(0);
 
     QFETCH(QString, text);
     QFETCH(QString, type);

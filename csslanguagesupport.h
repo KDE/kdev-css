@@ -42,12 +42,12 @@ public:
     /*Name Of the Language*/
     QString name() const;
 
-    virtual KDevelop::ParseJob *createParseJob(const KDevelop::IndexedString& url);
+    virtual KDevelop::ParseJob *createParseJob(const KDevelop::IndexedString& url) override;
 
     static LanguageSupport* self();
 
-    virtual KDevelop::SimpleRange specialLanguageObjectRange(const KUrl& url, const KDevelop::SimpleCursor& position);
-    virtual QWidget* specialLanguageObjectNavigationWidget(const KUrl& url, const KDevelop::SimpleCursor& position);
+    virtual KTextEditor::Range specialLanguageObjectRange(const QUrl& url, const KTextEditor::Cursor& position) override;
+    virtual QWidget* specialLanguageObjectNavigationWidget(const QUrl& url, const KTextEditor::Cursor& position) override;
 
 private:
     static LanguageSupport* m_self;

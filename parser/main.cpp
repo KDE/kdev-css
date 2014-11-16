@@ -37,9 +37,9 @@ typedef KDevelopUtils::DebugLanguageParserHelper<ParseSession, KDevPG::TokenStre
 
 int main(int argc, char* argv[])
 {
-    KAboutData aboutData( "css-parser", 0, ki18n( "css-parser" ),
-                          "1", ki18n("KDevelop CSS parser debugging utility"), KAboutData::License_GPL,
-                          ki18n( "(c) 2008 Niko Sams, 2009 Milian Wolff" ), KLocalizedString(), "http://www.kdevelop.org" );
+    KAboutData aboutData( "css-parser", i18n( "css-parser" ),
+                          "1", i18n("KDevelop CSS parser debugging utility"), KAboutLicense::GPL,
+                          i18n( "(c) 2008 Niko Sams, 2009 Milian Wolff" ), QString(), "http://www.kdevelop.org" );
 
     return KDevelopUtils::initAndRunParser<CssParser>(aboutData, argc, argv);
 }

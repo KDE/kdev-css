@@ -1,4 +1,3 @@
-
 kdevpgqt_generate(_kdevpgList css NAMESPACE Css DEBUG_VISITOR TOKEN_TEXT
     "${css_SOURCE_DIR}/parser/css.g"
     "${css_SOURCE_DIR}/parser/tokenizer.h"
@@ -6,10 +5,6 @@ kdevpgqt_generate(_kdevpgList css NAMESPACE Css DEBUG_VISITOR TOKEN_TEXT
 set( parser_SRCS
     ${_kdevpgList}
 )
-
-include_directories( ${CMAKE_CURRENT_BINARY_DIR} )
-
-find_package(Flex REQUIRED)
 
 # Copy tokenizer.ll to the builddir, so that flex doesn't write out
 # absolute paths in the generated file when we pass them as arguments.
@@ -36,28 +31,33 @@ add_custom_command(
     WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
 )
 
-
-
 set(parser_STAT_SRCS
     ${CMAKE_CURRENT_BINARY_DIR}/tokenizer.cpp
     parsesession.cpp
     editorintegrator.cpp
     htmlparser.cpp
-    )
+)
 
 ### next target
-kde4_add_library( kdev4cssparser SHARED ${parser_SRCS} ${parser_STAT_SRCS} )
+add_library(kdev4cssparser SHARED ${parser_SRCS} ${parser_STAT_SRCS} )
+generate_export_header(kdev4cssparser EXPORT_MACRO_NAME KDEVCSSPARSER_EXPORT
+                                       EXPORT_FILE_NAME parserexport.h)
 target_link_libraries( kdev4cssparser LINK_PRIVATE
-    ${KDE4_KDECORE_LIBS}
-    ${KDEVPLATFORM_LANGUAGE_LIBRARIES}
-    ${KDE4_KTEXTEDITOR_LIBS}
+    KDev::Language
+    # TODO: remove once KDevPlatform moves away from KDELibs4Support.
+    KF5::KDELibs4Support
 )
 install(TARGETS kdev4cssparser DESTINATION ${INSTALL_TARGETS_DEFAULT_ARGS})
 
 ### next target
-kde4_add_executable( css-parser main.cpp ${parser_SRCS} ${parser_STAT_SRCS} )
+add_executable( css-parser main.cpp ${parser_SRCS} ${parser_STAT_SRCS} )
 target_link_libraries(css-parser
-    ${QT_QTCORE_LIBRARY} ${KDEVPLATFORM_LANGUAGE_LIBRARIES} ${KDEVPLATFORM_TESTS_LIBRARIES})
+    Qt5::Test
+    KDev::Language
+    KDev::Tests
+    # TODO: remove once KDevPlatform moves away from KDELibs4Support.
+    KF5::KDELibs4Support
+)
 
 ### next target
 set(parsertest_SRCS test/parsertest.cpp
@@ -65,7 +65,11 @@ set(parsertest_SRCS test/parsertest.cpp
   ../duchain/tests/duchaintestbase.cpp
   ../duchain/builders/contextbuilder.cpp
   ../duchain/builders/declarationbuilder.cpp)
-kde4_add_unit_test(parsertest ${parsertest_SRCS})
-target_link_libraries(parsertest kdev4cssparser ${QT_QTTEST_LIBRARY} ${KDE4_KDECORE_LIBS}
-  ${KDEVPLATFORM_LANGUAGE_LIBRARIES}
-  ${KDEVPLATFORM_TESTS_LIBRARIES})
+ecm_add_test(${parsertest_SRCS}
+    TEST_NAME parsertest
+    LINK_LIBRARIES
+        Qt5::Test
+        kdev4cssparser
+        KDev::Language
+        KDev::Tests
+)
