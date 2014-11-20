@@ -72,4 +72,6 @@ ecm_add_test(${parsertest_SRCS}
         kdev4cssparser
         KDev::Language
         KDev::Tests
+        # TODO: remove once KDevPlatform moves away from KDELibs4Support.
+        KF5::KDELibs4Support
 )
