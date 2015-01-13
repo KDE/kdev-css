@@ -152,7 +152,7 @@ void ParseJob::run(ThreadWeaver::JobPointer /*self*/, ThreadWeaver::Thread */*th
         debug() << "compiling" << document().str();
     }
 
-    QReadLocker parseLock(languageSupport()->language()->parseLock());
+    QReadLocker parseLock(languageSupport()->parseLock());
 
     EditorIntegrator editor;
     DeclarationBuilder builder;
