@@ -181,4 +181,3 @@ void TestParser::htmlInlineStyle3()
 
 }
 
-#include "parsertest.moc"

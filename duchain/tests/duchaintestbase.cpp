@@ -102,4 +102,3 @@ TopDUContext* DUChainTestBase::parse(const QByteArray& unit, DumpAreas dump, QSt
     return top;
 }
 
-#include "duchaintestbase.moc"

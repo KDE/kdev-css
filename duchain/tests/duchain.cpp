@@ -70,4 +70,3 @@ void TestDUChain::testPseudoClass()
 
 }
 
-#include "duchain.moc"

@@ -313,4 +313,3 @@ void CodeCompletionModel::executeCompletionItem2(KTextEditor::Document* document
 
 }
 
-#include "model.moc"

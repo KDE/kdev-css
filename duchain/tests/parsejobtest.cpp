@@ -92,4 +92,3 @@ void TestParseJob::testHtmlTwoStyleElements()
 
 }
 
-#include "parsejobtest.moc"

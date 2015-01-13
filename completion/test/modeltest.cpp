@@ -264,4 +264,3 @@ void ModelTest::completionItems()
 
 QTEST_KDEMAIN(Css::ModelTest, GUI)
 
-#include "modeltest.moc"
