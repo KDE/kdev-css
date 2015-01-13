@@ -52,7 +52,7 @@ int debugArea() { return 1; }
 #define debug() kDebug(debugArea())
 
 LanguageSupport::LanguageSupport(QObject* parent, const QVariantList& /*args*/)
-    : KDevelop::IPlugin("kdevcsssupport", parent),
+    : KDevelop::IPlugin(QStringLiteral("kdevcsssupport"), parent),
       KDevelop::ILanguageSupport()
 {
     KDEV_USE_EXTENSION_INTERFACE(KDevelop::ILanguageSupport)
@@ -65,7 +65,7 @@ LanguageSupport::LanguageSupport(QObject* parent, const QVariantList& /*args*/)
 
 QString LanguageSupport::name() const
 {
-    return "Css";
+    return QStringLiteral("Css");
 }
 
 KDevelop::ParseJob *LanguageSupport::createParseJob(const KDevelop::IndexedString& url)
