@@ -54,6 +54,7 @@ Name[uk]=KDevCssSupport
 Name[x-test]=xxKDevCssSupportxx
 Name[zh_CN]=KDevCssSupport
 GenericName=CSS Support
+GenericName[ast]=Sofitu CSS
 GenericName[bs]=Podrška za CSS
 GenericName[ca]=Implementació per a CSS
 GenericName[ca@valencia]=Implementació per a CSS
