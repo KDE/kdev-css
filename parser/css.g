@@ -32,7 +32,7 @@ namespace Css
 
 %parser_declaration_header "QtCore/QString"
 %parser_bits_header "kdebug.h"
-%parser_declaration_header "language/interfaces/iproblem.h"
+%parser_declaration_header "language/duchain/problem.h"
 
 
 
