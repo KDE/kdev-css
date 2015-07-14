@@ -659,16 +659,16 @@ void Parser::reportProblem( Parser::ProblemType type, const QString& message )
     qint64 eCol;
     tokenStream->endPosition(index, &eLine, &eCol);
     KDevelop::Problem *p = new KDevelop::Problem();
-    p->setSource(KDevelop::ProblemData::Parser);
+    p->setSource(KDevelop::IProblem::Parser);
     switch ( type ) {
         case Error:
-            p->setSeverity(KDevelop::ProblemData::Error);
+            p->setSeverity(KDevelop::IProblem::Error);
             break;
         case Warning:
-            p->setSeverity(KDevelop::ProblemData::Warning);
+            p->setSeverity(KDevelop::IProblem::Warning);
             break;
         case Info:
-            p->setSeverity(KDevelop::ProblemData::Hint);
+            p->setSeverity(KDevelop::IProblem::Hint);
             break;
     }
     p->setDescription(message);
