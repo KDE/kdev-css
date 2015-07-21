@@ -37,11 +37,11 @@
 #include "parser/cssdebugvisitor.h"
 #include "version.h"
 
-K_PLUGIN_FACTORY_WITH_JSON(KDevCssSupportFactory, "kdevcsssupport.json", registerPlugin<Css::LanguageSupport>();)
-
 namespace Css
 {
 LanguageSupport* LanguageSupport::m_self = 0;
+
+K_PLUGIN_FACTORY_WITH_JSON(KDevCssSupportFactory, "kdevcsssupport.json", registerPlugin<LanguageSupport>();)
 
 #if KDE_VERSION > KDE_MAKE_VERSION(4, 3, 80)
 int debugArea() { static int s_area = KDebug::registerArea("kdevcsssupport"); return s_area; }
