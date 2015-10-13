@@ -1,8 +1,8 @@
 project(css)
 
-set(VERSION_MAJOR 1)
-set(VERSION_MINOR 9)
-set(VERSION_PATCH 60)
+set(VERSION_MAJOR 4)
+set(VERSION_MINOR 90)
+set(VERSION_PATCH 90)
 # KDevplatform dependency version
 set( KDEVPLATFORM_VERSION "${VERSION_MAJOR}.${VERSION_MINOR}.${VERSION_PATCH}" )
 
@@ -52,8 +52,8 @@ set(kdevcss_PART_SRCS
 
 qt5_add_resources(kdevcss_PART_SRCS kdevcssresources.qrc)
 
-add_library(kdevcsssupport MODULE ${kdevcss_PART_SRCS})
-
+kdevplatform_add_plugin(kdevcsssupport JSON kdevcsssupport.json
+    SOURCES ${kdevcss_PART_SRCS})
 target_link_libraries(kdevcsssupport
     kdev4cssparser
 
@@ -66,11 +66,6 @@ target_link_libraries(kdevcsssupport
     # TODO: remove once KDevPlatform moves away from KDELibs4Support.
     KF5::KDELibs4Support
 )
-
-install(TARGETS kdevcsssupport DESTINATION ${PLUGIN_INSTALL_DIR}/kdevplatform/${KDEV_PLUGIN_VERSION})
-
-configure_file(kdevcsssupport.desktop.cmake ${CMAKE_CURRENT_BINARY_DIR}/kdevcsssupport.desktop)
-kcoreaddons_desktop_to_json(kdevcsssupport ${CMAKE_CURRENT_BINARY_DIR}/kdevcsssupport.desktop)
 
 ### next target
 set(completionmodeltest_SRCS
