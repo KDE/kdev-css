@@ -28,9 +28,25 @@
     "GenericName[zh_CN]": "CSS 支持", 
     "KPlugin": {
         "Description": "CSS Language Support", 
+        "Description[ca]": "Implementació del llenguatge CSS", 
+        "Description[nl]": "CSS-taalondersteuning", 
+        "Description[pt]": "Suporte para a Linguagem CSS", 
+        "Description[pt_BR]": "Suporte à linguagem CSS", 
+        "Description[sv]": "CSS-språkstöd", 
+        "Description[uk]": "Підтримка мови CSS", 
+        "Description[x-test]": "xxCSS Language Supportxx", 
+        "Description[zh_CN]": "CSS 语言支持", 
         "Icon": "source", 
         "Id": "KDevCssSupport", 
         "Name": "KDevCssSupport", 
+        "Name[ca]": "KDevCssSupport", 
+        "Name[nl]": "KDevCssSupport", 
+        "Name[pt]": "KDevCssSupport", 
+        "Name[pt_BR]": "KDevCssSupport", 
+        "Name[sv]": "KDevelop CSS-stöd", 
+        "Name[uk]": "KDevCssSupport", 
+        "Name[x-test]": "xxKDevCssSupportxx", 
+        "Name[zh_CN]": "KDevCssSupport", 
         "ServiceTypes": [
             "KDevelop/Plugin"
         ]
