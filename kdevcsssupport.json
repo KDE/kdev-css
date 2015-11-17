@@ -28,6 +28,7 @@
     "GenericName[zh_CN]": "CSS 支持", 
     "KPlugin": {
         "Description": "CSS Language Support", 
+        "Description[ast]": "Sofitu del llinguax CSS", 
         "Description[ca@valencia]": "Implementació del llenguatge CSS", 
         "Description[ca]": "Implementació del llenguatge CSS", 
         "Description[de]": "Sprachunterstützung für CSS", 
