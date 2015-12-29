@@ -46,20 +46,9 @@
         "Icon": "source", 
         "Id": "KDevCssSupport", 
         "Name": "KDevCssSupport", 
-        "Name[ca@valencia]": "KDevCssSupport", 
-        "Name[ca]": "KDevCssSupport", 
-        "Name[de]": "KDevCssSupport", 
-        "Name[es]": "KDevCssSupport", 
-        "Name[gl]": "KDevCssSupport", 
-        "Name[nl]": "KDevCssSupport", 
         "Name[pl]": "ObsługaKDevCss", 
-        "Name[pt]": "KDevCssSupport", 
-        "Name[pt_BR]": "KDevCssSupport", 
-        "Name[sk]": "KDevCssSupport", 
         "Name[sv]": "KDevelop CSS-stöd", 
-        "Name[uk]": "KDevCssSupport", 
         "Name[x-test]": "xxKDevCssSupportxx", 
-        "Name[zh_CN]": "KDevCssSupport", 
         "ServiceTypes": [
             "KDevelop/Plugin"
         ]
