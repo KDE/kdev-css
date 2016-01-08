@@ -90,7 +90,7 @@ public:
         , m_position(position)
     {}
 
-    virtual void visitProperty(PropertyAst* node) override
+    void visitProperty(PropertyAst* node) override
     {
         if (!m_node && m_editor->findRange(node->ident).castToSimpleRange().contains(m_position)) {
             m_node = node;
@@ -101,7 +101,7 @@ public:
         DefaultVisitor::visitProperty(node);
     }
 
-    virtual void visitTerm(TermAst* node) override
+    void visitTerm(TermAst* node) override
     {
         if (!m_node && m_editor->findRange(node).castToSimpleRange().contains(m_position)) {
             m_node = node;

@@ -40,14 +40,14 @@ public:
     explicit LanguageSupport(QObject *parent, const QVariantList& args = QVariantList());
 
     /*Name Of the Language*/
-    QString name() const;
+    QString name() const override;
 
-    virtual KDevelop::ParseJob *createParseJob(const KDevelop::IndexedString& url) override;
+    KDevelop::ParseJob *createParseJob(const KDevelop::IndexedString& url) override;
 
     static LanguageSupport* self();
 
-    virtual KTextEditor::Range specialLanguageObjectRange(const QUrl& url, const KTextEditor::Cursor& position) override;
-    virtual QWidget* specialLanguageObjectNavigationWidget(const QUrl& url, const KTextEditor::Cursor& position) override;
+    KTextEditor::Range specialLanguageObjectRange(const QUrl& url, const KTextEditor::Cursor& position) override;
+    QWidget* specialLanguageObjectNavigationWidget(const QUrl& url, const KTextEditor::Cursor& position) override;
 
 private:
     static LanguageSupport* m_self;

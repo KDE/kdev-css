@@ -31,13 +31,13 @@ class CodeCompletionModel : public KTextEditor::CodeCompletionModel, public KTex
 
 public:
     CodeCompletionModel(QObject *parent);
-    virtual void completionInvoked(KTextEditor::View* view, const KTextEditor::Range& range, InvocationType invocationType);
+    void completionInvoked(KTextEditor::View* view, const KTextEditor::Range& range, InvocationType invocationType) override;
 
-    virtual QVariant data(const QModelIndex & index, int role) const;
+    QVariant data(const QModelIndex & index, int role) const override;
 
-    virtual KTextEditor::Range completionRange(KTextEditor::View* view, const KTextEditor::Cursor &position);
-    virtual bool shouldAbortCompletion(KTextEditor::View* view, const KTextEditor::Range& range, const QString &currentCompletion);
-    virtual bool shouldStartCompletion(KTextEditor::View* view, const QString& insertedText, bool userInsertion, const KTextEditor::Cursor& position);
+    KTextEditor::Range completionRange(KTextEditor::View* view, const KTextEditor::Cursor &position) override;
+    bool shouldAbortCompletion(KTextEditor::View* view, const KTextEditor::Range& range, const QString &currentCompletion) override;
+    bool shouldStartCompletion(KTextEditor::View* view, const QString& insertedText, bool userInsertion, const KTextEditor::Cursor& position) override;
 
     virtual void executeCompletionItem2(KTextEditor::Document* document, const KTextEditor::Range& word, const QModelIndex& index) const;
 
