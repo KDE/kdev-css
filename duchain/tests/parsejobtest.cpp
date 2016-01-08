@@ -36,7 +36,7 @@ void TestParseJob::testSimple()
     TopDUContext::Features features = TopDUContext::VisibleDeclarationsAndContexts;
 
     TestProject* project = new TestProject;
-    m_projectController->clearProjects();
+    m_projectController->closeAllProjects();
     m_projectController->addProject(project);
 
     TestFile f("a { color: red; }", "css", project);
@@ -55,7 +55,7 @@ void TestParseJob::testSimpleHtml()
     TopDUContext::Features features = TopDUContext::VisibleDeclarationsAndContexts;
 
     TestProject* project = new TestProject;
-    m_projectController->clearProjects();
+    m_projectController->closeAllProjects();
     m_projectController->addProject(project);
 
     TestFile f("<html><style>a { color: red; }</style></html>", "html", project);
@@ -74,7 +74,7 @@ void TestParseJob::testHtmlTwoStyleElements()
     TopDUContext::Features features = TopDUContext::VisibleDeclarationsAndContexts;
 
     TestProject* project = new TestProject;
-    m_projectController->clearProjects();
+    m_projectController->closeAllProjects();
     m_projectController->addProject(project);
 
     TestFile f("<html><style>a { color: red; }</style><style>h1 { font-weight:normal; }</style></html>",
