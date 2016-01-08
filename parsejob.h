@@ -39,10 +39,10 @@ class ParseJob : public KDevelop::ParseJob
 
 public:
     explicit ParseJob(const KDevelop::IndexedString &url, KDevelop::ILanguageSupport* languageSupport);
-    virtual ~ParseJob();
+    ~ParseJob() override;
 
 protected:
-    virtual void run(ThreadWeaver::JobPointer self, ThreadWeaver::Thread *thread) override;
+    void run(ThreadWeaver::JobPointer self, ThreadWeaver::Thread *thread) override;
 };
 
 }

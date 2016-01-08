@@ -50,7 +50,7 @@ public:
           m_context(CodeCompletionModel::SelectorContext)
     {}
 
-    virtual void visitDeclaration(DeclarationAst* node)
+    void visitDeclaration(DeclarationAst* node) override
     {
         {
             KTextEditor::Cursor pos = findPosition(node->startToken, EditorIntegrator::FrontEdge);
@@ -75,7 +75,7 @@ public:
         DefaultVisitor::visitDeclaration(node);
     }
 
-    virtual void visitRuleset(RulesetAst* node)
+    void visitRuleset(RulesetAst* node) override
     {
         if (node->lbrace != -1
               && m_range.start() >= findPosition(node->lbrace))
@@ -93,7 +93,7 @@ public:
         }
     }
 
-    virtual void visitSimpleSelector(SimpleSelectorAst* node)
+    void visitSimpleSelector(SimpleSelectorAst* node) override
     {
         if (node->element) {
             ifDebug( debug() << m_lastProperty << m_range.start() << findPosition(node->endToken); )
@@ -105,7 +105,7 @@ public:
         DefaultVisitor::visitSimpleSelector(node);
     }
 
-    virtual void visitProperty(PropertyAst* node)
+    void visitProperty(PropertyAst* node) override
     {
         ifDebug( debug() << m_lastProperty << m_range.start() << findPosition(node->endToken); )
         if (m_range.start() > findPosition(node->endToken)) {
