@@ -194,6 +194,7 @@ void ParseJob::run(ThreadWeaver::JobPointer /*self*/, ThreadWeaver::Thread */*th
     QDateTime lastModified = fileInfo.lastModified();
     file->setModificationRevision(contents().modification);
     KDevelop::DUChain::self()->updateContextEnvironment( top->topContext(), file.data() );
+    KDevelop::DUChain::self()->emitUpdateReady(document(), top);
 }
 
 }
