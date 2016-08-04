@@ -177,7 +177,7 @@ void Tokenizer::restart( KDevPG::TokenStream *tokenStream, const QByteArray &con
     m_tokenEnd = -1;
     m_currentOffset = 0;
 
-    yyrestart(NULL);
+    YY_NEW_FILE;
     BEGIN(INITIAL); // is not set automatically by yyrestart()
 }
 
