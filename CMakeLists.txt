@@ -1,3 +1,4 @@
+cmake_minimum_required(VERSION 2.8.12)
 project(css)
 
 set(VERSION_MAJOR 4)
@@ -6,16 +7,15 @@ set(VERSION_PATCH 90)
 # KDevplatform dependency version
 set( KDEVPLATFORM_VERSION "${VERSION_MAJOR}.${VERSION_MINOR}.${VERSION_PATCH}" )
 
-cmake_minimum_required(VERSION 2.8.12)
 find_package (ECM 1.0.0 REQUIRED NO_MODULE)
 message(STATUS "${CMAKE_MODULE_PATH}")
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${ECM_MODULE_PATH})
 message(STATUS "${CMAKE_MODULE_PATH}")
 
+include(KDECompilerSettings NO_POLICY_SCOPE)
 include(ECMAddTests)
 include(KDEInstallDirs)
 include(KDECMakeSettings)
-include(KDECompilerSettings)
 
 find_package(Qt5 REQUIRED Core Widgets Test WebKitWidgets)
 find_package(KF5 REQUIRED COMPONENTS KDELibs4Support ConfigWidgets KIO I18n KCMUtils TextEditor ThreadWeaver )
