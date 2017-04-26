@@ -64,8 +64,8 @@ protected:
 
 private:
     QByteArray m_contents;
-    std::size_t m_tokenBegin, m_tokenEnd;
-    std::size_t m_currentOffset;
+    int m_tokenBegin, m_tokenEnd;
+    int m_currentOffset;
     KDevPG::LocationTable *m_locationTable;
 };
 

@@ -47,8 +47,6 @@ LanguageSupport::LanguageSupport(QObject* parent, const QVariantList& /*args*/)
     : KDevelop::IPlugin(QStringLiteral("kdevcsssupport"), parent),
       KDevelop::ILanguageSupport()
 {
-    KDEV_USE_EXTENSION_INTERFACE(KDevelop::ILanguageSupport)
-
     m_self = this;
 
     CodeCompletionModel* ccModel = new CodeCompletionModel(this);
