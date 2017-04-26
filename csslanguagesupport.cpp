@@ -37,8 +37,8 @@
 #include "parser/cssdebugvisitor.h"
 #include "version.h"
 
-namespace Css
-{
+using namespace Css;
+
 LanguageSupport* LanguageSupport::m_self = 0;
 
 K_PLUGIN_FACTORY_WITH_JSON(KDevCssSupportFactory, "kdevcsssupport.json", registerPlugin<LanguageSupport>();)
@@ -228,8 +228,6 @@ QWidget* LanguageSupport::specialLanguageObjectNavigationWidget(const QUrl& url,
         }
     }
     return KDevelop::ILanguageSupport::specialLanguageObjectNavigationWidget(url, position);
-}
-
 }
 
 #include "csslanguagesupport.moc"
