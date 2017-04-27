@@ -32,6 +32,7 @@ add_custom_command(
 )
 
 set(parser_STAT_SRCS
+    ../debug.cpp
     ${CMAKE_CURRENT_BINARY_DIR}/tokenizer.cpp
     parsesession.cpp
     editorintegrator.cpp
@@ -62,6 +63,7 @@ target_link_libraries(css-parser
 ### next target
 set(parsertest_SRCS test/parsertest.cpp
   # TODO: extra library!
+  ../debug.cpp
   ../duchain/tests/duchaintestbase.cpp
   ../duchain/builders/contextbuilder.cpp
   ../duchain/builders/declarationbuilder.cpp)

@@ -19,7 +19,6 @@
 #include "csslanguagesupport.h"
 
 #include <kpluginfactory.h>
-#include <KDebug>
 #include <KTextEditor/Document>
 
 #include <language/codecompletion/codecompletion.h>
@@ -29,6 +28,7 @@
 #include <language/duchain/duchain.h>
 #include <language/duchain/duchainlock.h>
 
+#include "debug.h"
 #include "completion/model.h"
 #include "parsejob.h"
 #include "navigation/navigationwidget.h"
@@ -42,14 +42,6 @@ using namespace Css;
 LanguageSupport* LanguageSupport::m_self = 0;
 
 K_PLUGIN_FACTORY_WITH_JSON(KDevCssSupportFactory, "kdevcsssupport.json", registerPlugin<LanguageSupport>();)
-
-#if KDE_VERSION > KDE_MAKE_VERSION(4, 3, 80)
-int debugArea() { static int s_area = KDebug::registerArea("kdevcsssupport"); return s_area; }
-#else
-int debugArea() { return 1; }
-#endif
-
-#define debug() kDebug(debugArea())
 
 LanguageSupport::LanguageSupport(QObject* parent, const QVariantList& /*args*/)
     : KDevelop::IPlugin(QStringLiteral("kdevcsssupport"), parent),
@@ -70,7 +62,7 @@ QString LanguageSupport::name() const
 
 KDevelop::ParseJob *LanguageSupport::createParseJob(const KDevelop::IndexedString& url)
 {
-    kDebug(debugArea()) << url;
+    qCDebug(KDEV_CSS) << url;
     return new ParseJob(url, this);
 }
 
@@ -190,7 +182,7 @@ CursorIdentifier cursorIdentifier(const QUrl& url, const KTextEditor::Cursor& po
 KTextEditor::Range LanguageSupport::specialLanguageObjectRange(const QUrl& url, const KTextEditor::Cursor& position)
 {
     CursorIdentifier id = cursorIdentifier(url, position);
-    debug() << id.kind << id.contents;
+    qCDebug(KDEV_CSS) << id.kind << id.contents;
     if (id.kind) {
         return id.range.castToSimpleRange();
     }
@@ -200,7 +192,7 @@ KTextEditor::Range LanguageSupport::specialLanguageObjectRange(const QUrl& url, 
 QWidget* LanguageSupport::specialLanguageObjectNavigationWidget(const QUrl& url, const KTextEditor::Cursor& position)
 {
     CursorIdentifier id = cursorIdentifier(url, position);
-    debug() << id.kind << id.contents;
+    qCDebug(KDEV_CSS) << id.kind << id.contents;
     if (id.kind) {
         KDevelop::TopDUContextPointer top;
         {

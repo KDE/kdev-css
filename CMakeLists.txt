@@ -31,7 +31,8 @@ find_package(KDevelop-PG-Qt REQUIRED)
 find_package(FLEX REQUIRED)
 
 include_directories(
-    ${CMAKE_BINARY_DIR}/parser
+    ${CMAKE_CURRENT_SOURCE_DIR} # debug.h
+    ${CMAKE_CURRENT_BINARY_DIR}/parser
     ${KDEVPGQT_INCLUDE_DIR}
 )
 
@@ -41,6 +42,7 @@ set(kdevcss_PART_SRCS
     csslanguagesupport.cpp
     completion/model.cpp
     completion/contentassistdata.cpp
+    debug.cpp
     parsejob.cpp
     duchain/builders/contextbuilder.cpp
     duchain/builders/declarationbuilder.cpp
@@ -69,6 +71,7 @@ target_link_libraries(kdevcsssupport
 
 ### next target
 set(completionmodeltest_SRCS
+    debug.cpp
     completion/test/modeltest.cpp
     completion/model.cpp
     completion/contentassistdata.cpp
@@ -93,6 +96,7 @@ ecm_add_test(${completionmodeltest_SRCS}
 
 ### next target
 set(duchaintest_SRCS
+    debug.cpp
     duchain/tests/duchain.cpp
     duchain/tests/duchaintestbase.cpp
     duchain/builders/contextbuilder.cpp

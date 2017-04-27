@@ -25,6 +25,7 @@
 #include "parsesession.h"
 
 #include "cssast.h"
+#include "debug.h"
 
 #include "kdev-pg-memory-pool.h"
 #include "kdev-pg-token-stream.h"
@@ -32,7 +33,6 @@
 #include <QFile>
 #include <QTextCodec>
 #include <KLocalizedString>
-#include <KDebug>
 
 namespace Css
 {
@@ -75,7 +75,7 @@ bool ParseSession::readFile(const QString& filename, const char* codec)
 
     QFile f(filename);
     if (!f.open(QIODevice::ReadOnly | QIODevice::Text)) {
-        kDebug() << "Couldn't open project file:" << filename;
+        qCDebug(KDEV_CSS) << "Couldn't open project file:" << filename;
         return false;
     }
     QTextStream s(&f);
@@ -119,10 +119,10 @@ bool ParseSession::parse(Css::StartAst** ast)
     bool matched = parser->parseStart(&cssAst);
     *ast = cssAst;
     if (matched) {
-        kDebug() << "Successfully parsed";
+        qCDebug(KDEV_CSS) << "Successfully parsed";
     } else {
         parser->expectedSymbol(AstNode::StartKind, "start");
-        kDebug() << "Couldn't parse content";
+        qCDebug(KDEV_CSS) << "Couldn't parse content";
     }
     m_problems << parser->problems();
     delete parser;
@@ -136,10 +136,10 @@ bool ParseSession::parse(DeclarationListAst** ast)
     bool matched = parser->parseDeclarationList(&cssAst);
     *ast = cssAst;
     if (matched) {
-        kDebug() << "Successfully parsed";
+        qCDebug(KDEV_CSS) << "Successfully parsed";
     } else {
         parser->expectedSymbol(AstNode::DeclarationListKind, "declarationList");
-        kDebug() << "Couldn't parse content";
+        qCDebug(KDEV_CSS) << "Couldn't parse content";
     }
     m_problems << parser->problems();
     delete parser;

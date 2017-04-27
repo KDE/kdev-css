@@ -29,8 +29,6 @@ class ParseJob;
 
 namespace Css
 {
-int debugArea();
-
 class LanguageSupport : public KDevelop::IPlugin, public KDevelop::ILanguageSupport
 {
     Q_OBJECT

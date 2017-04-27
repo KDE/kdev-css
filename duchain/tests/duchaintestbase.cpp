@@ -22,7 +22,6 @@
 #include <QtTest/QtTest>
 
 #include <KComponentData>
-#include <KDebug>
 
 #include <language/duchain/duchaindumper.h>
 #include <language/duchain/parsingenvironment.h>
@@ -62,18 +61,18 @@ void DUChainTestBase::cleanupTestCase()
 TopDUContext* DUChainTestBase::parse(const QByteArray& unit, DumpAreas dump, QString url)
 {
     if (dump)
-        kDebug() << "==== Beginning new test case...:" << endl << unit;
+        qDebug() << "==== Beginning new test case...:" << endl << unit;
 
     ParseSession* session = new ParseSession();
     session->setContents(unit);
     StartAst* ast = 0;
     if (!session->parse(&ast)) {
-        kDebug() << "Parse failed";
+        qDebug() << "Parse failed";
         return 0;
     }
 
     if (dump & DumpAST) {
-        kDebug() << "===== AST:";
+        qDebug() << "===== AST:";
         DebugVisitor debugVisitor(session->tokenStream(), session->contents());
         debugVisitor.visitNode(ast);
     }
@@ -87,7 +86,7 @@ TopDUContext* DUChainTestBase::parse(const QByteArray& unit, DumpAreas dump, QSt
     TopDUContext* top = builder.build(IndexedString(url), ast);
 
     if (dump & DumpDUChain) {
-        kDebug() << "===== DUChain:";
+        qDebug() << "===== DUChain:";
 
         DUChainReadLocker lock;
         DUChainDumper dumper;
@@ -95,7 +94,7 @@ TopDUContext* DUChainTestBase::parse(const QByteArray& unit, DumpAreas dump, QSt
     }
 
     if (dump)
-        kDebug() << "===== Finished test case.";
+        qDebug() << "===== Finished test case.";
 
     delete session;
 

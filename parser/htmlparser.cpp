@@ -19,10 +19,12 @@
  ***************************************************************************/
 
 #include "htmlparser.h"
+
+#include "debug.h"
+
 #include <QXmlStreamReader>
 #include <QRegExp>
 #include <QBuffer>
-#include <KDebug>
 
 namespace Css {
 
@@ -59,7 +61,7 @@ QList<HtmlParser::Part> HtmlParser::parse()
             QString c = m_contents.left(reader.characterOffset());
             static QRegExp rx("<[^<>]+\\sstyle=[\"'](([^<>]*)[\"'][^<>]*>)$");
             if (rx.indexIn(c) != -1) {
-                kDebug() << rx.cap(0);
+                qCDebug(KDEV_CSS) << rx.cap(0);
                 p.contents = rx.cap(2); //don't use reader.attributes() as it doesn't contain newlines correctly
                 KTextEditor::Cursor start;
                 start.setLine(reader.lineNumber()-1-rx.cap(1).count('\n'));
@@ -79,7 +81,7 @@ QList<HtmlParser::Part> HtmlParser::parse()
                 p.tag = reader.name().toString();
                 ret << p;
             } else {
-                kWarning() << "failed parsing style attribute" << c;
+                qCWarning(KDEV_CSS) << "failed parsing style attribute" << c;
             }
         }
         reader.readNext();

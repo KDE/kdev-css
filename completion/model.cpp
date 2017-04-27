@@ -18,23 +18,21 @@
 
 #include "model.h"
 
+#include "debug.h"
+
 #include <KTextEditor/View>
 #include <KTextEditor/Document>
 
-#include <KDebug>
-
-#include <cssdefaultvisitor.h>
-#include <cssdebugvisitor.h>
+#include "cssdefaultvisitor.h"
+#include "cssdebugvisitor.h"
 #include "../parser/parsesession.h"
 #include "../parser/editorintegrator.h"
 #include "contentassistdata.h"
 #include "../parser/htmlparser.h"
+
 namespace Css {
 
 #define ifDebug(x) x
-
-extern int debugArea();
-#define debug() kDebug(debugArea())
 
 CodeCompletionModel::CodeCompletionModel(QObject *parent)
     : KTextEditor::CodeCompletionModel(parent)
@@ -54,21 +52,21 @@ public:
     {
         {
             KTextEditor::Cursor pos = findPosition(node->startToken, EditorIntegrator::FrontEdge);
-            ifDebug( debug() << m_editor->tokenToString(node->startToken) << m_range.start() << pos; )
+            ifDebug( qCDebug(KDEV_CSS) << m_editor->tokenToString(node->startToken) << m_range.start() << pos; )
             if (m_range.start() >= pos) {
                 if (node->colon != -1 && m_range.start() >= findPosition(node->colon, EditorIntegrator::FrontEdge)) {
-                    ifDebug( debug() << "using ValueContext"; )
+                    ifDebug( qCDebug(KDEV_CSS) << "using ValueContext"; )
                     m_context = CodeCompletionModel::ValueContext;
                 } else {
-                    ifDebug( debug() << "using PropertyContext 1"; )
+                    ifDebug( qCDebug(KDEV_CSS) << "using PropertyContext 1"; )
                     m_context = CodeCompletionModel::PropertyContext;
                 }
             }
         }
         if (node->semicolon != -1) {
-            ifDebug( debug() << m_range.start() << findPosition(node->semicolon, EditorIntegrator::FrontEdge); )
+            ifDebug( qCDebug(KDEV_CSS) << m_range.start() << findPosition(node->semicolon, EditorIntegrator::FrontEdge); )
             if (m_range.start() > findPosition(node->semicolon, EditorIntegrator::FrontEdge)) {
-                ifDebug( debug() << "using PropertyContext 2"; )
+                ifDebug( qCDebug(KDEV_CSS) << "using PropertyContext 2"; )
                 m_context = CodeCompletionModel::PropertyContext;
             }
         }
@@ -80,15 +78,15 @@ public:
         if (node->lbrace != -1
               && m_range.start() >= findPosition(node->lbrace))
         {
-            ifDebug( debug() << "using PropertyContext"; )
+            ifDebug( qCDebug(KDEV_CSS) << "using PropertyContext"; )
             m_context = CodeCompletionModel::PropertyContext;
         } else if (m_range.start() >= findPosition(node->startToken, EditorIntegrator::FrontEdge)) {
-            ifDebug( debug() << "using SelectorContext 1"; )
+            ifDebug( qCDebug(KDEV_CSS) << "using SelectorContext 1"; )
             m_context = CodeCompletionModel::SelectorContext;
         }
         DefaultVisitor::visitRuleset(node);
         if (node->rbrace != -1 && m_range.start() >= findPosition(node->rbrace)) {
-            ifDebug( debug() << "using SelectorContext 2"; )
+            ifDebug( qCDebug(KDEV_CSS) << "using SelectorContext 2"; )
             m_context = CodeCompletionModel::SelectorContext;
         }
     }
@@ -96,10 +94,10 @@ public:
     void visitSimpleSelector(SimpleSelectorAst* node) override
     {
         if (node->element) {
-            ifDebug( debug() << m_lastProperty << m_range.start() << findPosition(node->endToken); )
+            ifDebug( qCDebug(KDEV_CSS) << m_lastProperty << m_range.start() << findPosition(node->endToken); )
             if (m_range.start() > findPosition(node->endToken)) {
                 m_lastSelectorElement = node->element->ident;
-                ifDebug( debug() << "set lastSelectorElement" << m_editor->tokenToString(m_lastSelectorElement); )
+                ifDebug( qCDebug(KDEV_CSS) << "set lastSelectorElement" << m_editor->tokenToString(m_lastSelectorElement); )
             }
         }
         DefaultVisitor::visitSimpleSelector(node);
@@ -107,10 +105,10 @@ public:
 
     void visitProperty(PropertyAst* node) override
     {
-        ifDebug( debug() << m_lastProperty << m_range.start() << findPosition(node->endToken); )
+        ifDebug( qCDebug(KDEV_CSS) << m_lastProperty << m_range.start() << findPosition(node->endToken); )
         if (m_range.start() > findPosition(node->endToken)) {
             m_lastProperty = node->ident;
-            ifDebug( debug() << "set lastProperty" << m_editor->tokenToString(m_lastProperty); )
+            ifDebug( qCDebug(KDEV_CSS) << "set lastProperty" << m_editor->tokenToString(m_lastProperty); )
         }
         DefaultVisitor::visitProperty(node);
     }
@@ -141,18 +139,18 @@ void CodeCompletionModel::completionInvoked(KTextEditor::View* view, const KText
 {
     Q_UNUSED(invocationType);
 
-    ifDebug( debug() << range; )
+    ifDebug( qCDebug(KDEV_CSS) << range; )
 
     QList<HtmlParser::Part> parts;
     if (view->document()->mimeType() == "text/css") {
-        ifDebug( debug() << "css"; )
+        ifDebug( qCDebug(KDEV_CSS) << "css"; )
         HtmlParser::Part part;
         part.kind = HtmlParser::Part::Standalone;
         part.contents = view->document()->text();
         part.range = view->document()->documentRange();
         parts << part;
     } else {
-        ifDebug( debug() << "html"; )
+        ifDebug( qCDebug(KDEV_CSS) << "html"; )
         HtmlParser p;
         p.setContents(view->document()->text());
         parts = p.parse();
@@ -198,13 +196,13 @@ void CodeCompletionModel::completionInvoked(KTextEditor::View* view, const KText
         FindCurrentNodeVisitor visitor(&editor, range);
         visitor.visitNode(ast);
         m_completionContext = visitor.currentContext();
-        debug() << "context" << m_completionContext;
+        qCDebug(KDEV_CSS) << "context" << m_completionContext;
         switch (m_completionContext) {
             case PropertyContext:
             {
                 QString el;
                 if (part.kind != HtmlParser::Part::InlineStyle) {
-                    debug() << "lastSelectorElement" << visitor.lastSelectorElement();
+                    qCDebug(KDEV_CSS) << "lastSelectorElement" << visitor.lastSelectorElement();
                     el = visitor.lastSelectorElement();
                 } else {
                     el = part.tag;
@@ -217,7 +215,7 @@ void CodeCompletionModel::completionInvoked(KTextEditor::View* view, const KText
             }
             case ValueContext:
             {
-                debug() << "lastProperty" << visitor.lastProperty();
+                qCDebug(KDEV_CSS) << "lastProperty" << visitor.lastProperty();
                 ContentAssistData::Field field = ContentAssistData::self()->field(visitor.lastProperty());
                 m_items = field.values.keys();
                 setRowCount(m_items.count());
@@ -260,14 +258,14 @@ KTextEditor::Range CodeCompletionModel::completionRange(KTextEditor::View* view,
 
     KTextEditor::Cursor start = end;
 
-    //debug() << end << text.left(end.column()+1);
+    //qCDebug(KDEV_CSS) << end << text.left(end.column()+1);
     if (findWordStart.lastIndexIn(text.left(end.column()+1)) >= 0)
         start.setColumn(findWordStart.pos(1)-1);
-    //debug() << findWordStart.cap(0);
+    //qCDebug(KDEV_CSS) << findWordStart.cap(0);
 
     if (findWordEnd.indexIn(text.mid(end.column()+1)) >= 0)
         end.setColumn(end.column()+1 + findWordEnd.cap(1).length()-1);
-    //debug() << findWordEnd.cap(0);
+    //qCDebug(KDEV_CSS) << findWordEnd.cap(0);
 
     KTextEditor::Range ret = KTextEditor::Range(start, end);
 
@@ -281,7 +279,7 @@ bool CodeCompletionModel::shouldAbortCompletion(KTextEditor::View* view, const K
     Q_UNUSED(range);
     static const QRegExp allowedText("^([\\w\\-]*)");
     bool ret = !allowedText.exactMatch(currentCompletion);
-    debug() << currentCompletion << "shouldAbort:" << ret;
+    qCDebug(KDEV_CSS) << currentCompletion << "shouldAbort:" << ret;
     return ret;
 }
 

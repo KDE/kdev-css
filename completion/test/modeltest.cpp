@@ -1,15 +1,14 @@
 #include "modeltest.h"
 
 #include <qtest_kde.h>
-#include <KDebug>
+#include <QDebug>
+
 #include <KTextEditor/Editor>
 #include <KTextEditor/View>
 
 #include "../model.h"
 
 namespace Css {
-
-int debugArea() { return 9043; /* static int s_area = KDebug::registerArea("kdevcsssupport"); return s_area; */ }
 
 void ModelTest::testCompletionRange()
 {
@@ -21,20 +20,20 @@ void ModelTest::testCompletionRange()
 
     KTextEditor::Cursor position(0, 9);
     KTextEditor::Range range = model->completionRange(view, position);
-    kDebug() << range << doc->text(range);
+    qDebug() << range << doc->text(range);
     QCOMPARE(range, KTextEditor::Range(0, 5, 0, 11));
     QCOMPARE(doc->text(range), QString("font-w"));
 
     position = KTextEditor::Cursor(0, 10);
     range = model->completionRange(view, position);
-    kDebug() << range << doc->text(range);
+    qDebug() << range << doc->text(range);
     QCOMPARE(range, KTextEditor::Range(0, 5, 0, 11));
     QCOMPARE(doc->text(range), QString("font-w"));
 
 
     position = KTextEditor::Cursor(0, 11);
     range = model->completionRange(view, position);
-    kDebug() << range << doc->text(range);
+    qDebug() << range << doc->text(range);
     QCOMPARE(range, KTextEditor::Range(0, 5, 0, 11));
     QCOMPARE(doc->text(range), QString("font-w"));
 
@@ -43,13 +42,13 @@ void ModelTest::testCompletionRange()
 
     position = KTextEditor::Cursor(0, 9);
     range = model->completionRange(view, position);
-    kDebug() << range << doc->text(range);
+    qDebug() << range << doc->text(range);
     QCOMPARE(range, KTextEditor::Range(0, 5, 0, 10));
     QCOMPARE(doc->text(range), QString("font-"));
 
     position = KTextEditor::Cursor(0, 10);
     range = model->completionRange(view, position);
-    kDebug() << range << doc->text(range);
+    qDebug() << range << doc->text(range);
     QCOMPARE(range, KTextEditor::Range(0, 5, 0, 10));
     QCOMPARE(doc->text(range), QString("font-"));
 
@@ -58,7 +57,7 @@ void ModelTest::testCompletionRange()
 
     position = KTextEditor::Cursor(0, 5);
     range = model->completionRange(view, position);
-    kDebug() << range << doc->text(range);
+    qDebug() << range << doc->text(range);
     QCOMPARE(range, KTextEditor::Range(0, 0, 0, 5));
     QCOMPARE(doc->text(range), QString("font-"));
 
@@ -67,13 +66,13 @@ void ModelTest::testCompletionRange()
 
     position = KTextEditor::Cursor(0, 12);
     range = model->completionRange(view, position);
-    kDebug() << range << doc->text(range);
+    qDebug() << range << doc->text(range);
     QCOMPARE(range, KTextEditor::Range(0, 12, 0, 18));
     QCOMPARE(doc->text(range), QString("normal"));
 
     position = KTextEditor::Cursor(0, 15);
     range = model->completionRange(view, position);
-    kDebug() << range << doc->text(range);
+    qDebug() << range << doc->text(range);
     QCOMPARE(range, KTextEditor::Range(0, 12, 0, 18));
     QCOMPARE(doc->text(range), QString("normal"));
     delete doc;
@@ -89,7 +88,7 @@ void ModelTest::testCompletionRangeSecondLine()
 
     KTextEditor::Cursor position(1, 9);
     KTextEditor::Range range = model->completionRange(view, position);
-    kDebug() << range << doc->text(range);
+    qDebug() << range << doc->text(range);
     QCOMPARE(range, KTextEditor::Range(1, 5, 1, 11));
     QCOMPARE(doc->text(range), QString("font-w"));
     delete doc;
@@ -251,7 +250,7 @@ void ModelTest::completionItems()
     for (int i=0; i < model->rowCount(); ++i) {
         completions << model->data(model->index(i, CodeCompletionModel::Name), Qt::DisplayRole).toString();
     }
-    kDebug() << "completions" << completions;
+    qDebug() << "completions" << completions;
     QFETCH(QStringList, result);
     foreach (const QString &i, result) {
         QVERIFY(completions.contains(i));

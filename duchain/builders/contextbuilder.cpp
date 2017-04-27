@@ -31,7 +31,6 @@
 #include <interfaces/icompletionsettings.h>
 
 #include <KLocalizedString>
-#include <KDebug>
 
 #include "../../parser/parsesession.h"
 #include "../../parser/editorintegrator.h"
@@ -63,7 +62,7 @@ void ContextBuilder::startVisiting(AstNode* node)
 {
     if (node->kind == HtmlAst::KIND) {
         foreach (AstNode *el, static_cast<HtmlAst*>(node)->elements) {
-            kDebug() << el->kind;
+            qCDebug(KDEV_CSS) << el->kind;
             if (el->kind == StyleElementAst::KIND) {
                 editor()->setParseSession(static_cast<StyleElementAst*>(el)->session);
                 visitNode(static_cast<StyleElementAst*>(el)->start);
@@ -72,7 +71,7 @@ void ContextBuilder::startVisiting(AstNode* node)
                 InlineStyleAst* n = static_cast<InlineStyleAst*>(el);
 
                 KDevelop::RangeInRevision range = editor()->findRange(n->declarationList);
-                kDebug() << range;
+                qCDebug(KDEV_CSS) << range;
                 openContext(n, range,
                             KDevelop::DUContext::Class,
                             KDevelop::QualifiedIdentifier("TODO"));
@@ -142,7 +141,7 @@ KDevelop::RangeInRevision ContextBuilder::editorFindRange( AstNode* fromRange, A
 
 void ContextBuilder::visitRuleset(RulesetAst* node)
 {
-    kDebug(1) << node << node->declarations;
+    qCDebug(KDEV_CSS) << node << node->declarations;
     Q_ASSERT(node->declarations);
     KDevelop::RangeInRevision range;
     if (node->lbrace != -1) {

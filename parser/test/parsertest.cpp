@@ -19,6 +19,7 @@
 
 #include "parsertest.h"
 
+#include <QDebug>
 #include <QTest>
 
 #include "../parsesession.h"
@@ -26,7 +27,6 @@
 #include "../editorintegrator.h"
 #include "../htmlparser.h"
 
-#include <KDebug>
 
 QTEST_MAIN(Css::TestParser)
 
@@ -123,8 +123,8 @@ void TestParser::multiline()
 
     EditorIntegrator editor;
     editor.setParseSession(&session);
-    kDebug() << editor.findPosition(el->startToken, EditorIntegrator::FrontEdge);
-    kDebug() << editor.findPosition(el->endToken, EditorIntegrator::BackEdge);
+    qDebug() << editor.findPosition(el->startToken, EditorIntegrator::FrontEdge);
+    qDebug() << editor.findPosition(el->endToken, EditorIntegrator::BackEdge);
     QCOMPARE(editor.findPosition(el->endToken, EditorIntegrator::BackEdge),
                 KDevelop::CursorInRevision(1, 16));
 }

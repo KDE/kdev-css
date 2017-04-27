@@ -7,8 +7,6 @@
 
 namespace Css
 {
-int debugArea();
-
 class ModelTest : public DUChainTestBase
 {
     Q_OBJECT

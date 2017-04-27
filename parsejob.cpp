@@ -24,7 +24,6 @@
 #include <QtCore/QReadLocker>
 #include <QtCore/QThread>
 
-#include <kdebug.h>
 #include <KMimeType>
 
 #include <language/duchain/duchainlock.h>
@@ -34,6 +33,7 @@
 #include <language/duchain/declaration.h>
 #include <language/backgroundparser/urlparselock.h>
 
+#include "debug.h"
 #include "parser/editorintegrator.h"
 #include "parser/parsesession.h"
 #include "csslanguagesupport.h"
@@ -43,18 +43,16 @@
 
 namespace Css
 {
-extern int debugArea();
-#define debug() kDebug(debugArea())
 
 ParseJob::ParseJob(const KDevelop::IndexedString& url, KDevelop::ILanguageSupport* languageSupport)
         : KDevelop::ParseJob(url, languageSupport)
 {
-    kDebug();
+    qCDebug(KDEV_CSS);
 }
 
 ParseJob::~ParseJob()
 {
-    kDebug();
+    qCDebug(KDEV_CSS);
 }
 
 void ParseJob::run(ThreadWeaver::JobPointer /*self*/, ThreadWeaver::Thread */*thread*/)
@@ -73,12 +71,12 @@ void ParseJob::run(ThreadWeaver::JobPointer /*self*/, ThreadWeaver::Thread */*th
             }
         }
         if (!needsUpdate) {
-            debug() << "Already up to date" << document().str();
+            qCDebug(KDEV_CSS) << "Already up to date" << document().str();
             return;
         }
     }
 
-    debug() << "parsing" << document().str();
+    qCDebug(KDEV_CSS) << "parsing" << document().str();
 
     KDevelop::ProblemPointer p = readContents();
     if (p) {
@@ -142,13 +140,13 @@ void ParseJob::run(ThreadWeaver::JobPointer /*self*/, ThreadWeaver::Thread */*th
         top = KDevelop::DUChain::self()->chainForDocument(document());
     }
     if (top) {
-        debug() << "re-compiling" << document().str();
+        qCDebug(KDEV_CSS) << "re-compiling" << document().str();
         KDevelop::DUChainWriteLocker lock(KDevelop::DUChain::lock());
         top->clearImportedParentContexts();
         top->parsingEnvironmentFile()->clearModificationRevisions();
         top->clearProblems();
     } else {
-        debug() << "compiling" << document().str();
+        qCDebug(KDEV_CSS) << "compiling" << document().str();
     }
 
     QReadLocker parseLock(languageSupport()->parseLock());
@@ -157,7 +155,7 @@ void ParseJob::run(ThreadWeaver::JobPointer /*self*/, ThreadWeaver::Thread */*th
     DeclarationBuilder builder;
     builder.setEditor(&editor);
     top = builder.build(document(), fileAst, top);
-    kDebug() << top;
+    qCDebug(KDEV_CSS) << top;
     Q_ASSERT(top);
 
     foreach (AstNode *el, fileAst->elements) {

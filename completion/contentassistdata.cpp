@@ -22,7 +22,6 @@
 #include <QFile>
 
 #include <KStandardDirs>
-#include <KDebug>
 
 namespace Css {
 

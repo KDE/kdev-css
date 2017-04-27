@@ -22,39 +22,41 @@
 #include "valuenavigationcontext.h"
 #include "colornavigationcontext.h"
 
+using namespace KDevelop;
+
 namespace Css {
 
-NavigationWidget::NavigationWidget(KDevelop::TopDUContextPointer topContext, const Css::ContentAssistData::Field& field)
-    : KDevelop::AbstractNavigationWidget()
-{
-  m_topContext = topContext;
-  initBrowser(200);
-
-  //The first context is registered so it is kept alive by the shared-pointer mechanism
-  m_startContext = KDevelop::NavigationContextPointer(new FieldNavigationContext(topContext, field));
-  setContext( m_startContext );
-}
-
-NavigationWidget::NavigationWidget(KDevelop::TopDUContextPointer topContext, const Css::ContentAssistData::Value& value)
+NavigationWidget::NavigationWidget(KDevelop::TopDUContextPointer topContext,
+                                   const Css::ContentAssistData::Field& field)
     : AbstractNavigationWidget()
 {
-  m_topContext = topContext;
   initBrowser(200);
 
   //The first context is registered so it is kept alive by the shared-pointer mechanism
-  m_startContext = KDevelop::NavigationContextPointer(new ValueNavigationContext(topContext, value));
-  setContext( m_startContext );
+  auto context = NavigationContextPointer(new FieldNavigationContext(topContext, field));
+  setContext(context);
 }
 
-NavigationWidget::NavigationWidget(KDevelop::TopDUContextPointer topContext, const QString& colorName)
-  : AbstractNavigationWidget()
+NavigationWidget::NavigationWidget(KDevelop::TopDUContextPointer topContext,
+                                   const Css::ContentAssistData::Value& value)
+    : AbstractNavigationWidget()
 {
-  m_topContext = topContext;
   initBrowser(200);
 
   //The first context is registered so it is kept alive by the shared-pointer mechanism
-  m_startContext = KDevelop::NavigationContextPointer(new ColorNavigationContext(topContext, colorName));
-  setContext( m_startContext );
+  auto context = NavigationContextPointer(new ValueNavigationContext(topContext, value));
+  setContext(context);
+}
+
+NavigationWidget::NavigationWidget(KDevelop::TopDUContextPointer topContext,
+                                   const QString& colorName)
+  : AbstractNavigationWidget()
+{
+  initBrowser(200);
+
+  //The first context is registered so it is kept alive by the shared-pointer mechanism
+  auto context = NavigationContextPointer(new ColorNavigationContext(topContext, colorName));
+  setContext(context);
 }
 
 }
