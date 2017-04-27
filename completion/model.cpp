@@ -189,6 +189,7 @@ void CodeCompletionModel::completionInvoked(KTextEditor::View* view, const KText
 //         vis.visitNode(ast);
     )
 
+    beginResetModel();
     if (ast) {
         EditorIntegrator editor;
         editor.setParseSession(&session);
@@ -210,7 +211,7 @@ void CodeCompletionModel::completionInvoked(KTextEditor::View* view, const KText
                 ContentAssistData::Element element = ContentAssistData::self()->element(el);
                 m_items = element.fields;
                 setRowCount(m_items.count());
-                reset();
+                endResetModel();
                 return;
             }
             case ValueContext:
@@ -219,13 +220,13 @@ void CodeCompletionModel::completionInvoked(KTextEditor::View* view, const KText
                 ContentAssistData::Field field = ContentAssistData::self()->field(visitor.lastProperty());
                 m_items = field.values.keys();
                 setRowCount(m_items.count());
-                reset();
+                endResetModel();
                 return;
             }
             case SelectorContext:
                 m_items = ContentAssistData::self()->elements();
                 setRowCount(m_items.count());
-                reset();
+                endResetModel();
                 return;
             default:
                 break;
@@ -233,7 +234,7 @@ void CodeCompletionModel::completionInvoked(KTextEditor::View* view, const KText
     }
     m_items.clear();
     setRowCount(0);
-    reset();
+    endResetModel();
 }
 
 QVariant CodeCompletionModel::data(const QModelIndex & index, int role) const

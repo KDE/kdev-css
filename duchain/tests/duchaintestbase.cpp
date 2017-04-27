@@ -21,8 +21,6 @@
 
 #include <QtTest/QtTest>
 
-#include <KComponentData>
-
 #include <language/duchain/duchaindumper.h>
 #include <language/duchain/parsingenvironment.h>
 #include <language/duchain/duchainlock.h>

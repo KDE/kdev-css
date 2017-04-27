@@ -45,8 +45,6 @@ generate_export_header(kdev4cssparser EXPORT_MACRO_NAME KDEVCSSPARSER_EXPORT
                                        EXPORT_FILE_NAME parserexport.h)
 target_link_libraries( kdev4cssparser LINK_PRIVATE
     KDev::Language
-    # TODO: remove once KDevPlatform moves away from KDELibs4Support.
-    KF5::KDELibs4Support
 )
 install(TARGETS kdev4cssparser DESTINATION ${INSTALL_TARGETS_DEFAULT_ARGS})
 
@@ -56,8 +54,6 @@ target_link_libraries(css-parser
     Qt5::Test
     KDev::Language
     KDev::Tests
-    # TODO: remove once KDevPlatform moves away from KDELibs4Support.
-    KF5::KDELibs4Support
 )
 
 ### next target
@@ -74,6 +70,4 @@ ecm_add_test(${parsertest_SRCS}
         kdev4cssparser
         KDev::Language
         KDev::Tests
-        # TODO: remove once KDevPlatform moves away from KDELibs4Support.
-        KF5::KDELibs4Support
 )

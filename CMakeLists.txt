@@ -16,9 +16,10 @@ include(KDECompilerSettings NO_POLICY_SCOPE)
 include(ECMAddTests)
 include(KDEInstallDirs)
 include(KDECMakeSettings)
+include(GenerateExportHeader)
 
-find_package(Qt5 REQUIRED Core Widgets Test WebKitWidgets)
-find_package(KF5 REQUIRED COMPONENTS KDELibs4Support ConfigWidgets KIO I18n KCMUtils TextEditor ThreadWeaver )
+find_package(Qt5 CONFIG REQUIRED Core Widgets Test WebKitWidgets)
+find_package(KF5 REQUIRED COMPONENTS ItemModels ConfigWidgets KIO I18n KCMUtils TextEditor ThreadWeaver )
 find_package(KDevPlatform ${KDEVPLATFORM_VERSION} REQUIRED)
 
 configure_file(
@@ -64,9 +65,6 @@ target_link_libraries(kdevcsssupport
 
     KF5::I18n
     KF5::TextEditor
-
-    # TODO: remove once KDevPlatform moves away from KDELibs4Support.
-    KF5::KDELibs4Support
 )
 
 ### next target
@@ -90,8 +88,6 @@ ecm_add_test(${completionmodeltest_SRCS}
         kdev4cssparser
         KDev::Interfaces KDev::Language KDev::Tests
         KF5::I18n KF5::TextEditor
-        # TODO: remove once KDevPlatform moves away from KDELibs4Support.
-        KF5::KDELibs4Support
 )
 
 ### next target
@@ -109,8 +105,6 @@ ecm_add_test(${duchaintest_SRCS}
         Qt5::Test
         KDev::Interfaces KDev::Language KDev::Tests
         KF5::I18n KF5::TextEditor
-        # TODO: remove once KDevPlatform moves away from KDELibs4Support.
-        KF5::KDELibs4Support
 )
 
 ### next target
@@ -123,6 +117,4 @@ ecm_add_test(${parsejobtest_SRCS}
         Qt5::Test
         KDev::Interfaces KDev::Language KDev::Tests
         KF5::I18n KF5::TextEditor
-        # TODO: remove once KDevPlatform moves away from KDELibs4Support.
-        KF5::KDELibs4Support
 )

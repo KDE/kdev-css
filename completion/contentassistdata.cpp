@@ -21,8 +21,6 @@
 #include <QtCore/QXmlStreamReader>
 #include <QFile>
 
-#include <KStandardDirs>
-
 namespace Css {
 
 ContentAssistData* ContentAssistData::self()

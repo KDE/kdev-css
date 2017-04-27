@@ -20,11 +20,10 @@
 #include "parsejob.h"
 
 #include <QFile>
+#include <QMimeDatabase>
 #include <QReadWriteLock>
 #include <QtCore/QReadLocker>
 #include <QtCore/QThread>
-
-#include <KMimeType>
 
 #include <language/duchain/duchainlock.h>
 #include <language/duchain/duchain.h>
@@ -86,7 +85,8 @@ void ParseJob::run(ThreadWeaver::JobPointer /*self*/, ThreadWeaver::Thread */*th
 
     QList<HtmlParser::Part> parts;
 
-    if (KMimeType::findByUrl(document().toUrl())->name() == "text/css") {
+    QMimeDatabase db;
+    if (db.mimeTypeForUrl(document().toUrl()).name() == "text/css") {
         HtmlParser::Part part;
         part.kind = HtmlParser::Part::Standalone;
         part.contents = contents().contents;

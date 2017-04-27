@@ -1,7 +1,5 @@
 #include "parsejobtest.h"
 
-#include <qtest_kde.h>
-
 #include <tests/autotestshell.h>
 #include <tests/testcore.h>
 #include <interfaces/ilanguagecontroller.h>
@@ -12,7 +10,9 @@
 #include <language/duchain/duchain.h>
 #include <language/duchain/parsingenvironment.h>
 
-QTEST_KDEMAIN(Css::TestParseJob, GUI)
+#include <QtTest>
+
+QTEST_MAIN(Css::TestParseJob)
 
 using namespace KDevelop;
 

@@ -1,7 +1,8 @@
 #include "modeltest.h"
 
-#include <qtest_kde.h>
+#include <QtTest>
 #include <QDebug>
+#include <QUrl>
 
 #include <KTextEditor/Editor>
 #include <KTextEditor/View>
@@ -237,7 +238,7 @@ void ModelTest::completionItems()
     file.write(text.toUtf8());
     file.close();
 
-    doc->openUrl(KUrl("file://"+QDir::current().absoluteFilePath(file.fileName())));
+    doc->openUrl(QUrl::fromLocalFile(QDir::current().absoluteFilePath(file.fileName())));
 
     QCOMPARE(doc->mimeType(), QString("text/")+type);
 
@@ -261,5 +262,5 @@ void ModelTest::completionItems()
 
 }
 
-QTEST_KDEMAIN(Css::ModelTest, GUI)
+QTEST_MAIN(Css::ModelTest)
 

@@ -24,7 +24,6 @@
 
 #include <QStringList>
 
-#include <ksharedptr.h>
 #include <ktexteditor/range.h>
 
 namespace Css
