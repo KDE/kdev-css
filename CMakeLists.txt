@@ -7,13 +7,14 @@ set(VERSION_PATCH 90)
 # KDevplatform dependency version
 set( KDEVPLATFORM_VERSION "${VERSION_MAJOR}.${VERSION_MINOR}.${VERSION_PATCH}" )
 
-find_package (ECM 1.0.0 REQUIRED NO_MODULE)
+find_package (ECM "5.14.0" REQUIRED NO_MODULE)
 message(STATUS "${CMAKE_MODULE_PATH}")
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${ECM_MODULE_PATH})
 message(STATUS "${CMAKE_MODULE_PATH}")
 
 include(KDECompilerSettings NO_POLICY_SCOPE)
 include(ECMAddTests)
+include(ECMQtDeclareLoggingCategory)
 include(KDEInstallDirs)
 include(KDECMakeSettings)
 include(GenerateExportHeader)
@@ -32,9 +33,15 @@ find_package(KDevelop-PG-Qt REQUIRED)
 find_package(FLEX REQUIRED)
 
 include_directories(
-    ${CMAKE_CURRENT_SOURCE_DIR} # debug.h
+    ${CMAKE_CURRENT_BINARY_DIR} # debug.h
     ${CMAKE_CURRENT_BINARY_DIR}/parser
     ${KDEVPGQT_INCLUDE_DIR}
+)
+
+ecm_qt_declare_logging_category(kdevcss_LOG_SRCS
+    HEADER debug.h
+    IDENTIFIER KDEV_CSS
+    CATEGORY_NAME "kdevelop.languages.css"
 )
 
 add_subdirectory(parser)
@@ -43,7 +50,6 @@ set(kdevcss_PART_SRCS
     csslanguagesupport.cpp
     completion/model.cpp
     completion/contentassistdata.cpp
-    debug.cpp
     parsejob.cpp
     duchain/builders/contextbuilder.cpp
     duchain/builders/declarationbuilder.cpp
@@ -51,6 +57,7 @@ set(kdevcss_PART_SRCS
     navigation/navigationwidget.cpp
     navigation/valuenavigationcontext.cpp
     navigation/colornavigationcontext.cpp
+    ${kdevcss_LOG_SRCS}
 )
 
 qt5_add_resources(kdevcss_PART_SRCS kdevcssresources.qrc)
@@ -69,7 +76,6 @@ target_link_libraries(kdevcsssupport
 
 ### next target
 set(completionmodeltest_SRCS
-    debug.cpp
     completion/test/modeltest.cpp
     completion/model.cpp
     completion/contentassistdata.cpp
@@ -77,6 +83,7 @@ set(completionmodeltest_SRCS
     duchain/tests/duchaintestbase.cpp
     duchain/builders/contextbuilder.cpp
     duchain/builders/declarationbuilder.cpp
+    ${kdevcss_LOG_SRCS}
 )
 
 qt5_add_resources(completionmodeltest_SRCS kdevcssresources.qrc)
@@ -92,11 +99,11 @@ ecm_add_test(${completionmodeltest_SRCS}
 
 ### next target
 set(duchaintest_SRCS
-    debug.cpp
     duchain/tests/duchain.cpp
     duchain/tests/duchaintestbase.cpp
     duchain/builders/contextbuilder.cpp
     duchain/builders/declarationbuilder.cpp
+    ${kdevcss_LOG_SRCS}
 )
 ecm_add_test(${duchaintest_SRCS}
     TEST_NAME duchaintest
