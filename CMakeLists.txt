@@ -74,6 +74,9 @@ target_link_libraries(kdevcsssupport
     KF5::TextEditor
 )
 
+# kdebugsettings file
+install(FILES kdevcsssupport.categories DESTINATION ${KDE_INSTALL_CONFDIR})
+
 ### next target
 set(completionmodeltest_SRCS
     completion/test/modeltest.cpp
