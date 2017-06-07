@@ -18,7 +18,7 @@
 
 #include "duchain.h"
 
-#include <QtTest/QtTest>
+#include <QTest>
 
 #include <language/duchain/parsingenvironment.h>
 #include <language/duchain/duchain.h>

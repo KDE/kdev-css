@@ -18,7 +18,7 @@
 
 #include "contentassistdata.h"
 
-#include <QtCore/QXmlStreamReader>
+#include <QXmlStreamReader>
 #include <QFile>
 
 namespace Css {

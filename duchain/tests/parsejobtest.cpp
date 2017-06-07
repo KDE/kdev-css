@@ -10,7 +10,7 @@
 #include <language/duchain/duchain.h>
 #include <language/duchain/parsingenvironment.h>
 
-#include <QtTest>
+#include <QTest>
 
 QTEST_MAIN(Css::TestParseJob)
 

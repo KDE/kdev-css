@@ -22,8 +22,8 @@
 #include <QFile>
 #include <QMimeDatabase>
 #include <QReadWriteLock>
-#include <QtCore/QReadLocker>
-#include <QtCore/QThread>
+#include <QReadLocker>
+#include <QThread>
 
 #include <language/duchain/duchainlock.h>
 #include <language/duchain/duchain.h>

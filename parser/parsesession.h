@@ -25,7 +25,7 @@
 #ifndef CSS_PARSESESSION_H
 #define CSS_PARSESESSION_H
 
-#include <QtCore/QString>
+#include <QString>
 #include <language/editor/rangeinrevision.h>
 #include "cssparser.h"
 

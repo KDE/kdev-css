@@ -1,6 +1,7 @@
 #include "modeltest.h"
 
-#include <QtTest>
+#include <QTest>
+#include <QTemporaryFile>
 #include <QDebug>
 #include <QUrl>
 

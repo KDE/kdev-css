@@ -19,7 +19,7 @@
 
 #include "duchaintestbase.h"
 
-#include <QtTest/QtTest>
+#include <QTest>
 
 #include <language/duchain/duchaindumper.h>
 #include <language/duchain/parsingenvironment.h>

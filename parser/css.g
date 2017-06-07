@@ -30,7 +30,7 @@ namespace Css
 }
 :]
 
-%parser_declaration_header "QtCore/QString"
+%parser_declaration_header "QString"
 %parser_declaration_header "debug.h"
 %parser_declaration_header "language/duchain/problem.h"
 %parser_declaration_header "language/editor/documentrange.h"
@@ -603,7 +603,7 @@ IMPORTANT_SYM maybeSpace | 0
 
 [:
 
-#include <QtCore/QDebug>
+#include <QDebug>
 #include <KTextEditor/Range>
 #include "tokenizer.h"
 
