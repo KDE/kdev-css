@@ -82,7 +82,7 @@ void ContextBuilder::startVisiting(AstNode* node)
             }
         }
     } else {
-        qDebug()  << node->kind;
+        qCDebug(KDEV_CSS)  << node->kind;
         Q_ASSERT(node->kind == StartAst::KIND);
         visitNode(node);
     }

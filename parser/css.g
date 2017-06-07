@@ -603,8 +603,8 @@ IMPORTANT_SYM maybeSpace | 0
 
 [:
 
-#include <QDebug>
 #include <KTextEditor/Range>
+#include <debug.h>
 #include "tokenizer.h"
 
 namespace Css
@@ -629,7 +629,7 @@ void Parser::tokenize(const QString& contents)
         t.begin = tokenizer.tokenBegin();
         t.end = tokenizer.tokenEnd();
         t.kind = kind;
-        //if ( m_debug ) qDebug() << kind << tokenText(t.begin,t.end) << t.begin << t.end;
+        //if ( m_debug ) qCDebug(KDEV_CSS) << kind << tokenText(t.begin,t.end) << t.begin << t.end;
     }
     while ( kind != Parser::Token_EOF );
 
@@ -646,11 +646,15 @@ QString Parser::tokenText(qint64 begin, qint64 end)
 void Parser::reportProblem( Parser::ProblemType type, const QString& message )
 {
     if (type == Error)
-        qDebug() << "** ERROR:" << message;
+        qCDebug(KDEV_CSS) << "** ERROR:" << message;
     else if (type == Warning)
-        qDebug() << "** WARNING:" << message;
+        qCWarning(KDEV_CSS) << "** WARNING:" << message;
     else if (type == Info)
-        qDebug() << "** Info:" << message;
+#if QT_VERSION >= 0x050500
+        qCInfo(KDEV_CSS) << "** Info:" << message;
+#else
+        qCDebug(KDEV_CSS) << "** Info:" << message;
+#endif
 
     qint64 sLine;
     qint64 sCol;
