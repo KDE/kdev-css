@@ -19,7 +19,7 @@ include(KDEInstallDirs)
 include(KDECMakeSettings)
 include(GenerateExportHeader)
 
-find_package(Qt5 CONFIG REQUIRED Core Widgets Test WebKitWidgets)
+find_package(Qt5 CONFIG REQUIRED Core Widgets Test)
 find_package(KF5 REQUIRED COMPONENTS ItemModels ConfigWidgets KIO I18n KCMUtils TextEditor ThreadWeaver )
 find_package(KDevPlatform ${KDEVPLATFORM_VERSION} REQUIRED)
 
