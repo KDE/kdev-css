@@ -35,6 +35,7 @@ find_package(FLEX REQUIRED)
 include_directories(
     ${CMAKE_CURRENT_BINARY_DIR} # debug.h
     ${CMAKE_CURRENT_BINARY_DIR}/parser
+    ${FLEX_INCLUDE_DIRS}
     ${KDEVPGQT_INCLUDE_DIR}
 )
 
