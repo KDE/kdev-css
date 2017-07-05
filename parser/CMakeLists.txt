@@ -26,8 +26,7 @@ add_custom_command(
     OUTPUT  "${CMAKE_CURRENT_BINARY_DIR}/tokenizer.cpp"
     MAIN_DEPENDENCY "${CMAKE_CURRENT_BINARY_DIR}/tokenizer.flex"
     COMMAND ${FLEX_EXECUTABLE}
-    ARGS    -o"tokenizer.cpp"
-            "tokenizer.flex"
+    ARGS --nounistd -o"tokenizer.cpp" "tokenizer.flex"
     WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
 )
 
