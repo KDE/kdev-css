@@ -48,7 +48,7 @@ target_link_libraries( kdev4cssparser LINK_PRIVATE
 install(TARGETS kdev4cssparser DESTINATION ${INSTALL_TARGETS_DEFAULT_ARGS})
 
 ### next target
-add_executable(css-parser main.cpp)
+add_executable(css-parser ${CMAKE_CURRENT_BINARY_DIR}/tokenizer.cpp main.cpp)
 target_link_libraries(css-parser
     Qt5::Test
     KDev::Language
