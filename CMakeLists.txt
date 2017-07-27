@@ -19,8 +19,10 @@ include(KDEInstallDirs)
 include(KDECMakeSettings)
 include(GenerateExportHeader)
 
-find_package(Qt5 CONFIG REQUIRED Core Widgets Test)
-find_package(KF5 REQUIRED COMPONENTS ItemModels ConfigWidgets KIO I18n KCMUtils TextEditor ThreadWeaver )
+set(QT_MIN_VERSION "5.4.0")
+find_package(Qt5 ${QT_MIN_VERSION} CONFIG REQUIRED Core Widgets Test)
+set(KF5_DEP_VERSION "5.15.0")
+find_package(KF5 ${KF5_DEP_VERSION} REQUIRED COMPONENTS ItemModels ConfigWidgets KIO I18n KCMUtils TextEditor ThreadWeaver)
 find_package(KDevPlatform ${KDEVPLATFORM_VERSION} REQUIRED)
 
 configure_file(
