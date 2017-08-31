@@ -18,6 +18,7 @@ include(ECMQtDeclareLoggingCategory)
 include(KDEInstallDirs)
 include(KDECMakeSettings)
 include(GenerateExportHeader)
+include(FeatureSummary)
 
 set(QT_MIN_VERSION "5.5.0")
 find_package(Qt5 ${QT_MIN_VERSION} CONFIG REQUIRED Core Widgets Test)
@@ -31,8 +32,15 @@ configure_file(
   @ONLY
 )
 
-find_package(KDevelop-PG-Qt REQUIRED)
-find_package(FLEX REQUIRED)
+find_package(KDevelop-PG-Qt CONFIG)
+set_package_properties(KDevelop-PG-Qt PROPERTIES
+    TYPE REQUIRED
+)
+
+find_package(FLEX)
+set_package_properties(FLEX PROPERTIES
+    TYPE REQUIRED
+)
 
 include_directories(
     ${CMAKE_CURRENT_BINARY_DIR} # debug.h
@@ -131,3 +139,5 @@ ecm_add_test(${parsejobtest_SRCS}
         KDev::Interfaces KDev::Language KDev::Tests
         KF5::I18n KF5::TextEditor
 )
+
+feature_summary(WHAT ALL INCLUDE_QUIET_PACKAGES FATAL_ON_MISSING_REQUIRED_PACKAGES)
