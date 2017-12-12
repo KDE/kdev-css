@@ -48,6 +48,8 @@ set_package_properties(FLEX PROPERTIES
     TYPE REQUIRED
 )
 
+add_definitions(-DTRANSLATION_DOMAIN=\"kdevcss\")
+
 include_directories(
     ${CMAKE_CURRENT_BINARY_DIR} # debug.h
     ${CMAKE_CURRENT_BINARY_DIR}/parser
