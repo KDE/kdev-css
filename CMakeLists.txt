@@ -21,7 +21,11 @@ include(FeatureSummary)
 set(QT_MIN_VERSION "5.5.0")
 find_package(Qt5 ${QT_MIN_VERSION} CONFIG REQUIRED Core Widgets Test)
 set(KF5_DEP_VERSION "5.15.0")
-find_package(KF5 ${KF5_DEP_VERSION} REQUIRED COMPONENTS ItemModels ConfigWidgets KIO I18n KCMUtils TextEditor ThreadWeaver)
+find_package(KF5 ${KF5_DEP_VERSION} REQUIRED COMPONENTS
+    I18n
+    ItemModels # needed because missing in KDevPlatformConfig.cmake, remove once dep on kdevplatform >=5.2.2
+    TextEditor
+)
 set(KDEVPLATFORM_DEP_VERSION "5.1.0")
 find_package(KDevPlatform ${KDEVPLATFORM_DEP_VERSION} CONFIG)
 set_package_properties(KDevPlatform PROPERTIES
