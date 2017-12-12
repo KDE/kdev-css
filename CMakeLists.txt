@@ -4,8 +4,6 @@ project(css)
 set(VERSION_MAJOR 4)
 set(VERSION_MINOR 90)
 set(VERSION_PATCH 90)
-# KDevplatform dependency version
-set( KDEVPLATFORM_VERSION "${VERSION_MAJOR}.${VERSION_MINOR}.${VERSION_PATCH}" )
 
 find_package (ECM "5.14.0" REQUIRED NO_MODULE)
 message(STATUS "${CMAKE_MODULE_PATH}")
@@ -24,7 +22,11 @@ set(QT_MIN_VERSION "5.5.0")
 find_package(Qt5 ${QT_MIN_VERSION} CONFIG REQUIRED Core Widgets Test)
 set(KF5_DEP_VERSION "5.15.0")
 find_package(KF5 ${KF5_DEP_VERSION} REQUIRED COMPONENTS ItemModels ConfigWidgets KIO I18n KCMUtils TextEditor ThreadWeaver)
-find_package(KDevPlatform ${KDEVPLATFORM_VERSION} REQUIRED)
+set(KDEVPLATFORM_DEP_VERSION "5.1.0")
+find_package(KDevPlatform ${KDEVPLATFORM_DEP_VERSION} CONFIG)
+set_package_properties(KDevPlatform PROPERTIES
+    TYPE REQUIRED
+)
 
 configure_file(
   "${CMAKE_CURRENT_SOURCE_DIR}/version.h.cmake"
