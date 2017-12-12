@@ -1,31 +1,4 @@
 {
-    "Encoding": "UTF-8",
-    "GenericName": "CSS Support",
-    "GenericName[ast]": "Sofitu CSS",
-    "GenericName[bs]": "Podrška za CSS",
-    "GenericName[ca@valencia]": "Implementació per a CSS",
-    "GenericName[ca]": "Implementació per a CSS",
-    "GenericName[cs]": "Podpora CSS",
-    "GenericName[de]": "CSS-Unterstützung",
-    "GenericName[en_GB]": "CSS Support",
-    "GenericName[es]": "Implementación de CSS",
-    "GenericName[et]": "CSS-i toetus",
-    "GenericName[fi]": "CSS-tuki",
-    "GenericName[fr]": "Prise en charge de CSS",
-    "GenericName[ga]": "Tacaíocht CSS",
-    "GenericName[gl]": "Compatibilidade con CSS",
-    "GenericName[hu]": "CSS támogatás",
-    "GenericName[nl]": "CSS-ondersteuning",
-    "GenericName[pl]": "Obsługa CSS",
-    "GenericName[pt]": "Suporte para CSS",
-    "GenericName[pt_BR]": "Suporte à CSS",
-    "GenericName[sk]": "Podpora CSS",
-    "GenericName[sv]": "CSS-stöd",
-    "GenericName[tr]": "CSS Desteği",
-    "GenericName[ug]": "CSS قوللىشى",
-    "GenericName[uk]": "Підтримка CSS",
-    "GenericName[x-test]": "xxCSS Supportxx",
-    "GenericName[zh_CN]": "CSS 支持",
     "KPlugin": {
         "Description": "CSS Language Support",
         "Description[ast]": "Sofitu del llinguax CSS",
@@ -48,15 +21,11 @@
         "Description[zh_CN]": "CSS 语言支持",
         "Icon": "source",
         "Id": "KDevCssSupport",
-        "Name": "KDevCssSupport",
-        "Name[pl]": "ObsługaKDevCss",
-        "Name[sv]": "KDevelop CSS-stöd",
-        "Name[x-test]": "xxKDevCssSupportxx",
+        "Name": "CSS Support",
         "ServiceTypes": [
             "KDevelop/Plugin"
         ]
     },
-    "X-KDevelop-Args": "CSS",
     "X-KDevelop-Interfaces": [
         "ILanguageSupport"
     ],
