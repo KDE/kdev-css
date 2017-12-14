@@ -22,6 +22,12 @@
         "Icon": "source",
         "Id": "KDevCssSupport",
         "Name": "CSS Support",
+        "Name[ca]": "Implementació per a CSS",
+        "Name[nl]": "CSS-ondersteuning",
+        "Name[pt]": "Suporte para CSS",
+        "Name[sv]": "CSS-stöd",
+        "Name[uk]": "Підтримка CSS",
+        "Name[x-test]": "xxCSS Supportxx",
         "ServiceTypes": [
             "KDevelop/Plugin"
         ]
