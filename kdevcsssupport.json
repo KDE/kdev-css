@@ -22,6 +22,7 @@
         "Icon": "source",
         "Id": "KDevCssSupport",
         "Name": "CSS Support",
+        "Name[ca@valencia]": "Implementació per a CSS",
         "Name[ca]": "Implementació per a CSS",
         "Name[es]": "Implementación de CSS",
         "Name[nl]": "CSS-ondersteuning",
