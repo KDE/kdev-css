@@ -43,7 +43,7 @@ public:
     virtual ~ContextBuilder();
 
     virtual KDevelop::ReferencedTopDUContext build(const KDevelop::IndexedString& url, AstNode* node,
-            KDevelop::ReferencedTopDUContext updateContext = KDevelop::ReferencedTopDUContext());
+            const KDevelop::ReferencedTopDUContext& updateContext = KDevelop::ReferencedTopDUContext());
 
     void setEditor(EditorIntegrator* editor);
 protected:

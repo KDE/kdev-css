@@ -50,7 +50,7 @@ ContextBuilder::~ContextBuilder()
 }
 
 KDevelop::ReferencedTopDUContext ContextBuilder::build(const KDevelop::IndexedString& url, AstNode* node,
-        KDevelop::ReferencedTopDUContext updateContext)
+        const KDevelop::ReferencedTopDUContext& updateContext)
 {
     if ( KDevelop::ICore::self() ) {
         m_reportErrors = KDevelop::ICore::self()->languageController()->completionSettings()->highlightSemanticProblems();
