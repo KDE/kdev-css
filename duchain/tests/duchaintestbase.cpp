@@ -63,10 +63,10 @@ TopDUContext* DUChainTestBase::parse(const QByteArray& unit, DumpAreas dump, QSt
 
     ParseSession* session = new ParseSession();
     session->setContents(unit);
-    StartAst* ast = 0;
+    StartAst* ast = nullptr;
     if (!session->parse(&ast)) {
         qDebug() << "Parse failed";
-        return 0;
+        return nullptr;
     }
 
     if (dump & DumpAST) {

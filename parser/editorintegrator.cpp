@@ -27,7 +27,7 @@ using namespace KTextEditor;
 using namespace Css;
 
 EditorIntegrator::EditorIntegrator()
-        : m_session(0)
+        : m_session(nullptr)
 {
 }
 

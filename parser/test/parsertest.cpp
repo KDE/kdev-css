@@ -103,7 +103,7 @@ void TestParser::parser()
 
     ParseSession session;
     session.setContents(contents);
-    StartAst* ast = 0;
+    StartAst* ast = nullptr;
     QVERIFY(session.parse(&ast));
     DebugVisitor debugVisitor(session.tokenStream(), session.contents());
     debugVisitor.visitStart(ast);
@@ -115,7 +115,7 @@ void TestParser::multiline()
     session.setContents("body{color:red}\nbody{color:blue}");
     //                   012345678901234  01234567890123456
     //                   0         1      0         1
-    StartAst* ast = 0;
+    StartAst* ast = nullptr;
     QVERIFY(session.parse(&ast));
     DebugVisitor debugVisitor(session.tokenStream(), session.contents());
     RuleAst* el = ast->rules->rulesSequence->at(1)->element;

@@ -41,7 +41,8 @@ namespace Css
 {
 
 ContextBuilder::ContextBuilder()
-    : m_reportErrors(true), m_editor(0)
+    : m_reportErrors(true)
+    , m_editor(nullptr)
 {
 }
 
@@ -106,7 +107,7 @@ void ContextBuilder::setContextOnNode(AstNode* /*node*/, KDevelop::DUContext* /*
 KDevelop::DUContext* ContextBuilder::contextFromNode(AstNode* /*node*/)
 {
     //return node->ducontext;
-    return 0;
+    return nullptr;
 }
 
 void ContextBuilder::setEditor( EditorIntegrator* editor )

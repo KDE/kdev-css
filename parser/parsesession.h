@@ -48,7 +48,7 @@ public:
 
     void setContents(const QString& contents);
     void setCurrentDocument( const KDevelop::IndexedString& filename);
-    bool readFile(const QString& filename, const char* charset = 0);
+    bool readFile(const QString& filename, const char* charset = nullptr);
     void setDebug(bool);
     void setOffset(const KDevelop::CursorInRevision &offset);
     KDevPG::TokenStream* tokenStream() const;

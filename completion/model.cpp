@@ -161,7 +161,7 @@ void CodeCompletionModel::completionInvoked(KTextEditor::View* view, const KText
     Q_ASSERT(!parts.isEmpty());
 
     ParseSession session;
-    Css::AstNode* ast = 0;
+    Css::AstNode* ast = nullptr;
     HtmlParser::Part part;
     foreach (const HtmlParser::Part &p, parts) {
         if (p.range.contains(range.start())

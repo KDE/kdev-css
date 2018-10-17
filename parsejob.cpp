@@ -113,7 +113,7 @@ void ParseJob::run(ThreadWeaver::JobPointer /*self*/, ThreadWeaver::Thread */*th
         if (part.kind != HtmlParser::Part::InlineStyle) {
             StyleElementAst *el = new StyleElementAst;
             el->kind = StyleElementAst::KIND;
-            StartAst* ast = 0;
+            StartAst* ast = nullptr;
             session->parse(&ast);
             el->start = ast;
             el->session = session;
@@ -121,7 +121,7 @@ void ParseJob::run(ThreadWeaver::JobPointer /*self*/, ThreadWeaver::Thread */*th
         } else {
             InlineStyleAst *el = new InlineStyleAst;
             el->kind = InlineStyleAst::KIND;
-            DeclarationListAst* ast = 0;
+            DeclarationListAst* ast = nullptr;
             session->parse(&ast);
             el->declarationList = ast;
             el->session = session;
@@ -160,13 +160,13 @@ void ParseJob::run(ThreadWeaver::JobPointer /*self*/, ThreadWeaver::Thread */*th
 
     foreach (AstNode *el, fileAst->elements) {
 
-        ParseSession *session = 0;
+        ParseSession *session = nullptr;
         if (el->kind == StyleElementAst::KIND) {
             session = static_cast<StyleElementAst*>(el)->session;
-            static_cast<StyleElementAst*>(el)->session = 0; //deleted below
+            static_cast<StyleElementAst*>(el)->session = nullptr; //deleted below
         } else if (el->kind == InlineStyleAst::KIND) {
             session = static_cast<InlineStyleAst*>(el)->session;
-            static_cast<InlineStyleAst*>(el)->session = 0; //deleted below
+            static_cast<InlineStyleAst*>(el)->session = nullptr; //deleted below
         }
         Q_ASSERT(session);
         foreach(const KDevelop::ProblemPointer &p, session->problems()) {

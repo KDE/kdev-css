@@ -14,10 +14,10 @@ namespace Css {
 
 void ModelTest::testCompletionRange()
 {
-    KTextEditor::Document* doc = KTextEditor::Editor::instance()->createDocument(0);
+    KTextEditor::Document* doc = KTextEditor::Editor::instance()->createDocument(nullptr);
     doc->setText("body{font-w:normal;}");
                 //01234567890123456789 
-    KTextEditor::View* view = doc->createView(0);
+    KTextEditor::View* view = doc->createView(nullptr);
     CodeCompletionModel* model = new CodeCompletionModel(doc);
 
     KTextEditor::Cursor position(0, 9);
@@ -82,10 +82,10 @@ void ModelTest::testCompletionRange()
 
 void ModelTest::testCompletionRangeSecondLine()
 {
-    KTextEditor::Document* doc = KTextEditor::Editor::instance()->createDocument(0);
+    KTextEditor::Document* doc = KTextEditor::Editor::instance()->createDocument(nullptr);
     doc->setText("body{color:red;}\nbody{font-w:normal;}");
                 //                  01234567890123456789
-    KTextEditor::View* view = doc->createView(0);
+    KTextEditor::View* view = doc->createView(nullptr);
     CodeCompletionModel* model = new CodeCompletionModel(doc);
 
     KTextEditor::Cursor position(1, 9);
@@ -222,7 +222,7 @@ void ModelTest::completionItems_data()
 
 void ModelTest::completionItems()
 {
-    KTextEditor::Document* doc = KTextEditor::Editor::instance()->createDocument(0);
+    KTextEditor::Document* doc = KTextEditor::Editor::instance()->createDocument(nullptr);
 
     QFETCH(QString, text);
     QFETCH(QString, type);
@@ -243,7 +243,7 @@ void ModelTest::completionItems()
 
     QCOMPARE(doc->mimeType(), QString("text/")+type);
 
-    KTextEditor::View* view = doc->createView(0);
+    KTextEditor::View* view = doc->createView(nullptr);
     CodeCompletionModel* model = new CodeCompletionModel(doc);
 
     QCOMPARE(model->rowCount(), 0);

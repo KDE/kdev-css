@@ -25,7 +25,7 @@ namespace Css {
 
 ContentAssistData* ContentAssistData::self()
 {
-    static ContentAssistData* ret = 0;
+    static ContentAssistData* ret = nullptr;
     if (!ret) ret = new ContentAssistData;
     return ret;
 }

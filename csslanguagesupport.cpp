@@ -39,7 +39,7 @@
 
 using namespace Css;
 
-LanguageSupport* LanguageSupport::m_self = 0;
+LanguageSupport* LanguageSupport::m_self = nullptr;
 
 K_PLUGIN_FACTORY_WITH_JSON(KDevCssSupportFactory, "kdevcsssupport.json", registerPlugin<LanguageSupport>();)
 
@@ -74,8 +74,8 @@ class FindNodeVisitor : public DefaultVisitor
 public:
     FindNodeVisitor(EditorIntegrator* editor, const KTextEditor::Cursor& position)
         : DefaultVisitor()
-        , m_node(0)
-        , m_property(0)
+        , m_node(nullptr)
+        , m_property(nullptr)
         , m_editor(editor)
         , m_position(position)
     {}
@@ -143,7 +143,7 @@ CursorIdentifier cursorIdentifier(const QUrl& url, const KTextEditor::Cursor& po
 
 
     ParseSession session;
-    Css::DeclarationListAst* ast = 0;
+    Css::DeclarationListAst* ast = nullptr;
     session.setOffset(ctxRange.start);
     session.setContents(doc->textDocument()->text(ctxRange.castToSimpleRange()));
     session.parse(&ast);
@@ -196,7 +196,7 @@ QWidget* LanguageSupport::specialLanguageObjectNavigationWidget(const QUrl& url,
         {
             KDevelop::DUChainReadLocker lock(KDevelop::DUChain::lock());
             top = KDevelop::DUChain::self()->chainForDocument(url);
-            if (!top) return 0;
+            if (!top) return nullptr;
         }
         if (id.kind == PropertyAst::KIND) {
             ContentAssistData::Field field = ContentAssistData::self()->field(id.contents);

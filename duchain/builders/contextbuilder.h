@@ -50,7 +50,7 @@ protected:
     EditorIntegrator* editor() const;
 
     virtual KDevelop::TopDUContext* newTopContext(const KDevelop::RangeInRevision& range,
-                                                  KDevelop::ParsingEnvironmentFile* file = 0);
+                                                  KDevelop::ParsingEnvironmentFile* file = nullptr);
 
     virtual void startVisiting(AstNode* node);
     virtual void setContextOnNode(AstNode* node, KDevelop::DUContext* ctx);
