@@ -49,18 +49,18 @@ public:
     explicit Tokenizer( KDevPG::TokenStream *tokenStream, const QString &contents );
     void restart( KDevPG::TokenStream *tokenStream, const QByteArray &contents );
 
-    int yylex();
+    int yylex() override;
     int nextTokenKind() { return yylex(); }
     std::size_t tokenBegin() const { return m_tokenBegin; }
     std::size_t tokenEnd()   const { return m_tokenEnd;   }
 
 protected:
     // custom input, replacing the Flex default input stdin
-    virtual int LexerInput( char *buf, int max_size );
+    int LexerInput( char *buf, int max_size ) override;
 
     // dismisses any lexer output (which should not happen anyways)
-    virtual void LexerOutput( const char * /*buf*/, int /*max_size*/ ) { return; }
-    virtual void LexerError( const char */*msg*/ ) { return; }
+    void LexerOutput( const char * /*buf*/, int /*max_size*/ ) override { return; }
+    void LexerError( const char */*msg*/ ) override { return; }
 
 private:
     QByteArray m_contents;

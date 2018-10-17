@@ -30,8 +30,9 @@ public:
     FieldNavigationContext(KDevelop::TopDUContextPointer topContext,
                                    const ContentAssistData::Field &field);
 
-    virtual QString name() const;
-    virtual QString html(bool shorten = false);
+    QString name() const override;
+    QString html(bool shorten = false) override;
+
 private:
     ContentAssistData::Field m_field;
 };

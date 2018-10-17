@@ -31,8 +31,8 @@ public:
     ColorNavigationContext(KDevelop::TopDUContextPointer topContext,
                            const QString& name);
 
-    virtual QString name() const;
-    virtual QString html(bool shorten = false);
+    QString name() const override;
+    QString html(bool shorten = false) override;
 
 private:
     const QString m_name;

@@ -43,9 +43,9 @@ public:
     }
     DeclarationBuilder() {}
 protected:
-    virtual void visitRuleset(RulesetAst* node);
+    void visitRuleset(RulesetAst* node) override;
 
-    virtual void closeDeclaration();
+    void closeDeclaration() override;
 };
 
 }

@@ -40,28 +40,28 @@ class ContextBuilder: public ContextBuilderBase, public DefaultVisitor
 
 public:
     ContextBuilder();
-    virtual ~ContextBuilder();
+    ~ContextBuilder() override;
 
-    virtual KDevelop::ReferencedTopDUContext build(const KDevelop::IndexedString& url, AstNode* node,
-            const KDevelop::ReferencedTopDUContext& updateContext = KDevelop::ReferencedTopDUContext());
+    KDevelop::ReferencedTopDUContext build(const KDevelop::IndexedString& url, AstNode* node,
+            const KDevelop::ReferencedTopDUContext& updateContext = KDevelop::ReferencedTopDUContext()) override;
 
     void setEditor(EditorIntegrator* editor);
 protected:
     EditorIntegrator* editor() const;
 
-    virtual KDevelop::TopDUContext* newTopContext(const KDevelop::RangeInRevision& range,
-                                                  KDevelop::ParsingEnvironmentFile* file = nullptr);
+    KDevelop::TopDUContext* newTopContext(const KDevelop::RangeInRevision& range,
+                                          KDevelop::ParsingEnvironmentFile* file = nullptr) override;
 
-    virtual void startVisiting(AstNode* node);
-    virtual void setContextOnNode(AstNode* node, KDevelop::DUContext* ctx);
-    virtual KDevelop::DUContext* contextFromNode(AstNode* node);
-    virtual KDevelop::RangeInRevision editorFindRange(AstNode* fromRange, AstNode* toRange);
+    void startVisiting(AstNode* node) override;
+    void setContextOnNode(AstNode* node, KDevelop::DUContext* ctx) override;
+    KDevelop::DUContext* contextFromNode(AstNode* node) override;
+    KDevelop::RangeInRevision editorFindRange(AstNode* fromRange, AstNode* toRange) override;
     /// Find Cursor for start of a node, useful to limit findLocalDeclarations() searches.
     KDevelop::CursorInRevision startPos(AstNode* node);
 
-    virtual KDevelop::QualifiedIdentifier identifierForNode(SpecifierAst* id);
+    KDevelop::QualifiedIdentifier identifierForNode(SpecifierAst* id) override;
 
-    virtual void visitRuleset(RulesetAst* node);
+    void visitRuleset(RulesetAst* node) override;
 
     /// Whether semantic problems should get reported
     bool m_reportErrors;

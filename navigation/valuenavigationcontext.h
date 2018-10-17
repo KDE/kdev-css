@@ -31,8 +31,8 @@ public:
     ValueNavigationContext(KDevelop::TopDUContextPointer topContext,
                                    const ContentAssistData::Value &value);
 
-    virtual QString name() const;
-    virtual QString html(bool shorten = false);
+    QString name() const override;
+    QString html(bool shorten = false) override;
 
 private:
     ContentAssistData::Value m_value;
