@@ -187,7 +187,7 @@ KTextEditor::Range LanguageSupport::specialLanguageObjectRange(const QUrl& url, 
     return KDevelop::ILanguageSupport::specialLanguageObjectRange(url, position);
 }
 
-QWidget* LanguageSupport::specialLanguageObjectNavigationWidget(const QUrl& url, const KTextEditor::Cursor& position)
+QPair<QWidget*, KTextEditor::Range> LanguageSupport::specialLanguageObjectNavigationWidget(const QUrl& url, const KTextEditor::Cursor& position)
 {
     CursorIdentifier id = cursorIdentifier(url, position);
     qCDebug(KDEV_CSS) << id.kind << id.contents;
@@ -196,25 +196,31 @@ QWidget* LanguageSupport::specialLanguageObjectNavigationWidget(const QUrl& url,
         {
             KDevelop::DUChainReadLocker lock(KDevelop::DUChain::lock());
             top = KDevelop::DUChain::self()->chainForDocument(url);
-            if (!top) return nullptr;
+            if (!top) {
+                return {nullptr, KTextEditor::Range::invalid()};
+            }
         }
+        QWidget* widget = nullptr;
         if (id.kind == PropertyAst::KIND) {
             ContentAssistData::Field field = ContentAssistData::self()->field(id.contents);
             if (!field.name.isEmpty()) {
-                return new NavigationWidget(top, field);
+                widget = new NavigationWidget(top, field);
             }
         } else if (id.kind == TermAst::KIND) {
             ContentAssistData::Field field = ContentAssistData::self()->field(id.property);
             if (field.values.contains(id.contents)) {
-                return new NavigationWidget(top, field.values[id.contents]);
+                widget = new NavigationWidget(top, field.values[id.contents]);
             } else if (QColor(id.contents.trimmed()).isValid()) {
-                return new NavigationWidget(top, id.contents.trimmed());
+                widget = new NavigationWidget(top, id.contents.trimmed());
             }
         } else if (id.kind == HexcolorAst::KIND) {
-            return new NavigationWidget(top, id.contents.trimmed());
+            widget = new NavigationWidget(top, id.contents.trimmed());
         } else {
             Q_ASSERT_X(false, "Css::LanguageSupport::specialLanguageObjectNavigationWidget",
                               qPrintable(QString("unhandled id kind: %1").arg(id.kind)));
+        }
+        if (widget) {
+            return {widget, id.range.castToSimpleRange()};
         }
     }
     return KDevelop::ILanguageSupport::specialLanguageObjectNavigationWidget(url, position);
