@@ -51,6 +51,7 @@
         "Name[sv]": "CSS-stöd",
         "Name[uk]": "Підтримка CSS",
         "Name[x-test]": "xxCSS Supportxx",
+        "Name[zh_CN]": "CSS 支持",
         "Name[zh_TW]": "CSS 支援",
         "ServiceTypes": [
             "KDevelop/Plugin"
