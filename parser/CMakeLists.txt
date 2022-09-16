@@ -45,7 +45,7 @@ generate_export_header(kdev4cssparser EXPORT_MACRO_NAME KDEVCSSPARSER_EXPORT
 target_link_libraries( kdev4cssparser LINK_PRIVATE
     KDev::Language
 )
-install(TARGETS kdev4cssparser DESTINATION ${INSTALL_TARGETS_DEFAULT_ARGS})
+install(TARGETS kdev4cssparser DESTINATION ${KDE_INSTALL_TARGETS_DEFAULT_ARGS})
 
 ### next target
 if(WIN32)
