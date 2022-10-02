@@ -1,0 +1,49 @@
+# Copyright (C) YEAR This file is copyright:
+# This file is distributed under the same license as the kdev-css package.
+# Sergiu Bivol <sergiu@cip.md>, 2020.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: kdev-css\n"
+"Report-Msgid-Bugs-To: https://bugs.kde.org\n"
+"POT-Creation-Date: 2019-05-20 03:19+0200\n"
+"PO-Revision-Date: 2020-09-13 16:30+0100\n"
+"Last-Translator: Sergiu Bivol <sergiu@cip.md>\n"
+"Language-Team: Romanian\n"
+"Language: ro\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=3; plural=n==1 ? 0 : (n==0 || (n%100 > 0 && n%100 < "
+"20)) ? 1 : 2;\n"
+"X-Generator: Lokalize 19.12.3\n"
+
+#, kde-format
+msgctxt "NAME OF TRANSLATORS"
+msgid "Your names"
+msgstr "Sergiu Bivol"
+
+#, kde-format
+msgctxt "EMAIL OF TRANSLATORS"
+msgid "Your emails"
+msgstr "sergiu@cip.md"
+
+#: navigation/fieldnavigationcontext.cpp:40
+#, kde-format
+msgid "Example:"
+msgstr "Exemplu:"
+
+#: parser/main.cpp:40
+#, kde-format
+msgid "css-parser"
+msgstr "css-parser"
+
+#: parser/main.cpp:41
+#, kde-format
+msgid "KDevelop CSS parser debugging utility"
+msgstr "Utilitar KDevelop pentru depanarea analizorului CSS"
+
+#: parser/main.cpp:42
+#, kde-format
+msgid "(c) 2008 Niko Sams, 2009 Milian Wolff"
+msgstr "(c) 2008 Niko Sams, 2009 Milian Wolff"

@@ -1,0 +1,60 @@
+# Copyright (C) YEAR This_file_is_part_of_KDE
+# This file is distributed under the same license as the PACKAGE package.
+#
+# Balázs Úr <urbalazs@gmail.com>, 2012.
+msgid ""
+msgstr ""
+"Project-Id-Version: \n"
+"Report-Msgid-Bugs-To: https://bugs.kde.org\n"
+"POT-Creation-Date: 2019-05-20 03:19+0200\n"
+"PO-Revision-Date: 2012-10-30 10:24+0100\n"
+"Last-Translator: Balázs Úr <urbalazs@gmail.com>\n"
+"Language-Team: Hungarian <kde-l10n-hu@kde.org>\n"
+"Language: hu\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"X-Generator: Lokalize 1.5\n"
+
+#, kde-format
+msgctxt "NAME OF TRANSLATORS"
+msgid "Your names"
+msgstr "Úr Balázs"
+
+#, kde-format
+msgctxt "EMAIL OF TRANSLATORS"
+msgid "Your emails"
+msgstr "urbalazs@gmail.com"
+
+#: navigation/fieldnavigationcontext.cpp:40
+#, kde-format
+msgid "Example:"
+msgstr "Példa:"
+
+#: parser/main.cpp:40
+#, kde-format
+msgid "css-parser"
+msgstr "CSS-feldolgozó"
+
+#: parser/main.cpp:41
+#, kde-format
+msgid "KDevelop CSS parser debugging utility"
+msgstr "KDevelop CSS feldolgozó hibakereső segédprogram"
+
+#: parser/main.cpp:42
+#, kde-format
+msgid "(c) 2008 Niko Sams, 2009 Milian Wolff"
+msgstr "© Niko Sams, 2008., Milian Wolff, 2009."
+
+#~ msgid "CSS Support"
+#~ msgstr "CSS támogatás"
+
+#~ msgid "Support for CSS Language"
+#~ msgstr "Támogatás a CSS nyelvhez"
+
+#~ msgid "Niko Sams"
+#~ msgstr "Niko Sams"
+
+#~ msgid "Author"
+#~ msgstr "Szerző"

@@ -1,0 +1,65 @@
+# translation of kdevcss.po to Low Saxon
+# Copyright (C) YEAR This_file_is_part_of_KDE
+# This file is distributed under the same license as the PACKAGE package.
+# Manfred Wiese <m.j.wiese@web.de>, 2010, 2011.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: kdevcss\n"
+"Report-Msgid-Bugs-To: https://bugs.kde.org\n"
+"POT-Creation-Date: 2019-05-20 03:19+0200\n"
+"PO-Revision-Date: 2010-11-02 19:54+0100\n"
+"Last-Translator: Manfred Wiese <m.j.wiese@web.de>\n"
+"Language-Team: Low Saxon <kde-i18n-nds@kde.org>\n"
+"Language: nds\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Lokalize 1.0\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+
+#, kde-format
+msgctxt "NAME OF TRANSLATORS"
+msgid "Your names"
+msgstr "Manfred Wiese"
+
+#, kde-format
+msgctxt "EMAIL OF TRANSLATORS"
+msgid "Your emails"
+msgstr "m.j.wiese@web.de"
+
+#: navigation/fieldnavigationcontext.cpp:40
+#, kde-format
+msgid "Example:"
+msgstr "Bispill:"
+
+#: parser/main.cpp:40
+#, kde-format
+msgid "css-parser"
+msgstr "CSS-Inleser"
+
+#: parser/main.cpp:41
+#, kde-format
+msgid "KDevelop CSS parser debugging utility"
+msgstr "Fehlersöker för KDevelop sien CSS-Inleser"
+
+#: parser/main.cpp:42
+#, kde-format
+msgid "(c) 2008 Niko Sams, 2009 Milian Wolff"
+msgstr "© 2008 Niko Sams, 2009 Milian Wolff"
+
+#, fuzzy
+#~| msgid "Css Support"
+#~ msgid "CSS Support"
+#~ msgstr "CSS-Ünnerstütten"
+
+#, fuzzy
+#~| msgid "Support for Css Language"
+#~ msgid "Support for CSS Language"
+#~ msgstr "Ünnerstütten för CSS"
+
+#~ msgid "Niko Sams"
+#~ msgstr "Niko Sams"
+
+#~ msgid "Author"
+#~ msgstr "Autor"

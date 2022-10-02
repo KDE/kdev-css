@@ -1,0 +1,63 @@
+# Copyright (C) YEAR This_file_is_part_of_KDE
+# This file is distributed under the same license as the PACKAGE package.
+#
+# Andrew Coles <andrew_coles@yahoo.co.uk>, 2011.
+msgid ""
+msgstr ""
+"Project-Id-Version: \n"
+"Report-Msgid-Bugs-To: https://bugs.kde.org\n"
+"POT-Creation-Date: 2019-05-20 03:19+0200\n"
+"PO-Revision-Date: 2011-01-20 11:17+0000\n"
+"Last-Translator: Andrew Coles <andrew_coles@yahoo.co.uk>\n"
+"Language-Team: British English <kde-l10n-en_gb@kde.org>\n"
+"Language: en_GB\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+
+#, kde-format
+msgctxt "NAME OF TRANSLATORS"
+msgid "Your names"
+msgstr "Andrew Coles"
+
+#, kde-format
+msgctxt "EMAIL OF TRANSLATORS"
+msgid "Your emails"
+msgstr "andrew_coles@yahoo.co.uk"
+
+#: navigation/fieldnavigationcontext.cpp:40
+#, kde-format
+msgid "Example:"
+msgstr "Example:"
+
+#: parser/main.cpp:40
+#, kde-format
+msgid "css-parser"
+msgstr "css-parser"
+
+#: parser/main.cpp:41
+#, kde-format
+msgid "KDevelop CSS parser debugging utility"
+msgstr "KDevelop CSS parser debugging utility"
+
+#: parser/main.cpp:42
+#, kde-format
+msgid "(c) 2008 Niko Sams, 2009 Milian Wolff"
+msgstr "(c) 2008 Niko Sams, 2009 Milian Wolff"
+
+#, fuzzy
+#~| msgid "Css Support"
+#~ msgid "CSS Support"
+#~ msgstr "Css Support"
+
+#, fuzzy
+#~| msgid "Support for Css Language"
+#~ msgid "Support for CSS Language"
+#~ msgstr "Support for Css Language"
+
+#~ msgid "Niko Sams"
+#~ msgstr "Niko Sams"
+
+#~ msgid "Author"
+#~ msgstr "Author"
