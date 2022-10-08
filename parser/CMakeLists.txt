@@ -47,31 +47,33 @@ target_link_libraries( kdev4cssparser LINK_PRIVATE
 )
 install(TARGETS kdev4cssparser DESTINATION ${KDE_INSTALL_TARGETS_DEFAULT_ARGS})
 
-### next target
-if(WIN32)
-    add_executable(css-parser main.cpp)
-else()
-    add_executable(css-parser ${CMAKE_CURRENT_BINARY_DIR}/tokenizer.cpp main.cpp)
-endif()
-target_link_libraries(css-parser
-    Qt5::Test
-    KDev::Language
-    KDev::Tests
-    kdev4cssparser
-)
-
-### next target
-set(parsertest_SRCS test/parsertest.cpp
-  # TODO: extra library!
-    ${kdevcss_LOG_SRCS}
-  ../duchain/tests/duchaintestbase.cpp
-  ../duchain/builders/contextbuilder.cpp
-  ../duchain/builders/declarationbuilder.cpp)
-ecm_add_test(${parsertest_SRCS}
-    TEST_NAME parsertest
-    LINK_LIBRARIES
+if(BUILD_TESTING)
+    ### next target
+    if(WIN32)
+        add_executable(css-parser main.cpp)
+    else()
+        add_executable(css-parser ${CMAKE_CURRENT_BINARY_DIR}/tokenizer.cpp main.cpp)
+    endif()
+    target_link_libraries(css-parser
         Qt5::Test
-        kdev4cssparser
         KDev::Language
         KDev::Tests
-)
+        kdev4cssparser
+    )
+
+    ### next target
+    set(parsertest_SRCS test/parsertest.cpp
+      # TODO: extra library!
+        ${kdevcss_LOG_SRCS}
+      ../duchain/tests/duchaintestbase.cpp
+      ../duchain/builders/contextbuilder.cpp
+      ../duchain/builders/declarationbuilder.cpp)
+    ecm_add_test(${parsertest_SRCS}
+        TEST_NAME parsertest
+        LINK_LIBRARIES
+            Qt5::Test
+            kdev4cssparser
+            KDev::Language
+            KDev::Tests
+    )
+endif()

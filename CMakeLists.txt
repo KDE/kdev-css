@@ -98,56 +98,58 @@ target_link_libraries(kdevcsssupport
 # kdebugsettings file
 install(FILES kdevcsssupport.categories DESTINATION ${KDE_INSTALL_CONFDIR})
 
-### next target
-set(completionmodeltest_SRCS
-    completion/test/modeltest.cpp
-    completion/model.cpp
-    completion/contentassistdata.cpp
-    ##TODO: put this into a shared lib
-    duchain/tests/duchaintestbase.cpp
-    duchain/builders/contextbuilder.cpp
-    duchain/builders/declarationbuilder.cpp
-    ${kdevcss_LOG_SRCS}
-)
+if(BUILD_TESTING)
+    ### next target
+    set(completionmodeltest_SRCS
+        completion/test/modeltest.cpp
+        completion/model.cpp
+        completion/contentassistdata.cpp
+        ##TODO: put this into a shared lib
+        duchain/tests/duchaintestbase.cpp
+        duchain/builders/contextbuilder.cpp
+        duchain/builders/declarationbuilder.cpp
+        ${kdevcss_LOG_SRCS}
+    )
 
-qt5_add_resources(completionmodeltest_SRCS kdevcssresources.qrc)
+    qt5_add_resources(completionmodeltest_SRCS kdevcssresources.qrc)
 
-ecm_add_test(${completionmodeltest_SRCS}
-    TEST_NAME completionmodeltest
-    LINK_LIBRARIES
-        Qt5::Test
-        kdev4cssparser
-        KDev::Interfaces KDev::Language KDev::Tests
-        KF5::I18n KF5::TextEditor
-)
+    ecm_add_test(${completionmodeltest_SRCS}
+        TEST_NAME completionmodeltest
+        LINK_LIBRARIES
+            Qt5::Test
+            kdev4cssparser
+            KDev::Interfaces KDev::Language KDev::Tests
+            KF5::I18n KF5::TextEditor
+    )
 
-### next target
-set(duchaintest_SRCS
-    duchain/tests/duchain.cpp
-    duchain/tests/duchaintestbase.cpp
-    duchain/builders/contextbuilder.cpp
-    duchain/builders/declarationbuilder.cpp
-    ${kdevcss_LOG_SRCS}
-)
-ecm_add_test(${duchaintest_SRCS}
-    TEST_NAME duchaintest
-    LINK_LIBRARIES
-        kdev4cssparser
-        Qt5::Test
-        KDev::Interfaces KDev::Language KDev::Tests
-        KF5::I18n KF5::TextEditor
-)
+    ### next target
+    set(duchaintest_SRCS
+        duchain/tests/duchain.cpp
+        duchain/tests/duchaintestbase.cpp
+        duchain/builders/contextbuilder.cpp
+        duchain/builders/declarationbuilder.cpp
+        ${kdevcss_LOG_SRCS}
+    )
+    ecm_add_test(${duchaintest_SRCS}
+        TEST_NAME duchaintest
+        LINK_LIBRARIES
+            kdev4cssparser
+            Qt5::Test
+            KDev::Interfaces KDev::Language KDev::Tests
+            KF5::I18n KF5::TextEditor
+    )
 
-### next target
-set(parsejobtest_SRCS
-    duchain/tests/parsejobtest.cpp
-)
-ecm_add_test(${parsejobtest_SRCS}
-    TEST_NAME parsejobtest
-    LINK_LIBRARIES
-        Qt5::Test
-        KDev::Interfaces KDev::Language KDev::Tests
-        KF5::I18n KF5::TextEditor
-)
+    ### next target
+    set(parsejobtest_SRCS
+        duchain/tests/parsejobtest.cpp
+    )
+    ecm_add_test(${parsejobtest_SRCS}
+        TEST_NAME parsejobtest
+        LINK_LIBRARIES
+            Qt5::Test
+            KDev::Interfaces KDev::Language KDev::Tests
+            KF5::I18n KF5::TextEditor
+    )
+endif()
 
 feature_summary(WHAT ALL INCLUDE_QUIET_PACKAGES FATAL_ON_MISSING_REQUIRED_PACKAGES)
