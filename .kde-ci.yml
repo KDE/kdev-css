@@ -9,3 +9,6 @@ Dependencies:
     'frameworks/ktexteditor': '@stable'
     'kdevelop/kdevelop': '@stable'
     'kdevelop/kdevelop-pg-qt': '@stable'
+
+Options:
+  require-passing-tests-on: ['Linux', 'FreeBSD', 'Windows']
