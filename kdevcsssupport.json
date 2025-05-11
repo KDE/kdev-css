@@ -1,6 +1,7 @@
 {
     "KPlugin": {
         "Description": "CSS Language Support",
+        "Description[ar]": "دعم لغة سي اس اس",
         "Description[ca@valencia]": "Implementació del llenguatge CSS",
         "Description[ca]": "Implementació del llenguatge CSS",
         "Description[cs]": "Podpora jazyka CSS",
@@ -37,6 +38,7 @@
         "Icon": "source",
         "Id": "KDevCssSupport",
         "Name": "CSS Support",
+        "Name[ar]": "دعم سي اس اس",
         "Name[ca@valencia]": "Implementació del CSS",
         "Name[ca]": "Implementació del CSS",
         "Name[cs]": "Podpora CSS",
