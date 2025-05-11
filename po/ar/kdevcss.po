@@ -1,0 +1,49 @@
+# Copyright (C) 2025 This file is copyright:
+# This file is distributed under the same license as the kdev-css package.
+# SPDX-FileCopyrightText: 2025 Zayed Al-Saidi <zayed.alsaidi@gmail.com>
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: kdev-css\n"
+"Report-Msgid-Bugs-To: https://bugs.kde.org\n"
+"POT-Creation-Date: 2023-11-05 12:27+0000\n"
+"PO-Revision-Date: 2025-05-10 17:18+0400\n"
+"Last-Translator: Zayed Al-Saidi <zayed.alsaidi@gmail.com>\n"
+"Language-Team: ar\n"
+"Language: ar\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=6; plural=n==0 ? 0 : n==1 ? 1 : n==2 ? 2 : n%100>=3 "
+"&& n%100<=10 ? 3 : n%100>=11 && n%100<=99 ? 4 : 5;\n"
+"X-Generator: Lokalize 23.08.5\n"
+
+#, kde-format
+msgctxt "NAME OF TRANSLATORS"
+msgid "Your names"
+msgstr "زايد السعيدي"
+
+#, kde-format
+msgctxt "EMAIL OF TRANSLATORS"
+msgid "Your emails"
+msgstr "zayed.alsaidi@gmail.com"
+
+#: navigation/fieldnavigationcontext.cpp:40
+#, kde-format
+msgid "Example:"
+msgstr "مثال:"
+
+#: parser/main.cpp:40
+#, kde-format
+msgid "css-parser"
+msgstr "محلل-سي اس اس"
+
+#: parser/main.cpp:41
+#, kde-format
+msgid "KDevelop CSS parser debugging utility"
+msgstr "أداة تصحيح الأخطاء لمحلل سي اس اس لمطورك"
+
+#: parser/main.cpp:42
+#, kde-format
+msgid "(c) 2008 Niko Sams, 2009 Milian Wolff"
+msgstr "(ج) 2008 نيكو سامز، 2009 ميليان وولف"
