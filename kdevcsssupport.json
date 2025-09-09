@@ -32,7 +32,6 @@
         "Description[sv]": "CSS-språkstöd",
         "Description[tr]": "CSS Dil Desteği",
         "Description[uk]": "Підтримка мови CSS",
-        "Description[x-test]": "xxCSS Language Supportxx",
         "Description[zh_CN]": "CSS 语言支持",
         "Description[zh_TW]": "CSS 語言支援",
         "Icon": "source",
@@ -68,7 +67,6 @@
         "Name[sv]": "CSS-stöd",
         "Name[tr]": "CSS Desteği",
         "Name[uk]": "Підтримка CSS",
-        "Name[x-test]": "xxCSS Supportxx",
         "Name[zh_CN]": "CSS 支持",
         "Name[zh_TW]": "CSS 支援",
         "ServiceTypes": [
